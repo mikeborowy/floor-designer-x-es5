@@ -200,17 +200,17 @@ $selectedBorderColor: $colorBlue;
             }
 
             &.shape-resize-btn {
-                bottom: $btnPosition;
-                right: $btnPosition;
+                position: absolute;
+                bottom: -$btnPosition;
+                right: -$btnPosition;
                 cursor: nw-resize;
-                display: none;
-
+                /*display: none;*/
                 .shape-resize-inv-btn {
                     /* position: relative; */
                     width: 26px;
                     height: 26px;
                     /*background-color: red;*/
-                    z-index: 9;
+                    /*z-index: 9;*/
                     @include border-radius(50% 50%);
                     /* display: inline-block; */
                 }

@@ -117,6 +117,13 @@ namespace FloorDesigner.Controllers
                 return NotFound();
             }
 
+            List<Room> rl = db.Rooms.Where(r => r.FloorId == floor.Id).ToList();
+
+            if (rl.Count > 0)
+            {
+                db.Rooms.RemoveRange(rl);
+            }
+
             db.Floors.Remove(floor);
             db.SaveChanges();
 

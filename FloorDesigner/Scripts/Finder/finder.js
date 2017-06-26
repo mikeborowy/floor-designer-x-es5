@@ -94,8 +94,8 @@
 
                     var id = loadedItems[i].id;
                     var shape = loadedItems[i].shape;
-                    var x = loadedItems[i].xpos * gridCellWidth;
-                    var y = loadedItems[i].ypos * gridCellHeight;
+                    var x = loadedItems[i].xpos;
+                    var y = loadedItems[i].ypos;
                     var r = loadedItems[i].rotation;
 
                     var shapeSizeTableObj = findValueByKey(shapeSizes, shape);

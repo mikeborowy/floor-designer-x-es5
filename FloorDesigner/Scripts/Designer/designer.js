@@ -280,7 +280,7 @@
                 $('#floors-list').find('.floor-edit-btn').each(function (i, val) {
 
                     var btn = $(val);
-                    btn.css({ 'cursor': 'pointer' });
+                    //btn.css({ 'cursor': 'pointer' });
                     btn.click(onFloorEditBtnClick);
 
                 })
@@ -399,11 +399,13 @@
 
                         var id = loadedItems[i].id;
                         var shape = loadedItems[i].shape;
-                        var x = loadedItems[i].xpos * gridCellWidth;
-                        var y = loadedItems[i].ypos * gridCellHeight;
+                        var x = loadedItems[i].xpos;
+                        var y = loadedItems[i].ypos;
                         var r = loadedItems[i].rotation;
 
                         var shapeSizeTableObj = findValueByKey(shapeSizes, shape);
+
+                        console.log(shapeSizeTableObj);
 
                         draggedObj = {};
                         draggedObj.id = id;
@@ -411,8 +413,8 @@
                         draggedObj.x = x;
                         draggedObj.y = y;
                         draggedObj.r = r;
-                        draggedObj.w = shapeSizeTableObj.w;
-                        draggedObj.h = shapeSizeTableObj.h;
+                        draggedObj.w = shapeSizeTableObj.w * gridCellWidth;
+                        draggedObj.h = shapeSizeTableObj.h * gridCellWidth;
                         draggedObj.tox = shapeSizeTableObj.t.x;
                         draggedObj.toy = shapeSizeTableObj.t.y;
 
@@ -502,8 +504,8 @@
                 id: newId,
                 x: 0,
                 y: 0,
-                w: w,
-                h: h,
+                w: (gridCellWidth * w),
+                h: (gridCellHeight * h),
                 sh: sh
             };
         }
@@ -565,6 +567,8 @@
                     width: gridCellWidth,
                     height: gridCellHeight
                 });
+
+            console.log(draggedObj)
 
             //get freshly created item container
             var currentItem = createStageItem(
@@ -683,10 +687,10 @@
                 attr('data-parent', 'stage').
                 css({
                     position: 'absolute',
-                    width: (gridCellWidth) * w,
-                    'max-width': (gridCellWidth + 1) * w,
-                    height: (gridCellHeight) * h,
-                    'max-height': (gridCellHeight + 1) * h
+                    width: w,
+                    'max-width': w,
+                    height: h,
+                    'max-height': h
                 }).
                 appendTo(stageItemsContainer);
 
@@ -699,12 +703,12 @@
                     .appendTo(item);
             }
 
-            var newOriginX = (item.data('box-w') * gridCellWidth) * 0.5;
-            var newOriginY = (item.data('box-h') * gridCellHeight) * 0.5;
+            var newOriginX = (item.data('box-w') ) * 0.5;
+            var newOriginY = (item.data('box-h') ) * 0.5;
 
             if (item.width() > item.height()) {
-                newOriginX = (item.data('box-w') * gridCellWidth) - (gridCellWidth * 0.5);
-                newOriginY = (item.data('box-h') * gridCellHeight) - (gridCellHeight * 0.5);
+                newOriginX = (item.data('box-w') ) - ( 0.5);
+                newOriginY = (item.data('box-h') ) - ( 0.5);
             }
 
             TweenLite.set(item, { transformOrigin: "" + newOriginX + "px " + newOriginY + "px" });
@@ -761,8 +765,8 @@
 
         function createRegularShapeRoom() {
 
-            var w = (gridCellWidth * draggedObj.w) - (paddingLeft * 2);
-            var h = (gridCellHeight * draggedObj.h) - (paddingTop * 2);
+            var w = (draggedObj.w) - (paddingLeft * 2);
+            var h = (draggedObj.h) - (paddingTop * 2);
 
             var itemBgnd = $("<div/>").
                 attr('class', 'item-bgnd ' + draggedObj.sh).
@@ -776,8 +780,8 @@
 
         function createLShapeRoom() {
 
-            var w = (gridCellWidth * draggedObj.w) - (paddingLeft * 2);
-            var h = (gridCellHeight * draggedObj.h) - (paddingTop * 2);
+            var w = ( draggedObj.w) - (paddingLeft * 2);
+            var h = ( draggedObj.h) - (paddingTop * 2);
 
             var itemBgnd = $("<div><div class='l-shape-top'/><div class='l-shape-bottom'/></div>").
                 attr('class', 'item-bgnd ' + draggedObj.sh).
@@ -790,8 +794,8 @@
             var top = itemBgnd.
                 find('.l-shape-top').
                 css({
-                    width: w / draggedObj.w + (itemBorderSize + 1),
-                    height: h / draggedObj.h
+                    width: draggedObj.w /3 + (itemBorderSize + 1),
+                    height: draggedObj.h / 3
                 });
 
             var bottom = itemBgnd.
@@ -1032,8 +1036,8 @@
 
                 if (draggedItem.width() > draggedItem.height()) {
 
-                    newOriginX = (draggedItem.data('box-w') * gridCellWidth) - (gridCellWidth * 0.5);
-                    newOriginY = (draggedItem.data('box-h') * gridCellHeight) - (gridCellHeight * 0.5);
+                    newOriginX = (draggedItem.data('box-w') ) - ( 0.5);
+                    newOriginY = (draggedItem.data('box-h') ) - ( 0.5);
                     TweenLite.set(draggedItem, { transformOrigin: "" + newOriginX + "px " + newOriginY + "px" });
 
                     draggedItem.attr('data-box-tox', newOriginX);
@@ -1313,8 +1317,8 @@
                         shape: itemBox.data('box-shape'),
                         width: itemBox.data('box-w'),
                         height: itemBox.data('box-h'),
-                        xpos: itemBox.data('box-x') / gridCellWidth,
-                        ypos: itemBox.data('box-y') / gridCellHeight,
+                        xpos: itemBox.data('box-x'),
+                        ypos: itemBox.data('box-y'),
                         rotation: itemBox.data('box-r'),
                         floorId: floorCfg.id
                     };

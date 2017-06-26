@@ -213,15 +213,17 @@ $color: rgb(0,0,0);
 }
 
 .mdl-list__item-primary-content {
-}
+    
+    .floor-edit-btn {
+        cursor: pointer !important;
 
-.floor-edit-btn {
-    cursor: pointer !important;
-
-    &:hover {
-        color: $colorBlue;
+        &:hover {
+            color: $colorBlue;
+        }
     }
 }
+
+
 
 .floor-list-item {
 }

@@ -153,16 +153,17 @@ body {
       #stage-items-container .item-box .shape-button.shape-delete-btn .shape-delete-inv-icon:hover {
         background-color: red; }
   #stage-items-container .item-box .shape-button.shape-resize-btn {
-    bottom: 12px;
-    right: 12px;
+    position: absolute;
+    bottom: -12px;
+    right: -12px;
     cursor: nw-resize;
-    display: none; }
+    /*display: none;*/ }
     #stage-items-container .item-box .shape-button.shape-resize-btn .shape-resize-inv-btn {
       /* position: relative; */
       width: 26px;
       height: 26px;
       /*background-color: red;*/
-      z-index: 9;
+      /*z-index: 9;*/
       -webkit-border-radius: 50% 50%;
       border-radius: 50% 50%;
       background-clip: padding-box;
@@ -366,9 +367,9 @@ body {
     #floor-create-form .mdl-textfield__label:after {
       background-color: #448aff; }
 
-.floor-btn {
+.mdl-list__item-primary-content .floor-edit-btn {
   cursor: pointer !important; }
-  .floor-btn:hover {
+  .mdl-list__item-primary-content .floor-edit-btn:hover {
     color: #448aff; }
 
 .mdl-list-item-fixed {
