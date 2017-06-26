@@ -132,8 +132,7 @@
 
                 var form = validateFloorForm();
 
-                if (form.isValid)
-                {
+                if (form.isValid) {
                     var action = "/api/floors";
                     var data = {
                         officeId: 1,
@@ -162,6 +161,12 @@
                         }
                     });
                 }
+                else {
+                    _.forEach(form.errors, function (key, val) {
+                        if (!$('#floor-' + val).parent().hasClass('is-invalid'))
+                            $('#floor-' + val).parent().addClass('is-invalid');
+                    })
+                }
             }
 
             function clearFloorForm() {
@@ -181,59 +186,39 @@
             function validateFloorForm() {
 
                 var data = {
-                    name: $('#floor-num').val(),
+                    num: $('#floor-num').val(),
                     width: $('#floor-width').val(),
                     height: $('#floor-height').val()
                 };
 
                 let errors = {};
                 //floor number
-                if (data.name === '' || data.name === null) {
-                    errors.name = 'This field is required';
-
-                    if (!$('#floor-num').parent().hasClass('is-invalid'))
-                        $('#floor-num').parent().addClass('is-invalid');
+                if (data.num === '' || data.num === null) {
+                    errors.num = 'This field is required';
                 }
 
-                if (isNaN(data.name)) {
-                    errors.name = 'This is not a number';
-
-                    if (!$('#floor-num').parent().hasClass('is-invalid'))
-                        $('#floor-num').parent().addClass('is-invalid');
-
+                if (isNaN(data.num)) {
+                    errors.num = 'This is not a number';
                 }
                 //floor width
                 if (data.width === '' || data.width === null) {
                     errors.width = 'This field is required';
-
-                    if (!$('#floor-width').parent().hasClass('is-invalid'))
-                        $('#floor-width').parent().addClass('is-invalid');
                 }
 
                 if (isNaN(data.width)) {
                     errors.width = 'This is not a number';
-
-                    if (!$('#floor-width').parent().hasClass('is-invalid'))
-                        $('#floor-width').parent().addClass('is-invalid');
                 }
 
                 //floor height
                 if (data.height === '' || data.height === null) {
                     errors.height = 'This field is required';
-
-                    if (!$('#floor-height').parent().hasClass('is-invalid'))
-                        $('#floor-height').parent().addClass('is-invalid');
                 }
 
                 if (isNaN(data.height)) {
                     errors.height = 'This is not a number';
-
-                    if (!$('#floor-height').parent().hasClass('is-invalid'))
-                        $('#floor-height').parent().addClass('is-invalid');
                 }
 
-
-                return { errors, isValid: _.isEmpty(errors)};
+                return { errors, isValid: _.isEmpty(errors) };
             }
 
             function onFloorEditBtnClick(evt) {
