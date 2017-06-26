@@ -130,32 +130,110 @@
 
             function onAddFloorBtnClick() {
 
-                var action = "/api/floors";
+                var form = validateFloorForm();
+
+                if (form.isValid)
+                {
+                    var action = "/api/floors";
+                    var data = {
+                        officeId: 1,
+                        name: "Floor-" + $('#floor-num').val(),
+                        width: $('#floor-width').val(),
+                        height: $('#floor-height').val(),
+                        xpos: 0,
+                        ypos: 0,
+                        image: null
+                    };
+
+                    $.ajax({
+                        type: "POST",
+                        url: action,
+                        data: data,
+                        cache: false,
+                        success: function (response) {
+
+                            getFloorList();
+                            clearFloorForm();
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            if (debugMode) {
+                                console.log(xhr, ajaxOptions, thrownError);
+                            }
+                        }
+                    });
+                }
+            }
+
+            function clearFloorForm() {
+                $('#floor-num').val('');
+                $('#floor-num').parent().removeClass('is-focused');
+                $('#floor-num').parent().removeClass('is-dirty');
+
+                $('#floor-width').val('');
+                $('#floor-width').parent().removeClass('is-focused');
+                $('#floor-width').parent().removeClass('is-dirty');
+
+                $('#floor-height').val('');
+                $('#floor-height').parent().removeClass('is-focused');
+                $('#floor-height').parent().removeClass('is-dirty');
+            }
+
+            function validateFloorForm() {
+
                 var data = {
-                    officeId: 1,
-                    name: "Floor-" + $('#floor-num').val(),
+                    name: $('#floor-num').val(),
                     width: $('#floor-width').val(),
-                    height: $('#floor-height').val(),
-                    xpos: 0,
-                    ypos: 0,
-                    image: null
+                    height: $('#floor-height').val()
                 };
 
-                $.ajax({
-                    type: "POST",
-                    url: action,
-                    data: data,
-                    cache: false,
-                    success: function (response) {
+                let errors = {};
+                //floor number
+                if (data.name === '' || data.name === null) {
+                    errors.name = 'This field is required';
 
-                        getFloorList();
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        if (debugMode) {
-                            console.log(xhr, ajaxOptions, thrownError);
-                        }
-                    }
-                });
+                    if (!$('#floor-num').parent().hasClass('is-invalid'))
+                        $('#floor-num').parent().addClass('is-invalid');
+                }
+
+                if (isNaN(data.name)) {
+                    errors.name = 'This is not a number';
+
+                    if (!$('#floor-num').parent().hasClass('is-invalid'))
+                        $('#floor-num').parent().addClass('is-invalid');
+
+                }
+                //floor width
+                if (data.width === '' || data.width === null) {
+                    errors.width = 'This field is required';
+
+                    if (!$('#floor-width').parent().hasClass('is-invalid'))
+                        $('#floor-width').parent().addClass('is-invalid');
+                }
+
+                if (isNaN(data.width)) {
+                    errors.width = 'This is not a number';
+
+                    if (!$('#floor-width').parent().hasClass('is-invalid'))
+                        $('#floor-width').parent().addClass('is-invalid');
+                }
+
+                //floor height
+                if (data.height === '' || data.height === null) {
+                    errors.height = 'This field is required';
+
+                    if (!$('#floor-height').parent().hasClass('is-invalid'))
+                        $('#floor-height').parent().addClass('is-invalid');
+                }
+
+                if (isNaN(data.height)) {
+                    errors.height = 'This is not a number';
+
+                    if (!$('#floor-height').parent().hasClass('is-invalid'))
+                        $('#floor-height').parent().addClass('is-invalid');
+                }
+
+
+                return { errors, isValid: _.isEmpty(errors)};
             }
 
             function onFloorEditBtnClick(evt) {
@@ -194,7 +272,7 @@
 
                 var selectedFloor = $(evt.target);
                 var id = selectedFloor.parent().data('floor-id');
-                var action = "/api/floors/"+id;
+                var action = "/api/floors/" + id;
 
                 $.ajax({
                     type: "DELETE",
@@ -213,7 +291,7 @@
 
             }
 
-            function attachEvents() { 
+            function attachEvents() {
                 $('#floors-list').find('.floor-edit-btn').each(function (i, val) {
 
                     var btn = $(val);
@@ -234,7 +312,7 @@
             function getFloorList() {
 
                 var action = "/Designer/GetFloorsList";
-               
+
                 $.ajax({
                     type: "GET",
                     url: action,

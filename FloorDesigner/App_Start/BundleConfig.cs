@@ -55,8 +55,10 @@ namespace FloorDesigner
           ));
 
             bundles.Add(new ScriptBundle("~/bundles/common").Include(
+                "~/Scripts/Common/lodash.js",
                 "~/Scripts/Common/debugCfg.js",
-                "~/Scripts/Common/roomsCfg.js"));
+                "~/Scripts/Common/roomsCfg.js"
+                ));
 
             bundles.Add(new ScriptBundle("~/bundles/designer").Include(
                 "~/Scripts/Designer/designer.js"));
