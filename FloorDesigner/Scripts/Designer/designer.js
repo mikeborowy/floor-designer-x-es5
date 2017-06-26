@@ -21,6 +21,7 @@
         var currentAction;
         var gridPos;
         var draggedObj;
+        var resizeIsOn = false;
         var dragIsOn = false;
         var rotateIsOn = false;
         var currentDraggable = null;
@@ -743,6 +744,10 @@
             var deleteBtn = item.find('.shape-delete-btn');
             var resizeBtn = item.find('.shape-resize-btn');
 
+            resizeBtn.mousedown(onResizeBtnDown);
+            //resizeBtn.mouseup(onResizeBtnUp);
+            //resizeBtn.mouseleave(onResizeBtnUp);
+
             dragBtn.mousedown(onDragBtnDown);
             dragBtn.mouseup(onDragBtnUp);
             dragBtn.mouseleave(onDragBtnUp);
@@ -932,6 +937,33 @@
                 }
             })
         }
+
+        /**
+        * SHAPE BUTTONS: RESIZE START
+        */
+
+        function onResizeBtnDown() {
+            if (!resizeIsOn) {
+
+                resizeIsOn = true;
+
+                var btn = $(evt.target);
+                var invBtn = btn.parent().find('.shape-drag-inv-btn');
+                var icon = btn.find('.shape-drag-inv-icon')
+
+                TweenLite.set(invBtn, { scaleX: 5, scaleY: 5 })
+
+                var draggedItem = btn.parent().parent();
+                createDraggableStageItem(draggedItem, actionsOfDraggable.resize);
+
+                deslectItems();
+                selectItem(draggedItem);
+            }
+        }
+
+         /**
+        * SHAPE BUTTONS: RESIZE END
+        */
 
         /**
         * SHAPE BUTTONS: DRAG START
