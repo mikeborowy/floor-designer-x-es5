@@ -1,0 +1,113 @@
+﻿<div id="designer-toolbar">
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        <header class="mdl-layout__header">
+            <div class="mdl-layout__header-row">
+                <!-- Title -->
+                <div class="mdl-layout-title logo">
+                    <img src="~/Images/logo/logo.png" width="100"/>
+                </div>
+                <!-- Add spacer, to align navigation to the right -->
+                <div class="mdl-layout-spacer"></div>
+                <!-- Navigation. We hide it in small screens. -->
+                <nav class="mdl-navigation mdl-layout--large-screen-only">
+                    @*<a class="mdl-navigation__link" href="">Upload Blueprint</a>
+                        <a class="mdl-navigation__link" href="">Save</a>*@
+                    <div id="zoom-floor-panel">
+                        <button id="zoom-out-floor-btn" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored designer-toolbar-zoom-button">
+                            <i class="material-icons">zoom_out</i>
+                        </button>
+                        <input id="zoom-slider"
+                               class="mdl-slider mdl-js-slider"
+                               type="range" min="-10" max="10" value=""
+                               tabindex="0"
+                               onchange="OnSliderChange(this.value)">
+
+                        <button id="zoom-in-floor-btn" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored designer-toolbar-zoom-button">
+                            <i class="material-icons">zoom_in</i>
+                        </button>
+                    </div>
+                    <button id="zoom-reset-floor-btn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent designer-toolbar-button">
+                        <span><i class="material-icons">youtube_searched_for</i></span>
+                        <span>
+                            Reset Zoom
+                        </span>
+                    </button>
+                    <button id="upload-floor-bgnd-btn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent designer-toolbar-button">
+                        <span><i class="material-icons">file_upload</i></span>
+                        <span>
+                            Upload Photo
+                        </span>
+                    </button>
+                    <button id="save-floor-btn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent designer-toolbar-button">
+                        <span>
+                            <i class="material-icons">cloud_upload</i>
+                        </span>
+                        <span>Save Floor Plan</span>
+                    </button>
+                    <button id="floor-finder-btn" 
+                            class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent designer-toolbar-button"
+                            data-url="@Url.Action("Index", "RoomFinder")">
+                        <span>
+                            <i class="material-icons">visibility</i>
+                        </span>
+                        <span>Floor Finder</span>
+                    </button>
+                </nav>
+            </div>
+        </header>
+        <div class="mdl-layout__drawer">
+            <group class="designer-toolbar-group">
+                <span class="mdl-layout-title">Select Office</span>
+            </group>
+            <group class="designer-toolbar-group">
+                <form>
+                    <formgroup class="designer-toolbar-form-group">
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select ">
+                            <input class="mdl-textfield__input" type="text" id="search-country" value="Poland" readonly tabIndex="-1">
+                            <label for="search-country" class="mdl-textfield__label">Country</label>
+                            <ul for="search-country" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+                                <li class="mdl-menu__item">Poland</li>
+                                <li class="mdl-menu__item">Sweden</li>
+                            </ul>
+                        </div>
+                    </formgroup>
+                    <formgroup class="designer-toolbar-form-group">
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select ">
+                            <input class="mdl-textfield__input" type="text" id="search-city" value="Warsaw" readonly tabIndex="-1">
+                            <label for="search-city" class="mdl-textfield__label">City</label>
+                            <ul for="search-city" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+                                <li class="mdl-menu__item">Warsaw</li>
+                                <li class="mdl-menu__item">Stockholm</li>
+                            </ul>
+                        </div>
+                    </formgroup>
+                    <formgroup class="designer-toolbar-form-group">
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth">
+                            <input class="mdl-textfield__input" type="text" id="sample1" value="Office 1, Malborska St. 51" readonly tabIndex="-1">
+                            <label for="sample1" class="mdl-textfield__label">Office</label>
+                            <ul for="sample1" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+                                <li class="mdl-menu__item">Office 1, Malborska St. 51</li>
+                                <li class="mdl-menu__item">Office 2, Szwedzki Pl. 3</li>
+                            </ul>
+                        </div>
+                    </formgroup>
+                    <br />
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent mdl-long-btn">
+                        <i class="material-icons">search</i>
+                        Submit Search
+                    </button>
+                </form>
+            </group>
+
+            @Html.Partial("searchPanel");
+
+            @*<group class="designer-toolbar-group">
+                    <span class="mdl-layout-title">Select Floor</span>
+                </group>*@
+           
+        </div>
+        @*<main class="mdl-layout__content">*
+                <div class="page-content"></div>
+            </main>*@
+    </div>
+</div>

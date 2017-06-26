@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Floor Designer</title>
+    <link href="~/Content/material.fonts.css" rel="stylesheet" />
+    <link href="~/Content/material.min.css" rel="stylesheet" />
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/mdl")
+    @Scripts.Render("~/bundles/gsap")
+</head>
+<body>
+ 
+    <div id="app">
+        @RenderBody()
+    </div>
+
+  
+</body>
+</html>

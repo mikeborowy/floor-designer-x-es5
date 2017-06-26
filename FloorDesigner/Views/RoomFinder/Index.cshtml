@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "Room Finder";
+
+}
+
+<section id="finder-screen">
+
+    @Html.Partial("finderToolbar")
+
+    <div id="finder-workspace">
+        @Html.Partial("finderSearchPanel")
+        @Html.Partial("finderStage")
+    </div>
+
+
+</section>
+
+@Scripts.Render("~/bundles/common")
+@Scripts.Render("~/bundles/finder")
