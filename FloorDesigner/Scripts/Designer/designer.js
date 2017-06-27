@@ -21,9 +21,9 @@
         var currentAction;
         var gridPos;
         var draggedObj;
-        var resizeIsOn = false;
         var dragIsOn = false;
         var rotateIsOn = false;
+        var resizeIsOn = false;
         var currentDraggable = null;
         var actionsOfDraggable = {
             drag: "x,y",
@@ -400,9 +400,12 @@
 
                         var id = loadedItems[i].id;
                         var shape = loadedItems[i].shape;
+                        var w = loadedItems[i].width;
+                        var h = loadedItems[i].height;
                         var x = loadedItems[i].xpos;
                         var y = loadedItems[i].ypos;
                         var r = loadedItems[i].rotation;
+
 
                         var shapeSizeTableObj = findValueByKey(shapeSizes, shape);
 
@@ -414,8 +417,8 @@
                         draggedObj.x = x;
                         draggedObj.y = y;
                         draggedObj.r = r;
-                        draggedObj.w = shapeSizeTableObj.w * gridCellWidth;
-                        draggedObj.h = shapeSizeTableObj.h * gridCellWidth;
+                        draggedObj.w = w;
+                        draggedObj.h = h;
                         draggedObj.tox = shapeSizeTableObj.t.x;
                         draggedObj.toy = shapeSizeTableObj.t.y;
 
@@ -689,9 +692,7 @@
                 css({
                     position: 'absolute',
                     width: w,
-                    'max-width': w,
-                    height: h,
-                    'max-height': h
+                    height: h
                 }).
                 appendTo(stageItemsContainer);
 
@@ -704,21 +705,21 @@
                     .appendTo(item);
             }
 
-            var newOriginX = (item.data('box-w') ) * 0.5;
-            var newOriginY = (item.data('box-h') ) * 0.5;
+            var newOriginX = (item.data('box-w')) * 0.5;
+            var newOriginY = (item.data('box-h')) * 0.5;
 
             if (item.width() > item.height()) {
-                newOriginX = (item.data('box-w') ) - ( 0.5);
-                newOriginY = (item.data('box-h') ) - ( 0.5);
+                newOriginX = (item.data('box-w')) - (0.5);
+                newOriginY = (item.data('box-h')) - (0.5);
             }
 
             TweenLite.set(item, { transformOrigin: "" + newOriginX + "px " + newOriginY + "px" });
-
             TweenLite.set(item, { rotation: r });
             TweenLite.set(item.find('.shape-button'), { rotation: (360 - r) });
 
             item.attr('data-box-tox', newOriginX);
             item.attr('data-box-toy', newOriginY);
+
 
             removeDuplicate('.item-box');
 
@@ -744,9 +745,7 @@
             var deleteBtn = item.find('.shape-delete-btn');
             var resizeBtn = item.find('.shape-resize-btn');
 
-            resizeBtn.mousedown(onResizeBtnDown);
-            //resizeBtn.mouseup(onResizeBtnUp);
-            //resizeBtn.mouseleave(onResizeBtnUp);
+            createDraggableStageItem(resizeBtn, actionsOfDraggable.resize);
 
             dragBtn.mousedown(onDragBtnDown);
             dragBtn.mouseup(onDragBtnUp);
@@ -785,8 +784,8 @@
 
         function createLShapeRoom() {
 
-            var w = ( draggedObj.w) - (paddingLeft * 2);
-            var h = ( draggedObj.h) - (paddingTop * 2);
+            var w = (draggedObj.w) - (paddingLeft * 2);
+            var h = (draggedObj.h) - (paddingTop * 2);
 
             var itemBgnd = $("<div><div class='l-shape-top'/><div class='l-shape-bottom'/></div>").
                 attr('class', 'item-bgnd ' + draggedObj.sh).
@@ -799,7 +798,7 @@
             var top = itemBgnd.
                 find('.l-shape-top').
                 css({
-                    width: draggedObj.w /3 + (itemBorderSize + 1),
+                    width: draggedObj.w / 3 + (itemBorderSize + 1),
                     height: draggedObj.h / 3
                 });
 
@@ -942,28 +941,9 @@
         * SHAPE BUTTONS: RESIZE START
         */
 
-        function onResizeBtnDown(evt) {
-            if (!resizeIsOn) {
-
-                resizeIsOn = true;
-
-                var btn = $(evt.target);
-                var invBtn = btn.parent().find('.shape-drag-inv-btn');
-                var icon = btn.find('.shape-drag-inv-icon')
-
-                //TweenLite.set(invBtn, { scaleX: 5, scaleY: 5 })
-
-                var draggedItem = btn.parent().parent();
-                createDraggableStageItem(btn, draggedItem, actionsOfDraggable.resize);
-
-                deslectItems();
-                selectItem(draggedItem);
-            }
-        }
-
-         /**
-        * SHAPE BUTTONS: RESIZE END
-        */
+        /**
+       * SHAPE BUTTONS: RESIZE END
+       */
 
         /**
         * SHAPE BUTTONS: DRAG START
@@ -981,7 +961,7 @@
                 TweenLite.set(invBtn, { scaleX: 5, scaleY: 5 })
 
                 var draggedItem = btn.parent().parent();
-                createDraggableStageItem(invBtn, draggedItem, actionsOfDraggable.drag);
+                createDraggableStageItem(draggedItem, actionsOfDraggable.drag);
 
                 deslectItems();
                 selectItem(draggedItem);
@@ -1068,14 +1048,14 @@
 
                 if (draggedItem.width() > draggedItem.height()) {
 
-                    newOriginX = (draggedItem.data('box-w') ) - ( 0.5);
-                    newOriginY = (draggedItem.data('box-h') ) - ( 0.5);
+                    newOriginX = (draggedItem.data('box-w')) - (0.5);
+                    newOriginY = (draggedItem.data('box-h')) - (0.5);
                     TweenLite.set(draggedItem, { transformOrigin: "" + newOriginX + "px " + newOriginY + "px" });
 
                     draggedItem.attr('data-box-tox', newOriginX);
                     draggedItem.attr('data-box-toy', newOriginY);
                 }
-                createDraggableStageItem(invBtn, draggedItem, actionsOfDraggable.rotate);
+                createDraggableStageItem(draggedItem, actionsOfDraggable.rotate);
 
                 deslectItems();
                 selectItem(draggedItem);
@@ -1140,28 +1120,55 @@
         * CREATE DRAGGABLE STAGE ITEM START
         */
 
-        function createDraggableStageItem(btn, item, actionType) {
+        function createDraggableStageItem(dragQueen, actionType) {
 
-            var _stage = $('#stage');
-            var _snap = true;
-            var _liveSnap = false;
-            var _throwProp = true;
-            var _rotationSnap = 90;
+            var stage = $('#stage');
+            var snap = true;
+            var liveSnap = false;
+            var throwProp = true;
+            var rotationSnap = 90;
+
+            var resizeW;
+            var resizeH;
 
             switch (actionType) {
                 //Resize Me
                 case actionsOfDraggable.resize:
 
-
-                    Draggable.create($(btn), {
+                    Draggable.create(dragQueen, {
                         type: "x,y",
+                        throwProps: throwProp,
                         onPress: function (e) {
                             e.stopPropagation(); // cancel drag
                         },
                         onDrag: function (e) {
 
-                            //console.log(item)
-                            TweenLite.set(item.find('.item-bgnd '), { width: this.x, height: this.y });
+                            var item = dragQueen.parent();
+                                 deslectItems();
+                                 selectItem(item);
+
+                            resizeW = (item.attr('data-box-w') * 1) + this.x;
+                            resizeH = (item.attr('data-box-h') * 1) + this.y;
+
+                            TweenLite.set(dragQueen, { x: 0, y: 0 });
+                            TweenLite.set(item, { width: resizeW, height: resizeH });
+                            TweenLite.set(item.find('.item-bgnd '), { width: resizeW, height: resizeH });
+                        },
+                        onDragEnd: function (evt) {
+
+                            var item = dragQueen.parent();
+                            item.attr('data-box-w', resizeW);
+                            item.attr('data-box-h', resizeH);
+
+                        },
+                        onThrowComplete: function () {
+
+                            var item = dragQueen.parent();
+                            item.attr('data-box-w', resizeW);
+                            item.attr('data-box-h', resizeH);
+                            //this.disable();
+                            if (currentDraggable != null)
+                                currentDraggable[0].kill();
                         }
                     });
 
@@ -1169,22 +1176,22 @@
                 //Drag Me
                 case actionsOfDraggable.drag:
 
-                    currentDraggable = Draggable.create(item, {
-                        bounds: _stage,
+                    currentDraggable = Draggable.create(dragQueen, {
+                        type: actionType,
+                        bounds: stage,
                         autoScroll: 1,
                         edgeResistance: 0.65,
-                        type: actionType,
-                        throwProps: _throwProp,
+                        throwProps: throwProp,
                         //throwResistance: 0,
                         maxDuration: 0.3,
-                        liveSnap: _liveSnap,
+                        liveSnap: liveSnap,
                         snap: {
 
                             x: function (endValue) {
-                                return (_snap || _liveSnap) ? Math.round(endValue / gridCellWidth) * gridCellWidth : endValue;
+                                return (snap || liveSnap) ? Math.round(endValue / gridCellWidth) * gridCellWidth : endValue;
                             },
                             y: function (endValue) {
-                                return (_snap || _liveSnap) ? Math.round(endValue / gridCellHeight) * gridCellHeight : endValue;
+                                return (snap || liveSnap) ? Math.round(endValue / gridCellHeight) * gridCellHeight : endValue;
                             }
                         },
                         //onPress: function (evt) {
@@ -1193,25 +1200,24 @@
                         onDrag: function () { },
                         onThrowComplete: function () {
 
-                            var _item = $(item);
-                            _item.attr('data-box-x', Math.ceil(this.x));
-                            _item.attr('data-box-y', Math.ceil(this.y));
+                            var item = $(dragQueen);
+                            item.attr('data-box-x', Math.ceil(this.x));
+                            item.attr('data-box-y', Math.ceil(this.y));
                             //this.disable();
                             if (currentDraggable != null)
                                 currentDraggable[0].kill();
                         }
                     });
 
-
                     break;
-
+                //Rotate me
                 case actionsOfDraggable.rotate:
 
-                    currentDraggable = Draggable.create(item, {
+                    currentDraggable = Draggable.create(dragQueen, {
                         type: "rotation",
-                        throwProps: _throwProp,
+                        throwProps: throwProp,
                         snap: function (endValue) {
-                            return Math.round(endValue / _rotationSnap) * _rotationSnap;
+                            return Math.round(endValue / rotationSnap) * rotationSnap;
                         },
                         //onPress: function (evt) {
                         //    evt.stopPropagation(); // cancel drag
@@ -1220,8 +1226,8 @@
                         onThrowUpdate: setNumberRotation,
                         onThrowComplete: function (evt) {
 
-                            var _item = $(item);
-                            _item.attr('data-box-r', (this.rotation % 360));
+                            var item = $(dragQueen);
+                            item.attr('data-box-r', (this.rotation % 360));
                             //this.disable();
 
                             if (currentDraggable != null)
@@ -1360,15 +1366,15 @@
 
                 $('.item-box').each(function (i, val) {
 
-                    var itemBox = $(val);
+                    var itemBox = $(val)
 
                     var room = {
-                        shape: itemBox.data('box-shape'),
-                        width: itemBox.data('box-w'),
-                        height: itemBox.data('box-h'),
-                        xpos: itemBox.data('box-x'),
-                        ypos: itemBox.data('box-y'),
-                        rotation: itemBox.data('box-r'),
+                        shape: itemBox.attr('data-box-shape'),
+                        width: itemBox.attr('data-box-w'),
+                        height: itemBox.attr('data-box-h'),
+                        xpos: itemBox.attr('data-box-x'),
+                        ypos: itemBox.attr('data-box-y'),
+                        rotation: itemBox.attr('data-box-r'),
                         floorId: floorCfg.id
                     };
 

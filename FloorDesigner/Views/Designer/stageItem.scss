@@ -10,6 +10,8 @@ $selectedBorderColor: $colorBlue;
 #stage-items-container {
     .item-box {
 
+        background-color:blue !important;
+
         &.item-selected {
             .item-bgnd {
                 &.shape-room-sqr-2x2,
@@ -203,7 +205,7 @@ $selectedBorderColor: $colorBlue;
                 position: absolute;
                 bottom: -$btnPosition;
                 right: -$btnPosition;
-                cursor: nw-resize;
+                cursor: nw-resize !important;
                 /*display: none;*/
                 .shape-resize-inv-btn {
                     /* position: relative; */

@@ -15,12 +15,10 @@ namespace FloorDesigner.Context
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-
-            modelBuilder.Entity<Floor>().HasKey(t => t.Id);
-
-            modelBuilder.Entity<Room>().HasKey(t => t.Id);
-            modelBuilder.Entity<Room>().HasRequired(t => t.Floor).WithMany(t => t.Rooms).WillCascadeOnDelete();
+            //modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+            //modelBuilder.Entity<Floor>().HasKey(t => t.Id);
+            //modelBuilder.Entity<Room>().HasKey(t => t.Id);
+            //modelBuilder.Entity<Room>().HasRequired(t => t.Floor).WithMany(t => t.Rooms).WillCascadeOnDelete();
         }
     }
 }
