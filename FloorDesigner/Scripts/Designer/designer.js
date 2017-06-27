@@ -57,10 +57,10 @@
             $(window).click(function (evt) {
 
                 if (debugMode) {
-                    console.log(evt.target.id);
-                    console.log(evt.target.className);
-                    console.log($(evt.target));
-                    console.log($(evt.currentTarget));
+                    //console.log(evt.target.id);
+                    //console.log(evt.target.className);
+                    //console.log($(evt.target));
+                    //console.log($(evt.currentTarget));
                 }
 
                 onDeselectRoom(evt.target);
@@ -942,7 +942,7 @@
         * SHAPE BUTTONS: RESIZE START
         */
 
-        function onResizeBtnDown() {
+        function onResizeBtnDown(evt) {
             if (!resizeIsOn) {
 
                 resizeIsOn = true;
@@ -951,10 +951,10 @@
                 var invBtn = btn.parent().find('.shape-drag-inv-btn');
                 var icon = btn.find('.shape-drag-inv-icon')
 
-                TweenLite.set(invBtn, { scaleX: 5, scaleY: 5 })
+                //TweenLite.set(invBtn, { scaleX: 5, scaleY: 5 })
 
                 var draggedItem = btn.parent().parent();
-                createDraggableStageItem(draggedItem, actionsOfDraggable.resize);
+                createDraggableStageItem(btn, draggedItem, actionsOfDraggable.resize);
 
                 deslectItems();
                 selectItem(draggedItem);
@@ -981,7 +981,7 @@
                 TweenLite.set(invBtn, { scaleX: 5, scaleY: 5 })
 
                 var draggedItem = btn.parent().parent();
-                createDraggableStageItem(draggedItem, actionsOfDraggable.drag);
+                createDraggableStageItem(invBtn, draggedItem, actionsOfDraggable.drag);
 
                 deslectItems();
                 selectItem(draggedItem);
@@ -1075,7 +1075,7 @@
                     draggedItem.attr('data-box-tox', newOriginX);
                     draggedItem.attr('data-box-toy', newOriginY);
                 }
-                createDraggableStageItem(draggedItem, actionsOfDraggable.rotate);
+                createDraggableStageItem(invBtn, draggedItem, actionsOfDraggable.rotate);
 
                 deslectItems();
                 selectItem(draggedItem);
@@ -1140,7 +1140,7 @@
         * CREATE DRAGGABLE STAGE ITEM START
         */
 
-        function createDraggableStageItem(item, actionType) {
+        function createDraggableStageItem(btn, item, actionType) {
 
             var _stage = $('#stage');
             var _snap = true;
@@ -1149,6 +1149,23 @@
             var _rotationSnap = 90;
 
             switch (actionType) {
+                //Resize Me
+                case actionsOfDraggable.resize:
+
+
+                    Draggable.create($(btn), {
+                        type: "x,y",
+                        onPress: function (e) {
+                            e.stopPropagation(); // cancel drag
+                        },
+                        onDrag: function (e) {
+
+                            //console.log(item)
+                            TweenLite.set(item.find('.item-bgnd '), { width: this.x, height: this.y });
+                        }
+                    });
+
+                    break;
                 //Drag Me
                 case actionsOfDraggable.drag:
 
