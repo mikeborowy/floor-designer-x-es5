@@ -157,7 +157,10 @@
     <Content Include="app\assets\shapes\room_squa_3x3.png" />
     <Content Include="app\assets\world.jpg" />
     <Content Include="app\components\App.js" />
-    <Content Include="app\components\designerScreen\searchPanel.js" />
+    <Content Include="app\components\designerScreen\searchPanel\searchPanelFloorListItem.js" />
+    <Content Include="app\components\designerScreen\searchPanel\searchPanel.js" />
+    <Content Include="app\components\designerScreen\searchPanel\searchPanelForm.js" />
+    <Content Include="app\components\designerScreen\searchPanel\searchPanelFloorList.js" />
     <Content Include="app\components\designerScreen\shapesPanel.js" />
     <Content Include="app\components\designerScreen\stage.js" />
     <Content Include="app\components\designerScreen\toolbar.js" />
@@ -198,6 +201,7 @@
     <Content Include="app\assets\sass\mixins.scss" />
     <Content Include="app\index.scss" />
     <Content Include="app\assets\sass\colors.scss" />
+    <Content Include="app\components\designerScreen\searchPanel\searchPanel.scss" />
     <None Include="compilerconfig.json" />
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>

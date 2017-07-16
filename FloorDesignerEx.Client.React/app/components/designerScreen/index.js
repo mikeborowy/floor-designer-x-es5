@@ -1,6 +1,4 @@
 ﻿import * as React from 'react';
-import 'react-mdl/extra/material.css';
-import 'react-mdl/extra/material.js';
 import Toolbar from './toolbar';
 import Worspace from './workspace';
 
@@ -10,7 +8,6 @@ class DesignerScreen extends React.Component {
         super(props)
 
         console.log('DesignerScreen', props.appCfg);
-
     }
 
     render() {
@@ -21,5 +18,6 @@ class DesignerScreen extends React.Component {
             </div>
         );
     }
+
 }
 export default DesignerScreen;

@@ -225,6 +225,9 @@
     margin: 0px !important; } }
 
 /*Toolbar END*/
+#floors-list .floor-list-item {
+  margin: 0 25px 0 25px; }
+
 #shapes-panel {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
