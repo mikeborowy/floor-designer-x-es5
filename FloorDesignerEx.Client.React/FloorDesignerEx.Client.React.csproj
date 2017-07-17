@@ -155,13 +155,16 @@
     <Content Include="app\assets\shapes\room_rect_3x2.png" />
     <Content Include="app\assets\shapes\room_squa_2x2.png" />
     <Content Include="app\assets\shapes\room_squa_3x3.png" />
+    <Content Include="app\assets\shapes\shapesCfg.js" />
     <Content Include="app\assets\world.jpg" />
     <Content Include="app\components\App.js" />
     <Content Include="app\components\designerScreen\searchPanel\searchPanelFloorListItem.js" />
     <Content Include="app\components\designerScreen\searchPanel\searchPanel.js" />
     <Content Include="app\components\designerScreen\searchPanel\searchPanelForm.js" />
     <Content Include="app\components\designerScreen\searchPanel\searchPanelFloorList.js" />
-    <Content Include="app\components\designerScreen\shapesPanel.js" />
+    <Content Include="app\components\designerScreen\shapesPanel\imagesCfg.js" />
+    <Content Include="app\components\designerScreen\shapesPanel\shapesPanel.js" />
+    <Content Include="app\components\designerScreen\shapesPanel\shapesPanelListItem.js" />
     <Content Include="app\components\designerScreen\stage.js" />
     <Content Include="app\components\designerScreen\toolbar.js" />
     <Content Include="app\components\designerScreen\workspace.js" />
@@ -194,7 +197,7 @@
     <Content Include="app\components\helloWorld\.helloworld.scss" />
     <Content Include="Content\Site.scss" />
     <Content Include="app\components\designerScreen\index.scss" />
-    <Content Include="app\components\designerScreen\shapesPanel.scss" />
+    <Content Include="app\components\designerScreen\shapesPanel\shapesPanel.scss" />
     <Content Include="app\components\designerScreen\stage.scss" />
     <Content Include="app\components\designerScreen\toolbar.scss" />
     <Content Include="app\components\designerScreen\stageItem.scss" />

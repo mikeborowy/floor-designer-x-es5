@@ -10,11 +10,13 @@ class DesignerScreen extends React.Component {
         console.log('DesignerScreen', props.appCfg);
     }
 
+    
+
     render() {
         return (
             <div id="designer-screen">
-                <Toolbar/>
-                <Worspace/>
+                <Toolbar />
+                <Worspace />
             </div>
         );
     }
