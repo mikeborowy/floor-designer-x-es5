@@ -228,6 +228,15 @@
 #floors-list .floor-list-item {
   margin: 0 25px 0 25px; }
 
+#floor-create .mdl-list__item-primary-content {
+  padding: 0 25px 0 25px !important; }
+
+#floor-create .mdl-list__item-secondary-content {
+  padding: 0 25px 0 25px !important; }
+
+#search-panel-form-result {
+  padding: 0 25px 0 25px !important; }
+
 #shapes-panel {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;

@@ -1,6 +1,6 @@
 ﻿import * as React from 'react';
 import { shapesCfg } from '../../../assets/shapes/shapesCfg';
-import ShapeItem from './shapesPanelListItem';
+import ShapesPanelListItem from './shapesPanelListItem';
 
 const ShapesPanel = (props) => {
 
@@ -46,13 +46,10 @@ const ShapesPanel = (props) => {
     return (
         <div id="shapes-panel">
             <div id="shapes-box">
-                <ul id="shapes-list" class="demo-list-two mdl-list ">
+                <ul id="shapes-list" className="demo-list-two mdl-list ">
                     {shapesList.map(function (shapeItem) {
-                        return (
-                            <ShapeItem key={shapeItem.id} shape={shapeItem} />
-                        )
+                        return <ShapesPanelListItem key={shapeItem.id} shape={shapeItem} />
                     })}
-
                 </ul>
             </div>
         </div>

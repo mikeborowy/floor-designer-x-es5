@@ -158,10 +158,12 @@
     <Content Include="app\assets\shapes\shapesCfg.js" />
     <Content Include="app\assets\world.jpg" />
     <Content Include="app\components\App.js" />
+    <Content Include="app\components\designerScreen\searchPanel\searchPanelCreateFloor.js" />
     <Content Include="app\components\designerScreen\searchPanel\searchPanelFloorListItem.js" />
     <Content Include="app\components\designerScreen\searchPanel\searchPanel.js" />
     <Content Include="app\components\designerScreen\searchPanel\searchPanelForm.js" />
     <Content Include="app\components\designerScreen\searchPanel\searchPanelFloorList.js" />
+    <Content Include="app\components\designerScreen\searchPanel\searchPanelFormResult.js" />
     <Content Include="app\components\designerScreen\shapesPanel\imagesCfg.js" />
     <Content Include="app\components\designerScreen\shapesPanel\shapesPanel.js" />
     <Content Include="app\components\designerScreen\shapesPanel\shapesPanelListItem.js" />

@@ -1,5 +1,7 @@
 ﻿import * as React from 'react';
 import SearchPanelForm from './searchPanelForm';
+import SearchPanelFormResult from './searchPanelFormResult';
+import SearchPanelCreateFloor from './searchPanelCreateFloor';
 import SearchPanelFloorList from './searchPanelFloorList';
 
 class SearchPanel extends React.Component {
@@ -25,8 +27,14 @@ class SearchPanel extends React.Component {
                 <group className="designer-toolbar-group">
                     <span className="mdl-layout-title">Select Office</span>
                 </group>
-                <SearchPanelForm />
-                <SearchPanelFloorList floorList={this.state.floorList} />
+                <group className="designer-toolbar-group">
+                    <SearchPanelForm />
+                </group>
+                <group className="designer-toolbar-group">
+                    <SearchPanelFormResult/>
+                    <SearchPanelCreateFloor/>
+                    <SearchPanelFloorList floorList={this.state.floorList} />
+                </group>
             </div>
         )
     }
