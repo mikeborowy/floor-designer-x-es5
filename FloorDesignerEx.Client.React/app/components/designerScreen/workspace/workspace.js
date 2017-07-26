@@ -1,8 +1,8 @@
 ﻿import * as React from 'react';
 import $ from 'jquery';
 
-import ShapesPanel from './shapesPanel/shapesPanel';
-import Stage from './stage';
+import ShapesPanel from '../shapesPanel/shapesPanel';
+import Stage from '../stage/stage';
 
 class Workspace extends React.Component {
 

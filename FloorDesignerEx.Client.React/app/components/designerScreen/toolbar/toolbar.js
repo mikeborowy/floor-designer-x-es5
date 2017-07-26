@@ -1,6 +1,6 @@
 ﻿import * as React from 'react';
-import LogoImg from '../../assets/logo/logo.png';
-import SearchPanel from './searchPanel/searchPanel';
+import LogoImg from '../../../assets/logo/logo.png';
+import SearchPanel from '../searchPanel/searchPanel';
 
 const Toolbar = () => {
 

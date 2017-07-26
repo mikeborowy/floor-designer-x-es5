@@ -167,9 +167,10 @@
     <Content Include="app\components\designerScreen\shapesPanel\imagesCfg.js" />
     <Content Include="app\components\designerScreen\shapesPanel\shapesPanel.js" />
     <Content Include="app\components\designerScreen\shapesPanel\shapesPanelListItem.js" />
-    <Content Include="app\components\designerScreen\stage.js" />
-    <Content Include="app\components\designerScreen\toolbar.js" />
-    <Content Include="app\components\designerScreen\workspace.js" />
+    <Content Include="app\components\designerScreen\common\roomsCfg.js" />
+    <Content Include="app\components\designerScreen\stage\stage.js" />
+    <Content Include="app\components\designerScreen\toolbar\toolbar.js" />
+    <Content Include="app\components\designerScreen\workspace\workspace.js" />
     <Content Include="app\components\designerScreen\index.js" />
     <Content Include="app\components\helloWorld\HelloWorld.js" />
     <Content Include="app\constants\appCfg.js" />
@@ -200,13 +201,14 @@
     <Content Include="Content\Site.scss" />
     <Content Include="app\components\designerScreen\index.scss" />
     <Content Include="app\components\designerScreen\shapesPanel\shapesPanel.scss" />
-    <Content Include="app\components\designerScreen\stage.scss" />
-    <Content Include="app\components\designerScreen\toolbar.scss" />
-    <Content Include="app\components\designerScreen\stageItem.scss" />
+    <Content Include="app\components\designerScreen\stage\stage.scss" />
+    <Content Include="app\components\designerScreen\toolbar\toolbar.scss" />
+    <Content Include="app\components\designerScreen\stage\stageItem.scss" />
     <Content Include="app\assets\sass\mixins.scss" />
     <Content Include="app\index.scss" />
     <Content Include="app\assets\sass\colors.scss" />
     <Content Include="app\components\designerScreen\searchPanel\searchPanel.scss" />
+    <Content Include="app\components\designerScreen\workspace\workspace.scss" />
     <None Include="compilerconfig.json" />
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>

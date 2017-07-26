@@ -27,10 +27,11 @@
 
 /*Designer Screen START*/
 @import 'components/designerScreen/index.scss';
-@import 'components/DesignerScreen/toolbar.scss';
+@import 'components/DesignerScreen/toolbar/toolbar.scss';
 @import 'components/DesignerScreen/searchPanel/searchPanel.scss';
+@import 'components/DesignerScreen/workspace/workspace.scss';
 @import 'components/DesignerScreen/shapesPanel/shapesPanel.scss';
-@import 'components/DesignerScreen/stage.scss';
-@import 'components/DesignerScreen/stageItem.scss';
+@import 'components/DesignerScreen/stage/stage.scss';
+@import 'components/DesignerScreen/stage/stageItem.scss';
 /*Designer Screen END*/
 
