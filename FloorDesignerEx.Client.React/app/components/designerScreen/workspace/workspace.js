@@ -12,9 +12,9 @@ class Workspace extends React.Component {
 
     updateDimensions() {
 
-        var toolbarHeight = $("#designer-toolbar").height();
-        var windowWidth = $(window).width();
-        var windowHeight = $(window).height();
+        let toolbarHeight = $("#designer-toolbar").height();
+        let windowWidth = $(window).width();
+        let windowHeight = $(window).height();
 
         $("#shapes-panel").height(
             windowHeight - toolbarHeight

@@ -1,94 +1,104 @@
 ﻿import * as React from 'react';
 import $ from 'jquery';
 import roomsCfg from '../common/roomsCfg';
+import BlueprintImg from '../../../assets/blueprints/bgnd_12x10.jpg';
 
-const Stage = (props) => {
+class Stage extends React.Component {
 
-    const floorCfg = {
-        id: 4,
-        officeId: 1,
-        name: "Floor 1",
-        width: 15,
-        height: 10,
-        xpos: 0,
-        ypos: 0,
-        image: null,
-        rooms: []
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            floorCfg: {
+                id: 4,
+                officeId: 1,
+                name: "Floor 1",
+                width: 15,
+                height: 10,
+                xpos: 0,
+                ypos: 0,
+                image: null,
+                rooms: []
+            },
+            roomCfg: {
+                gridCellWidth: roomsCfg().CELL_WIDTH,
+                gridCellHeight: roomsCfg().CELL_HEIGHT,
+                shapeSizes: roomsCfg().SHAPES_SIZES,
+                paddingLeft: roomsCfg().SHAPE_CFG,
+                paddingTop: roomsCfg().SHAPE_CFG.PADDING_TOP,
+                itemBorderSize: roomsCfg().SHAPE_CFG.BORDER_SIZE
+            },
+            loadedItems: {},
+            imgPath: BlueprintImg,
+            draggedObj: null
+        }
+
+        this.stageInit = this.stageInit.bind(this);
+        this.createGrid = this.createGrid.bind(this);
+        this.clearStage = this.clearStage.bind(this);
+
     }
 
-    let loadedItems = {};
-    const imgPath = "../Images/blueprints/bgnd_12x10.jpg";
+    stageInit() {
 
-    console.log(roomsCfg())
+        let { floorCfg, roomCfg } = this.state;
 
-    //const gridCellWidth = roomsCfg.CELL_WIDTH;
-    //const gridCellHeight = roomsCfg.CELL_HEIGHT;
-    //const shapeSizes = roomsCfg.SHAPES_SIZES;
-    //const paddingLeft = roomsCfg.SHAPE_CFG;
+        $('#stage').width(floorCfg.width * roomCfg.gridCellWidth);
+        $('#stage').height(floorCfg.height * roomCfg.gridCellHeight);
 
+        $('#stage-items-container').width(floorCfg.width * roomCfg.gridCellWidth);
+        $('#stage-items-container').height(floorCfg.height * roomCfg.gridCellHeight);
 
-    //const paddingTop = roomsCfg.SHAPE_CFG.PADDING_TOP;
-    //const itemBorderSize = roomsCfg.SHAPE_CFG.BORDER_SIZE;
+        const img = $('#stage').find('img');
+        img.attr('src', floorCfg.image);
+        img.width(floorCfg.width * roomCfg.gridCellWidth);
+        img.height(floorCfg.height * roomCfg.gridCellHeight);
 
-    let draggedObj;
+        this.createGrid(roomCfg.gridCellWidth, roomCfg.gridCellHeight, floorCfg.width, floorCfg.height);
+    }
 
-    //function stageInit() {
+    createGrid(gridCellWidth, gridCellHeight, gridColumns, gridRows) {
 
-    //    $('#stage').width(floorCfg.width * gridCellWidth);
-    //    $('#stage').height(floorCfg.height * gridCellHeight);
+        const _stage = $('#stage');
+        const _stageGridBgnd = $('#stage-grid-bgnd');
+        const _stageGridLive = $('#stage-grid-live');
 
-    //    $('#stage-items-container').width(floorCfg.width * gridCellWidth);
-    //    $('#stage-items-container').height(floorCfg.height * gridCellHeight);
+        const w = 1;
+        const h = 1;
 
-    //    const img = $('#stage').find('img');
-    //    img.attr('src', floorCfg.image);
-    //    img.width(floorCfg.width * gridCellWidth);
-    //    img.height(floorCfg.height * gridCellHeight);
+        for (let i = 0; i < gridRows * gridColumns; i++) {
 
-    //    createGrid(gridCellWidth, gridCellHeight, floorCfg.width, floorCfg.height);
-    //}
+            let x = (i * gridCellWidth) % (gridColumns * gridCellWidth);
+            let y = Math.floor(i / gridColumns) * gridCellHeight;
 
-    //function createGrid(gridCellWidth, gridCellHeight, gridColumns, gridRows) {
+            $("<div/>").
+                attr('id', i).
+                attr('class', 'stage-board-field-highlight').
+                css({
+                    position: "absolute",
+                    width: (gridCellWidth * w),
+                    height: (gridCellHeight * h),
+                    top: y, left: x
+                }).
+                prependTo(_stageGridLive);
 
-    //    const _stage = $('#stage');
-    //    const _stageGridBgnd = $('#stage-grid-bgnd');
-    //    const _stageGridLive = $('#stage-grid-live');
+            $("<div></div>").
+                attr('id', i).
+                attr('class', 'stage-board-field').
+                css({
+                    position: "absolute",
+                    //boxShadow: 'inset 0px 0px 0px 10px #f00',
+                    border: "1px dashed rgba(0,0,0,0.05)",
+                    width: gridCellWidth,
+                    height: gridCellHeight,
+                    top: y, left: x
+                })
+                .prependTo(_stageGridBgnd);
+        }
 
-    //    const w = 1;
-    //    const h = 1;
-
-    //    for (let i = 0; i < gridRows * gridColumns; i++) {
-
-    //        x = (i * gridCellWidth) % (gridColumns * gridCellWidth);
-    //        y = Math.floor(i / gridColumns) * gridCellHeight;
-
-    //        $("<div/>").
-    //            attr('id', i).
-    //            attr('class', 'stage-board-field-highlight').
-    //            css({
-    //                position: "absolute",
-    //                width: (gridCellWidth * w),
-    //                height: (gridCellHeight * h),
-    //                top: y, left: x
-    //            }).
-    //            prependTo(_stageGridLive);
-
-    //        $("<div></div>").
-    //            attr('id', i).
-    //            attr('class', 'stage-board-field').
-    //            css({
-    //                position: "absolute",
-    //                //boxShadow: 'inset 0px 0px 0px 10px #f00',
-    //                border: "1px dashed rgba(0,0,0,0.05)",
-    //                width: gridCellWidth,
-    //                height: gridCellHeight,
-    //                top: y, left: x
-    //            })
-    //            .prependTo(_stageGridBgnd);
-    //    }
-
-    //    loadItems();
-    //}
+        console.log("done")
+        //loadItems();
+    }
 
     //function loadItems() {
 
@@ -135,14 +145,14 @@ const Stage = (props) => {
     //    }
     //}
 
-    function clearStage() {
+    clearStage() {
 
         $('#stage-grid-bgnd').html('');
         $('#stage-grid-live').html('');
         $('#stage-items-container').html('');
     }
 
-    function findValueByKey(array, key) {
+    findValueByKey(array, key) {
 
         for (let i = 0; i < array.length; i++) {
 
@@ -154,19 +164,65 @@ const Stage = (props) => {
         return null;
     }
 
-    return (
-        <div id="stage-container">
-            <div id="stage-top"></div>
-            <div id="stage">
-                <img id="stage-bgnd" src={imgPath} />
-                <div id="stage-grid-bgnd"></div>
-                <div id="stage-grid-live"></div>
-                <div id="stage-items-container"></div>
-            </div>
-            <div id="stage-bottom"></div>
-        </div>
-    )
+    updateDimensions() {
 
+        let toolbarHeight = $("#designer-toolbar").height();
+        let windowWidth = $(window).width();
+        let windowHeight = $(window).height();
+
+        $("#stage-container").height(
+            windowHeight - toolbarHeight
+        )
+
+        let parentHeight = $("#stage-container").height();
+        let parentWidth = $("#stage-container").width();
+
+        if ($("#stage").height() <= $("#stage-container").height()) {
+
+            let posY = (parentHeight / 2 - $("#stage").height() / 2);
+            TweenLite.to($("#stage"), 0, { y: posY })
+        }
+        else {
+            TweenLite.to($("#stage"), 0, { y: 0 })
+        }
+
+        if ($("#stage").width() <= $("#stage-container").width()) {
+            let posX = (parentWidth / 2 - $("#stage").width() / 2)
+            TweenLite.to($("#stage"), 0, { x: posX })
+        }
+        else {
+            TweenLite.to($("#stage"), 0, { x: 0 })
+        }
+    }
+
+    componentWillMount() {
+        this.updateDimensions();
+    }
+
+    componentDidMount() {
+        this.stageInit();
+        this.updateDimensions();
+        window.addEventListener("resize", this.updateDimensions.bind(this));
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("resize", this.updateDimensions.bind(this));
+    } 
+
+    render() {
+        return (
+            <div id="stage-container">
+                <div id="stage-top"></div>
+                <div id="stage">
+                    <img id="stage-bgnd" src={this.state.imgPath} />
+                    <div id="stage-grid-bgnd"></div>
+                    <div id="stage-grid-live"></div>
+                    <div id="stage-items-container"></div>
+                </div>
+                <div id="stage-bottom"></div>
+            </div>
+        )
+    }
 }
 
 export default Stage;
