@@ -1,6 +1,6 @@
 ﻿import * as React from 'react';
 import $ from 'jquery';
-import roomsCfg from '../common/roomsCfg';
+import RoomsCfg from '../common/roomsCfg';
 import BlueprintImg from '../../../assets/blueprints/bgnd_12x10.jpg';
 
 class Stage extends React.Component {
@@ -21,12 +21,12 @@ class Stage extends React.Component {
                 rooms: []
             },
             roomCfg: {
-                gridCellWidth: roomsCfg().CELL_WIDTH,
-                gridCellHeight: roomsCfg().CELL_HEIGHT,
-                shapeSizes: roomsCfg().SHAPES_SIZES,
-                paddingLeft: roomsCfg().SHAPE_CFG,
-                paddingTop: roomsCfg().SHAPE_CFG.PADDING_TOP,
-                itemBorderSize: roomsCfg().SHAPE_CFG.BORDER_SIZE
+                gridCellWidth: RoomsCfg().CELL_WIDTH,
+                gridCellHeight: RoomsCfg().CELL_HEIGHT,
+                shapeSizes: RoomsCfg().SHAPES_SIZES,
+                paddingLeft: RoomsCfg().SHAPE_CFG,
+                paddingTop: RoomsCfg().SHAPE_CFG.PADDING_TOP,
+                itemBorderSize: RoomsCfg().SHAPE_CFG.BORDER_SIZE
             },
             loadedItems: {},
             imgPath: BlueprintImg,

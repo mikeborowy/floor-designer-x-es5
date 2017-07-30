@@ -164,7 +164,7 @@
     <Content Include="app\components\designerScreen\searchPanel\searchPanelForm.js" />
     <Content Include="app\components\designerScreen\searchPanel\searchPanelFloorList.js" />
     <Content Include="app\components\designerScreen\searchPanel\searchPanelFormResult.js" />
-    <Content Include="app\components\designerScreen\shapesPanel\imagesCfg.js" />
+    <Content Include="app\components\designerScreen\shapesPanel\shapesCfg.js" />
     <Content Include="app\components\designerScreen\shapesPanel\shapesPanel.js" />
     <Content Include="app\components\designerScreen\shapesPanel\shapesPanelListItem.js" />
     <Content Include="app\components\designerScreen\common\roomsCfg.js" />

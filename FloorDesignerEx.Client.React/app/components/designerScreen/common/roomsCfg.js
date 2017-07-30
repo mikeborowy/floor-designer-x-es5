@@ -1,4 +1,6 @@
-﻿const config = () => {
+﻿import { shapesCfg } from '../../../assets/shapes/shapesCfg';
+
+const roomsCfg = () => {
 
     let roomsCfg = {}
     roomsCfg.CELL_WIDTH = 60;
@@ -17,7 +19,8 @@
                 t: {
                     x: roomsCfg.CELL_WIDTH,
                     y: roomsCfg.CELL_HEIGHT
-                }
+                },
+                thumb: shapesCfg.sq_2x2
             }
         },
         {
@@ -28,7 +31,8 @@
                 t: {
                     x: (2 * roomsCfg.CELL_WIDTH) - (roomsCfg.CELL_WIDTH * 0.5),
                     y: (2 * roomsCfg.CELL_HEIGHT) - (roomsCfg.CELL_HEIGHT * 0.5)
-                }
+                },
+                thumb: shapesCfg.sq_3x3
             }
         },
         {
@@ -39,7 +43,8 @@
                 t: {
                     x: (3 * roomsCfg.CELL_WIDTH) - (roomsCfg.CELL_WIDTH * 0.5),
                     y: (2 * roomsCfg.CELL_HEIGHT) - (roomsCfg.CELL_HEIGHT * 0.5)
-                }
+                },
+                thumb: shapesCfg.rq_3x2
             }
         },
         {
@@ -50,7 +55,8 @@
                 t: {
                     x: (3 * roomsCfg.CELL_WIDTH) - (roomsCfg.CELL_WIDTH * 0.5),
                     y: (2 * roomsCfg.CELL_HEIGHT) - (roomsCfg.CELL_HEIGHT * 0.5)
-                }
+                },
+                thumb: shapesCfg.ls_3x3
             }
         }
     ];
@@ -58,4 +64,4 @@
     return (roomsCfg)
 }
 
-export default config;
+export default roomsCfg;

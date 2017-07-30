@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "3b44abd13ab01b939a77"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "cbc0c2e34ff33808e35c"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -597,7 +597,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "3b44abd13ab01b939a77"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "cbc0c2e34ff33808e35c"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -31268,7 +31268,10 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	var config = function config() {
+	
+	var _shapesCfg = __webpack_require__(/*! ../../../assets/shapes/shapesCfg */ 121);
+	
+	var roomsCfg = function roomsCfg() {
 	
 	    var roomsCfg = {};
 	    roomsCfg.CELL_WIDTH = 60;
@@ -31285,7 +31288,8 @@
 	            t: {
 	                x: roomsCfg.CELL_WIDTH,
 	                y: roomsCfg.CELL_HEIGHT
-	            }
+	            },
+	            thumb: _shapesCfg.shapesCfg.sq_2x2
 	        }
 	    }, {
 	        "shape-room-sqr-3x3": {
@@ -31294,7 +31298,8 @@
 	            t: {
 	                x: 2 * roomsCfg.CELL_WIDTH - roomsCfg.CELL_WIDTH * 0.5,
 	                y: 2 * roomsCfg.CELL_HEIGHT - roomsCfg.CELL_HEIGHT * 0.5
-	            }
+	            },
+	            thumb: _shapesCfg.shapesCfg.sq_3x3
 	        }
 	    }, {
 	        "shape-room-rct-3x2": {
@@ -31303,7 +31308,8 @@
 	            t: {
 	                x: 3 * roomsCfg.CELL_WIDTH - roomsCfg.CELL_WIDTH * 0.5,
 	                y: 2 * roomsCfg.CELL_HEIGHT - roomsCfg.CELL_HEIGHT * 0.5
-	            }
+	            },
+	            thumb: _shapesCfg.shapesCfg.rq_3x2
 	        }
 	    }, {
 	        "shape-room-l-3x2": {
@@ -31312,14 +31318,15 @@
 	            t: {
 	                x: 3 * roomsCfg.CELL_WIDTH - roomsCfg.CELL_WIDTH * 0.5,
 	                y: 2 * roomsCfg.CELL_HEIGHT - roomsCfg.CELL_HEIGHT * 0.5
-	            }
+	            },
+	            thumb: _shapesCfg.shapesCfg.ls_3x3
 	        }
 	    }];
 	
 	    return roomsCfg;
 	};
 	
-	exports.default = config;
+	exports.default = roomsCfg;
 	
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(/*! ./~/react-hot-loader/makeExportsHot.js */ 11); if (makeExportsHot(module, __webpack_require__(/*! react */ 2))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "roomsCfg.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../../../~/webpack/buildin/module.js */ 12)(module)))
@@ -31901,7 +31908,9 @@
 	
 	var React = _interopRequireWildcard(_react);
 	
-	var _shapesCfg = __webpack_require__(/*! ../../../assets/shapes/shapesCfg */ 121);
+	var _shapesCfg = __webpack_require__(/*! ./shapesCfg */ 206);
+	
+	var _shapesCfg2 = _interopRequireDefault(_shapesCfg);
 	
 	var _shapesPanelListItem = __webpack_require__(/*! ./shapesPanelListItem */ 132);
 	
@@ -31913,39 +31922,7 @@
 	
 	var ShapesPanel = function ShapesPanel(props) {
 	
-	    var shapesList = [{
-	        id: '1',
-	        name: 'shape-room-sqr-2x2',
-	        image: _shapesCfg.shapesCfg.sq_2x2,
-	        width: 2,
-	        height: 2,
-	        desc: 'Square Room',
-	        isDraggable: true
-	    }, {
-	        id: '2',
-	        name: 'shape-room-sqr-3x3',
-	        image: _shapesCfg.shapesCfg.sq_3x3,
-	        width: 3,
-	        height: 2,
-	        desc: 'Rectangle Room',
-	        isDraggable: true
-	    }, {
-	        id: '3',
-	        name: 'shape-room-rect-3x3',
-	        image: _shapesCfg.shapesCfg.rq_3x2,
-	        width: 3,
-	        height: 3,
-	        desc: 'Square Room',
-	        isDraggable: true
-	    }, {
-	        id: '4',
-	        name: 'shape-room-l-3x2',
-	        image: _shapesCfg.shapesCfg.ls_3x3,
-	        width: 3,
-	        height: 3,
-	        desc: 'Square Room',
-	        isDraggable: true
-	    }];
+	    var shapesList = (0, _shapesCfg2.default)();
 	
 	    return React.createElement(
 	        'div',
@@ -42225,6 +42202,64 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __webpack_require__.p + "../Images/bgnd_12x10.jpg";
+
+/***/ },
+/* 206 */
+/*!****************************************************************!*\
+  !*** ./app/components/designerScreen/shapesPanel/shapesCfg.js ***!
+  \****************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(/*! ./~/react-hot-api/modules/index.js */ 9), RootInstanceProvider = __webpack_require__(/*! ./~/react-hot-loader/RootInstanceProvider.js */ 10), ReactMount = __webpack_require__(/*! react/lib/ReactMount */ 6), React = __webpack_require__(/*! react */ 2); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+	
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _shapesCfg = __webpack_require__(/*! ../../../assets/shapes/shapesCfg */ 121);
+	
+	var shapesList = function shapesList() {
+	    return [{
+	        id: '1',
+	        name: 'shape-room-sqr-2x2',
+	        image: _shapesCfg.shapesCfg.sq_2x2,
+	        width: 2,
+	        height: 2,
+	        desc: 'Square Room',
+	        isDraggable: true
+	    }, {
+	        id: '2',
+	        name: 'shape-room-sqr-3x3',
+	        image: _shapesCfg.shapesCfg.sq_3x3,
+	        width: 3,
+	        height: 2,
+	        desc: 'Rectangle Room',
+	        isDraggable: true
+	    }, {
+	        id: '3',
+	        name: 'shape-room-rect-3x3',
+	        image: _shapesCfg.shapesCfg.rq_3x2,
+	        width: 3,
+	        height: 3,
+	        desc: 'Square Room',
+	        isDraggable: true
+	    }, {
+	        id: '4',
+	        name: 'shape-room-l-3x2',
+	        image: _shapesCfg.shapesCfg.ls_3x3,
+	        width: 3,
+	        height: 3,
+	        desc: 'Square Room',
+	        isDraggable: true
+	    }];
+	};
+	
+	exports.default = shapesList;
+	
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(/*! ./~/react-hot-loader/makeExportsHot.js */ 11); if (makeExportsHot(module, __webpack_require__(/*! react */ 2))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "shapesCfg.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../../../~/webpack/buildin/module.js */ 12)(module)))
 
 /***/ }
 /******/ ]);
