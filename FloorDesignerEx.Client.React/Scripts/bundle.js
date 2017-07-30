@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "cbc0c2e34ff33808e35c"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "da593a7635ae0a3b9a3d"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -597,7 +597,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "cbc0c2e34ff33808e35c"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "da593a7635ae0a3b9a3d"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -31271,7 +31271,7 @@
 	
 	var _shapesCfg = __webpack_require__(/*! ../../../assets/shapes/shapesCfg */ 121);
 	
-	var roomsCfg = function roomsCfg() {
+	var config = function config() {
 	
 	    var roomsCfg = {};
 	    roomsCfg.CELL_WIDTH = 60;
@@ -31326,7 +31326,7 @@
 	    return roomsCfg;
 	};
 	
-	exports.default = roomsCfg;
+	exports.default = config;
 	
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(/*! ./~/react-hot-loader/makeExportsHot.js */ 11); if (makeExportsHot(module, __webpack_require__(/*! react */ 2))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "roomsCfg.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../../../~/webpack/buildin/module.js */ 12)(module)))
@@ -32146,7 +32146,6 @@
 	        _this.stageInit = _this.stageInit.bind(_this);
 	        _this.createGrid = _this.createGrid.bind(_this);
 	        _this.clearStage = _this.clearStage.bind(_this);
-	
 	        return _this;
 	    }
 	
@@ -42234,16 +42233,16 @@
 	        name: 'shape-room-sqr-3x3',
 	        image: _shapesCfg.shapesCfg.sq_3x3,
 	        width: 3,
-	        height: 2,
-	        desc: 'Rectangle Room',
+	        height: 3,
+	        desc: 'Square Room',
 	        isDraggable: true
 	    }, {
 	        id: '3',
-	        name: 'shape-room-rect-3x3',
+	        name: 'shape-room-rect-3x2',
 	        image: _shapesCfg.shapesCfg.rq_3x2,
 	        width: 3,
-	        height: 3,
-	        desc: 'Square Room',
+	        height: 2,
+	        desc: 'Rectangle Room',
 	        isDraggable: true
 	    }, {
 	        id: '4',
@@ -42251,7 +42250,7 @@
 	        image: _shapesCfg.shapesCfg.ls_3x3,
 	        width: 3,
 	        height: 3,
-	        desc: 'Square Room',
+	        desc: 'L-Shape Room',
 	        isDraggable: true
 	    }];
 	};

@@ -1,6 +1,6 @@
 ﻿import { shapesCfg } from '../../../assets/shapes/shapesCfg';
 
-const roomsCfg = () => {
+const config = () => {
 
     let roomsCfg = {}
     roomsCfg.CELL_WIDTH = 60;
@@ -64,4 +64,4 @@ const roomsCfg = () => {
     return (roomsCfg)
 }
 
-export default roomsCfg;
+export default config;

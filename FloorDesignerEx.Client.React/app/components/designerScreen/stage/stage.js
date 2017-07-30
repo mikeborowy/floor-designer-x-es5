@@ -36,7 +36,6 @@ class Stage extends React.Component {
         this.stageInit = this.stageInit.bind(this);
         this.createGrid = this.createGrid.bind(this);
         this.clearStage = this.clearStage.bind(this);
-
     }
 
     stageInit() {

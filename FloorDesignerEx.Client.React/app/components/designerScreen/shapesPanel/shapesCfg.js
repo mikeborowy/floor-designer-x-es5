@@ -16,17 +16,17 @@ const shapesList = () => {
             name: 'shape-room-sqr-3x3',
             image: shapesCfg.sq_3x3,
             width: 3,
-            height: 2,
-            desc: 'Rectangle Room',
+            height: 3,
+            desc: 'Square Room',
             isDraggable: true
         },
         {
             id: '3',
-            name: 'shape-room-rect-3x3',
+            name: 'shape-room-rect-3x2',
             image: shapesCfg.rq_3x2,
             width: 3,
-            height: 3,
-            desc: 'Square Room',
+            height: 2,
+            desc: 'Rectangle Room',
             isDraggable: true
         },
         {
@@ -35,7 +35,7 @@ const shapesList = () => {
             image: shapesCfg.ls_3x3,
             width: 3,
             height: 3,
-            desc: 'Square Room',
+            desc: 'L-Shape Room',
             isDraggable: true
         }
     ]

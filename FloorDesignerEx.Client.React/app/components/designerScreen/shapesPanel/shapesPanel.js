@@ -4,7 +4,7 @@ import ShapesPanelListItem from './shapesPanelListItem';
 
 const ShapesPanel = (props) => {
 
-    let shapesList = ShapesListCfg()
+    let shapesList = ShapesListCfg();
 
     return (
         <div id="shapes-panel">
