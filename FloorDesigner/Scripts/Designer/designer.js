@@ -1333,6 +1333,7 @@
                 stageScaleNum = (this.value * 0.1) + 1;
                 ZoomStage();
             });
+
             /*ZOOM IN BTN*/
             $('#zoom-in-floor-btn').click(function () {
 

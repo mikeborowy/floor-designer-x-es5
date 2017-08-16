@@ -169,6 +169,8 @@
     <Content Include="app\components\designerScreen\shapesPanel\shapesPanelListItem.js" />
     <Content Include="app\components\designerScreen\common\roomsCfg.js" />
     <Content Include="app\components\designerScreen\stage\stage.js" />
+    <Content Include="app\components\designerScreen\stage\stageBoard.js" />
+    <Content Include="app\components\designerScreen\stage\stageBoardHighlight.js" />
     <Content Include="app\components\designerScreen\toolbar\toolbar.js" />
     <Content Include="app\components\designerScreen\workspace\workspace.js" />
     <Content Include="app\components\designerScreen\index.js" />

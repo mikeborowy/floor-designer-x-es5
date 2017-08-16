@@ -6,14 +6,12 @@ class DesignerScreen extends React.Component {
 
     constructor(props) {
         super(props)
-
-        console.log('DesignerScreen', props.appCfg);
     }
 
     render() {
         return (
             <div id="designer-screen">
-                <Toolbar />
+                <Toolbar appCfg={this.props.appCfg} />
                 <Worspace />
             </div>
         );

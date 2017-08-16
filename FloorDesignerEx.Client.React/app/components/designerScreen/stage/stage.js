@@ -3,6 +3,9 @@ import $ from 'jquery';
 import RoomsCfg from '../common/roomsCfg';
 import BlueprintImg from '../../../assets/blueprints/bgnd_12x10.jpg';
 
+import StageBoard from './stageBoard';
+import StageBoardHighlight from './stageBoardHighlight';
+
 class Stage extends React.Component {
 
     constructor(props) {
@@ -28,7 +31,10 @@ class Stage extends React.Component {
                 paddingTop: RoomsCfg().SHAPE_CFG.PADDING_TOP,
                 itemBorderSize: RoomsCfg().SHAPE_CFG.BORDER_SIZE
             },
-            loadedItems: {},
+            stageCfg: {
+                stageBoardsList: []
+            },
+            loadedItems: [],
             imgPath: BlueprintImg,
             draggedObj: null
         }
@@ -36,6 +42,8 @@ class Stage extends React.Component {
         this.stageInit = this.stageInit.bind(this);
         this.createGrid = this.createGrid.bind(this);
         this.clearStage = this.clearStage.bind(this);
+        this.updateDimensions = this.updateDimensions.bind(this);
+
     }
 
     stageInit() {
@@ -52,16 +60,16 @@ class Stage extends React.Component {
         img.attr('src', floorCfg.image);
         img.width(floorCfg.width * roomCfg.gridCellWidth);
         img.height(floorCfg.height * roomCfg.gridCellHeight);
-
-        this.createGrid(roomCfg.gridCellWidth, roomCfg.gridCellHeight, floorCfg.width, floorCfg.height);
     }
 
-    createGrid(gridCellWidth, gridCellHeight, gridColumns, gridRows) {
+    createGrid() {
 
-        const _stage = $('#stage');
-        const _stageGridBgnd = $('#stage-grid-bgnd');
-        const _stageGridLive = $('#stage-grid-live');
-
+        let { stageBoardsList } = this.state;
+        let { gridCellWidth, gridCellHeight } = this.state.roomCfg;
+        let gridColumns = this.state.floorCfg.width;
+        let gridRows = this.state.floorCfg.height;
+        let list = [];
+        
         const w = 1;
         const h = 1;
 
@@ -70,36 +78,27 @@ class Stage extends React.Component {
             let x = (i * gridCellWidth) % (gridColumns * gridCellWidth);
             let y = Math.floor(i / gridColumns) * gridCellHeight;
 
-            $("<div/>").
-                attr('id', i).
-                attr('class', 'stage-board-field-highlight').
-                css({
-                    position: "absolute",
-                    width: (gridCellWidth * w),
-                    height: (gridCellHeight * h),
-                    top: y, left: x
-                }).
-                prependTo(_stageGridLive);
+            list.push({
+                id: i,
+                width: (gridCellWidth * w),
+                height: (gridCellHeight * h),
+                top: y,
+                left: x
+            })
 
-            $("<div></div>").
-                attr('id', i).
-                attr('class', 'stage-board-field').
-                css({
-                    position: "absolute",
-                    //boxShadow: 'inset 0px 0px 0px 10px #f00',
-                    border: "1px dashed rgba(0,0,0,0.05)",
-                    width: gridCellWidth,
-                    height: gridCellHeight,
-                    top: y, left: x
-                })
-                .prependTo(_stageGridBgnd);
+            this.setState({
+                stageCfg:{
+                    stageBoardsList: list
+                }
+            });
         }
+    };
 
-        console.log("done")
-        //loadItems();
-    }
+      //createGrid(gridCellWidth, gridCellHeight, gridColumns, gridRows) {
+               //loadItems();
+    //}
 
-    //function loadItems() {
+    loadItems() {
 
     //    if (loadedItems.length > 0) {
     //        $.each(loadedItems, function (i, val) {
@@ -142,14 +141,14 @@ class Stage extends React.Component {
     //            })
     //        });
     //    }
-    //}
+    }
 
     clearStage() {
 
         $('#stage-grid-bgnd').html('');
         $('#stage-grid-live').html('');
         $('#stage-items-container').html('');
-    }
+    };
 
     findValueByKey(array, key) {
 
@@ -161,7 +160,7 @@ class Stage extends React.Component {
             }
         }
         return null;
-    }
+    };
 
     updateDimensions() {
 
@@ -195,28 +194,62 @@ class Stage extends React.Component {
     }
 
     componentWillMount() {
-        this.updateDimensions();
+        //this.updateDimensions();
     }
 
     componentDidMount() {
+
         this.stageInit();
+        this.createGrid();
         this.updateDimensions();
-        window.addEventListener("resize", this.updateDimensions.bind(this));
+        window.addEventListener("resize", this.updateDimensions);
     }
 
     componentWillUnmount() {
-        window.removeEventListener("resize", this.updateDimensions.bind(this));
+        window.removeEventListener("resize", this.updateDimensions);
     } 
 
     render() {
+
+        let { stageBoardsList } = this.state.stageCfg;
+
         return (
             <div id="stage-container">
                 <div id="stage-top"></div>
                 <div id="stage">
                     <img id="stage-bgnd" src={this.state.imgPath} />
-                    <div id="stage-grid-bgnd"></div>
-                    <div id="stage-grid-live"></div>
-                    <div id="stage-items-container"></div>
+                    <div id="stage-grid-bgnd">
+                        {
+                            stageBoardsList.map(function (boardItem) {
+
+                                return <StageBoard
+                                    key={boardItem.id}
+                                    id={boardItem.id}
+                                    width={boardItem.width}
+                                    height={boardItem.height}
+                                    top={boardItem.top}
+                                    left={boardItem.left}
+                                />
+                            })
+                        }
+                    </div>
+                    <div id="stage-grid-live">
+                        {
+                            stageBoardsList.map(function (boardItem) {
+
+                                return <StageBoardHighlight
+                                    key={boardItem.id}
+                                    id={boardItem.id}
+                                    width={boardItem.width}
+                                    height={boardItem.height}
+                                    top={boardItem.top}
+                                    left={boardItem.left}
+                                />
+                            })
+                        }
+                    </div>
+                    <div id="stage-items-container">
+                    </div>
                 </div>
                 <div id="stage-bottom"></div>
             </div>
