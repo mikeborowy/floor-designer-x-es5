@@ -1,5 +1,4 @@
 ﻿import * as React from 'react';
-import Toolbar from './toolbar/toolbar';
 import Worspace from './workspace/workspace';
 
 class DesignerScreen extends React.Component {
@@ -11,7 +10,6 @@ class DesignerScreen extends React.Component {
     render() {
         return (
             <div id="designer-screen">
-                <Toolbar appCfg={this.props.appCfg} />
                 <Worspace />
             </div>
         );

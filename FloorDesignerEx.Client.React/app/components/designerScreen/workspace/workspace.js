@@ -1,6 +1,7 @@
 ﻿import * as React from 'react';
 import $ from 'jquery';
 
+import Toolbar from '../toolbar/toolbar';
 import ShapesPanel from '../shapesPanel/shapesPanel';
 import Stage from '../stage/stage';
 
@@ -8,6 +9,10 @@ class Workspace extends React.Component {
 
     constructor(props) {
         super(props)
+
+        this.state = {
+            zoom: 1
+        }
     }
 
     updateDimensions() {
@@ -19,6 +24,11 @@ class Workspace extends React.Component {
         $("#shapes-panel").height(
             windowHeight - toolbarHeight
         )
+    }
+
+    /*we get zoom value from toolbar and set in current comp state*/
+    updateZoom(zoom) {
+        this.setState({zoom})
     }
 
     componentWillMount() {
@@ -37,8 +47,17 @@ class Workspace extends React.Component {
     render() {
         return (
             <div id="designer-workspace">
-                <ShapesPanel />
-                <Stage />
+                <Toolbar
+                    appCfg={this.props.appCfg}
+                    onZoomUpdate={this.updateZoom.bind(this)}
+                />
+                <ShapesPanel
+                    appCfg={this.props.appCfg}
+                />
+                <Stage
+                    appCfg={this.props.appCfg}
+                    zoom={this.state.zoom}
+                />
             </div>
         )
     }

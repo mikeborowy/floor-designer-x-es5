@@ -1,0 +1,735 @@
+webpackHotUpdate(0,{
+
+/***/ 107:
+/*!**********************************************!*\
+  !*** ./app/assets/blueprints/bgnd_12x10.jpg ***!
+  \**********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__.p + "../Images/bgnd_12x10.jpg";
+
+/***/ },
+
+/***/ 124:
+/*!**********************************************************!*\
+  !*** ./app/components/designerScreen/common/roomsCfg.js ***!
+  \**********************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(/*! ./~/react-hot-api/modules/index.js */ 7), RootInstanceProvider = __webpack_require__(/*! ./~/react-hot-loader/RootInstanceProvider.js */ 8), ReactMount = __webpack_require__(/*! react/lib/ReactMount */ 6), React = __webpack_require__(/*! react */ 2); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+	
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _shapesCfg = __webpack_require__(/*! ../../../assets/shapes/shapesCfg */ 64);
+	
+	var config = function config() {
+	
+	    var roomsCfg = {};
+	    roomsCfg.CELL_WIDTH = 60;
+	    roomsCfg.CELL_HEIGHT = 60;
+	    roomsCfg.SHAPE_CFG = {
+	        PADDING_LEFT: 0,
+	        PADDING_TOP: 0,
+	        BORDER_SIZE: 3
+	    };
+	    roomsCfg.SHAPES_SIZES = [{
+	        "shape-room-sqr-2x2": {
+	            w: 2,
+	            h: 2,
+	            t: {
+	                x: roomsCfg.CELL_WIDTH,
+	                y: roomsCfg.CELL_HEIGHT
+	            },
+	            thumb: _shapesCfg.shapesCfg.sq_2x2
+	        }
+	    }, {
+	        "shape-room-sqr-3x3": {
+	            w: 3,
+	            h: 3,
+	            t: {
+	                x: 2 * roomsCfg.CELL_WIDTH - roomsCfg.CELL_WIDTH * 0.5,
+	                y: 2 * roomsCfg.CELL_HEIGHT - roomsCfg.CELL_HEIGHT * 0.5
+	            },
+	            thumb: _shapesCfg.shapesCfg.sq_3x3
+	        }
+	    }, {
+	        "shape-room-rct-3x2": {
+	            w: 3,
+	            h: 2,
+	            t: {
+	                x: 3 * roomsCfg.CELL_WIDTH - roomsCfg.CELL_WIDTH * 0.5,
+	                y: 2 * roomsCfg.CELL_HEIGHT - roomsCfg.CELL_HEIGHT * 0.5
+	            },
+	            thumb: _shapesCfg.shapesCfg.rq_3x2
+	        }
+	    }, {
+	        "shape-room-l-3x2": {
+	            w: 3,
+	            h: 3,
+	            t: {
+	                x: 3 * roomsCfg.CELL_WIDTH - roomsCfg.CELL_WIDTH * 0.5,
+	                y: 2 * roomsCfg.CELL_HEIGHT - roomsCfg.CELL_HEIGHT * 0.5
+	            },
+	            thumb: _shapesCfg.shapesCfg.ls_3x3
+	        }
+	    }];
+	
+	    return roomsCfg;
+	};
+	
+	exports.default = config;
+	
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(/*! ./~/react-hot-loader/makeExportsHot.js */ 9); if (makeExportsHot(module, __webpack_require__(/*! react */ 2))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "roomsCfg.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../../../~/webpack/buildin/module.js */ 10)(module)))
+
+/***/ },
+
+/***/ 135:
+/*!******************************************************!*\
+  !*** ./app/components/designerScreen/stage/stage.js ***!
+  \******************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(/*! ./~/react-hot-api/modules/index.js */ 7), RootInstanceProvider = __webpack_require__(/*! ./~/react-hot-loader/RootInstanceProvider.js */ 8), ReactMount = __webpack_require__(/*! react/lib/ReactMount */ 6), React = __webpack_require__(/*! react */ 2); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+	
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 2);
+	
+	var React = _interopRequireWildcard(_react);
+	
+	var _jquery = __webpack_require__(/*! jquery */ 30);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	var _roomsCfg = __webpack_require__(/*! ../common/roomsCfg */ 124);
+	
+	var _roomsCfg2 = _interopRequireDefault(_roomsCfg);
+	
+	var _bgnd_12x = __webpack_require__(/*! ../../../assets/blueprints/bgnd_12x10.jpg */ 107);
+	
+	var _bgnd_12x2 = _interopRequireDefault(_bgnd_12x);
+	
+	var _stageBoard = __webpack_require__(/*! ./stageBoard */ 136);
+	
+	var _stageBoard2 = _interopRequireDefault(_stageBoard);
+	
+	var _stageBoardHighlight = __webpack_require__(/*! ./stageBoardHighlight */ 137);
+	
+	var _stageBoardHighlight2 = _interopRequireDefault(_stageBoardHighlight);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Stage = function (_React$Component) {
+	    _inherits(Stage, _React$Component);
+	
+	    function Stage(props) {
+	        _classCallCheck(this, Stage);
+	
+	        var _this = _possibleConstructorReturn(this, (Stage.__proto__ || Object.getPrototypeOf(Stage)).call(this, props));
+	
+	        _this.state = {
+	            zoom: _this.props.zoom,
+	            floorCfg: {
+	                id: 4,
+	                officeId: 1,
+	                name: "Floor 1",
+	                width: 15,
+	                height: 10,
+	                xpos: 0,
+	                ypos: 0,
+	                image: null,
+	                rooms: []
+	            },
+	            roomCfg: {
+	                gridCellWidth: (0, _roomsCfg2.default)().CELL_WIDTH,
+	                gridCellHeight: (0, _roomsCfg2.default)().CELL_HEIGHT,
+	                shapeSizes: (0, _roomsCfg2.default)().SHAPES_SIZES,
+	                paddingLeft: (0, _roomsCfg2.default)().SHAPE_CFG,
+	                paddingTop: (0, _roomsCfg2.default)().SHAPE_CFG.PADDING_TOP,
+	                itemBorderSize: (0, _roomsCfg2.default)().SHAPE_CFG.BORDER_SIZE
+	            },
+	            stageCfg: {
+	                stageBoardsList: []
+	            },
+	            loadedItems: [],
+	            imgPath: _bgnd_12x2.default,
+	            draggedObj: null
+	        };
+	
+	        _this.stageInit = _this.stageInit.bind(_this);
+	        _this.createGrid = _this.createGrid.bind(_this);
+	        _this.clearStage = _this.clearStage.bind(_this);
+	        _this.updateDimensions = _this.updateDimensions.bind(_this);
+	        _this.onZoomStage = _this.onZoomStage.bind(_this);
+	        return _this;
+	    }
+	
+	    _createClass(Stage, [{
+	        key: 'stageInit',
+	        value: function stageInit() {
+	            var _state = this.state,
+	                floorCfg = _state.floorCfg,
+	                roomCfg = _state.roomCfg;
+	
+	
+	            (0, _jquery2.default)(this).width(floorCfg.width * roomCfg.gridCellWidth);
+	            (0, _jquery2.default)(this).height(floorCfg.height * roomCfg.gridCellHeight);
+	
+	            (0, _jquery2.default)('#stage-items-container').width(floorCfg.width * roomCfg.gridCellWidth);
+	            (0, _jquery2.default)('#stage-items-container').height(floorCfg.height * roomCfg.gridCellHeight);
+	
+	            var img = (0, _jquery2.default)('#stage').find('img');
+	            img.attr('src', floorCfg.image);
+	            img.width(floorCfg.width * roomCfg.gridCellWidth);
+	            img.height(floorCfg.height * roomCfg.gridCellHeight);
+	        }
+	    }, {
+	        key: 'createGrid',
+	        value: function createGrid() {
+	            var stageBoardsList = this.state.stageBoardsList;
+	            var _state$roomCfg = this.state.roomCfg,
+	                gridCellWidth = _state$roomCfg.gridCellWidth,
+	                gridCellHeight = _state$roomCfg.gridCellHeight;
+	
+	            var gridColumns = this.state.floorCfg.width;
+	            var gridRows = this.state.floorCfg.height;
+	            var list = [];
+	
+	            var w = 1;
+	            var h = 1;
+	
+	            for (var i = 0; i < gridRows * gridColumns; i++) {
+	
+	                var x = i * gridCellWidth % (gridColumns * gridCellWidth);
+	                var y = Math.floor(i / gridColumns) * gridCellHeight;
+	
+	                list.push({
+	                    id: i,
+	                    width: gridCellWidth * w,
+	                    height: gridCellHeight * h,
+	                    top: y,
+	                    left: x
+	                });
+	
+	                this.setState({
+	                    stageCfg: {
+	                        stageBoardsList: list
+	                    }
+	                });
+	            }
+	        }
+	    }, {
+	        key: 'loadItems',
+	
+	
+	        //createGrid(gridCellWidth, gridCellHeight, gridColumns, gridRows) {
+	        //loadItems();
+	        //}
+	
+	        value: function loadItems() {
+	
+	            //    if (loadedItems.length > 0) {
+	            //        $.each(loadedItems, function (i, val) {
+	
+	            //            TweenLite.delayedCall(0.1 * i, function () {
+	
+	            //                let id = loadedItems[i].id;
+	            //                let shape = loadedItems[i].shape;
+	            //                let w = loadedItems[i].width;
+	            //                let h = loadedItems[i].height;
+	            //                let x = loadedItems[i].xpos;
+	            //                let y = loadedItems[i].ypos;
+	            //                let r = loadedItems[i].rotation;
+	
+	            //                let shapeSizeTableObj = findValueByKey(shapeSizes, shape);
+	
+	            //                console.log(shapeSizeTableObj);
+	
+	            //                draggedObj = {};
+	            //                draggedObj.id = id;
+	            //                draggedObj.sh = shape;
+	            //                draggedObj.x = x;
+	            //                draggedObj.y = y;
+	            //                draggedObj.r = r;
+	            //                draggedObj.w = w;
+	            //                draggedObj.h = h;
+	            //                draggedObj.tox = shapeSizeTableObj.t.x;
+	            //                draggedObj.toy = shapeSizeTableObj.t.y;
+	
+	            //                let currentItem = createStageItem(
+	            //                    draggedObj.id,
+	            //                    draggedObj.x,
+	            //                    draggedObj.y,
+	            //                    draggedObj.r,
+	            //                    draggedObj.tox,
+	            //                    draggedObj.toy,
+	            //                    draggedObj.w,
+	            //                    draggedObj.h,
+	            //                    draggedObj.sh);
+	            //            })
+	            //        });
+	            //    }
+	        }
+	    }, {
+	        key: 'clearStage',
+	        value: function clearStage() {
+	
+	            (0, _jquery2.default)('#stage-grid-bgnd').html('');
+	            (0, _jquery2.default)('#stage-grid-live').html('');
+	            (0, _jquery2.default)('#stage-items-container').html('');
+	        }
+	    }, {
+	        key: 'findValueByKey',
+	        value: function findValueByKey(array, key) {
+	
+	            for (var i = 0; i < array.length; i++) {
+	
+	                if (array[i][key]) {
+	
+	                    return array[i][key];
+	                }
+	            }
+	            return null;
+	        }
+	    }, {
+	        key: 'onZoomStage',
+	
+	
+	        /*ZOOM START*/
+	        value: function onZoomStage(stageScaleNum) {
+	
+	            var stage = (0, _jquery2.default)("#stage");
+	            var stageContainer = (0, _jquery2.default)('#stage-container');
+	
+	            var stageScaleNumMin = 0.2;
+	            var stageScaleNumMax = 2;
+	
+	            //TweenLite.killTweensOf(room);
+	            //TweenLite.killTweensOf(roomContainer);
+	
+	            //let stageScaleNum = this.stageScaleNum;
+	            //let { stageScaleNumMin, stageScaleNumMax } = this.state
+	
+	            if (stageScaleNum < stageScaleNumMin) {
+	                stageScaleNum = stageScaleNumMin;
+	            }
+	            if (stageScaleNum > stageScaleNumMax) {
+	                stageScaleNum = stageScaleNumMax;
+	            }
+	
+	            TweenMax.to(stage, 0.3, {
+	                scaleX: stageScaleNum,
+	                scaleY: stageScaleNum
+	            });
+	
+	            var posX = stageContainer.width() / 2 - stage.width() / 2;
+	            var stageWidthAfterScale = stage.width() * stageScaleNum;
+	
+	            var posY = stageContainer.height() / 2 - stage.height() / 2;
+	            var stageHeightAfterScale = stage.height() * stageScaleNum;
+	
+	            //First for horizontal scale scroll issue
+	            //check if scaled room width is bigger than room conatiner
+	            //if true align to left
+	            if (stageWidthAfterScale >= stageContainer.width()) {
+	                TweenMax.set(stage, {
+	                    transformOrigin: "0 50%",
+	                    x: 0,
+	                    y: posY
+	                });
+	
+	                //then check if scaled room height is bigger than room conatiner 
+	                //and align to top
+	                if (stageHeightAfterScale >= stageContainer.height()) {
+	                    TweenMax.set(stage, {
+	                        transformOrigin: "0% 0%",
+	                        x: 0,
+	                        y: 0
+	                    });
+	                }
+	            }
+	            //for vertical scale scroll issue
+	            //check if scaled room height is bigger than room conatiner 
+	            //if true align to top
+	            else if (stageHeightAfterScale >= stageContainer.height()) {
+	                    TweenMax.set(stage, {
+	                        transformOrigin: "50% 0%",
+	                        x: posX,
+	                        y: 0
+	                    });
+	
+	                    //then check if scaled room width is bigger than room conatiner 
+	                    //and align to left
+	                    if (stageWidthAfterScale >= stageContainer.width()) {
+	                        TweenMax.set(stage, {
+	                            transformOrigin: "0 0",
+	                            x: 0,
+	                            y: 0
+	                        });
+	                    }
+	                }
+	                //otherwise appply regular scale with centerd point
+	                else {
+	                        TweenMax.set(stage, {
+	                            transformOrigin: "50% 50%",
+	                            x: posX,
+	                            y: posY
+	                        });
+	                    }
+	        }
+	        /*ZOOM END*/
+	
+	    }, {
+	        key: 'updateDimensions',
+	        value: function updateDimensions() {
+	
+	            var toolbarHeight = (0, _jquery2.default)("#designer-toolbar").height();
+	            var windowWidth = (0, _jquery2.default)(window).width();
+	            var windowHeight = (0, _jquery2.default)(window).height();
+	
+	            (0, _jquery2.default)("#stage-container").height(windowHeight - toolbarHeight);
+	
+	            var parentHeight = (0, _jquery2.default)("#stage-container").height();
+	            var parentWidth = (0, _jquery2.default)("#stage-container").width();
+	
+	            if ((0, _jquery2.default)("#stage").height() <= (0, _jquery2.default)("#stage-container").height()) {
+	
+	                var posY = parentHeight / 2 - (0, _jquery2.default)("#stage").height() / 2;
+	                TweenLite.to((0, _jquery2.default)("#stage"), 0, { y: posY });
+	            } else {
+	                TweenLite.to((0, _jquery2.default)("#stage"), 0, { y: 0 });
+	            }
+	
+	            if ((0, _jquery2.default)("#stage").width() <= (0, _jquery2.default)("#stage-container").width()) {
+	                var posX = parentWidth / 2 - (0, _jquery2.default)("#stage").width() / 2;
+	                TweenLite.to((0, _jquery2.default)("#stage"), 0, { x: posX });
+	            } else {
+	                TweenLite.to((0, _jquery2.default)("#stage"), 0, { x: 0 });
+	            }
+	        }
+	    }, {
+	        key: 'componentWillUpdate',
+	        value: function componentWillUpdate() {}
+	    }, {
+	        key: 'componentDidUpdate',
+	        value: function componentDidUpdate() {
+	            console.log("Stage", this.props.zoom);
+	            this.onZoomStage(this.props.zoom);
+	        }
+	    }, {
+	        key: 'componentWillMount',
+	        value: function componentWillMount() {
+	            //this.updateDimensions();
+	        }
+	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	
+	            this.stageInit();
+	            this.createGrid();
+	            this.updateDimensions();
+	            window.addEventListener("resize", this.updateDimensions);
+	        }
+	    }, {
+	        key: 'componentWillUnmount',
+	        value: function componentWillUnmount() {
+	            window.removeEventListener("resize", this.updateDimensions);
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var stageBoardsList = this.state.stageCfg.stageBoardsList;
+	
+	
+	            return React.createElement(
+	                'div',
+	                { id: 'stage-container' },
+	                React.createElement('div', { id: 'stage-top' }),
+	                React.createElement(
+	                    'div',
+	                    { id: 'stage' },
+	                    React.createElement('img', { id: 'stage-bgnd', src: this.state.imgPath }),
+	                    React.createElement(
+	                        'div',
+	                        { id: 'stage-grid-bgnd' },
+	                        stageBoardsList.map(function (boardItem) {
+	
+	                            return React.createElement(_stageBoard2.default, {
+	                                key: boardItem.id,
+	                                id: boardItem.id,
+	                                width: boardItem.width,
+	                                height: boardItem.height,
+	                                top: boardItem.top,
+	                                left: boardItem.left
+	                            });
+	                        })
+	                    ),
+	                    React.createElement(
+	                        'div',
+	                        { id: 'stage-grid-live' },
+	                        stageBoardsList.map(function (boardItem) {
+	
+	                            return React.createElement(_stageBoardHighlight2.default, {
+	                                key: boardItem.id,
+	                                id: boardItem.id,
+	                                width: boardItem.width,
+	                                height: boardItem.height,
+	                                top: boardItem.top,
+	                                left: boardItem.left
+	                            });
+	                        })
+	                    ),
+	                    React.createElement('div', { id: 'stage-items-container' })
+	                ),
+	                React.createElement('div', { id: 'stage-bottom' })
+	            );
+	        }
+	    }]);
+	
+	    return Stage;
+	}(React.Component);
+	
+	exports.default = Stage;
+	
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(/*! ./~/react-hot-loader/makeExportsHot.js */ 9); if (makeExportsHot(module, __webpack_require__(/*! react */ 2))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "stage.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../../../~/webpack/buildin/module.js */ 10)(module)))
+
+/***/ },
+
+/***/ 136:
+/*!***********************************************************!*\
+  !*** ./app/components/designerScreen/stage/stageBoard.js ***!
+  \***********************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(/*! ./~/react-hot-api/modules/index.js */ 7), RootInstanceProvider = __webpack_require__(/*! ./~/react-hot-loader/RootInstanceProvider.js */ 8), ReactMount = __webpack_require__(/*! react/lib/ReactMount */ 6), React = __webpack_require__(/*! react */ 2); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+	
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 2);
+	
+	var React = _interopRequireWildcard(_react);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var StageBoard = function StageBoard(_ref) {
+	    var id = _ref.id,
+	        width = _ref.width,
+	        height = _ref.height,
+	        top = _ref.top,
+	        left = _ref.left;
+	
+	
+	    var divStyle = {
+	        position: 'absolute',
+	        border: '1px dashed rgba(0, 0, 0, 0.1)',
+	        top: top,
+	        left: left,
+	        width: width,
+	        height: height
+	    };
+	
+	    return React.createElement('div', { id: id, className: 'stage-board-field', style: divStyle });
+	};
+	
+	exports.default = StageBoard;
+	
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(/*! ./~/react-hot-loader/makeExportsHot.js */ 9); if (makeExportsHot(module, __webpack_require__(/*! react */ 2))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "stageBoard.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../../../~/webpack/buildin/module.js */ 10)(module)))
+
+/***/ },
+
+/***/ 137:
+/*!********************************************************************!*\
+  !*** ./app/components/designerScreen/stage/stageBoardHighlight.js ***!
+  \********************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(/*! ./~/react-hot-api/modules/index.js */ 7), RootInstanceProvider = __webpack_require__(/*! ./~/react-hot-loader/RootInstanceProvider.js */ 8), ReactMount = __webpack_require__(/*! react/lib/ReactMount */ 6), React = __webpack_require__(/*! react */ 2); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+	
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 2);
+	
+	var React = _interopRequireWildcard(_react);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var StageBoardHighlight = function StageBoardHighlight(_ref) {
+	    var id = _ref.id,
+	        width = _ref.width,
+	        height = _ref.height,
+	        top = _ref.top,
+	        left = _ref.left;
+	
+	
+	    var divStyle = {
+	        position: 'absolute',
+	        top: top,
+	        left: left,
+	        width: width,
+	        height: height
+	    };
+	
+	    return React.createElement('div', { id: id, className: 'stage-board-field-highlight', style: divStyle });
+	};
+	
+	exports.default = StageBoardHighlight;
+	
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(/*! ./~/react-hot-loader/makeExportsHot.js */ 9); if (makeExportsHot(module, __webpack_require__(/*! react */ 2))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "stageBoardHighlight.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../../../~/webpack/buildin/module.js */ 10)(module)))
+
+/***/ },
+
+/***/ 139:
+/*!**************************************************************!*\
+  !*** ./app/components/designerScreen/workspace/workspace.js ***!
+  \**************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(/*! ./~/react-hot-api/modules/index.js */ 7), RootInstanceProvider = __webpack_require__(/*! ./~/react-hot-loader/RootInstanceProvider.js */ 8), ReactMount = __webpack_require__(/*! react/lib/ReactMount */ 6), React = __webpack_require__(/*! react */ 2); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+	
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 2);
+	
+	var React = _interopRequireWildcard(_react);
+	
+	var _jquery = __webpack_require__(/*! jquery */ 30);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	var _toolbar = __webpack_require__(/*! ../toolbar/toolbar */ 138);
+	
+	var _toolbar2 = _interopRequireDefault(_toolbar);
+	
+	var _shapesPanel = __webpack_require__(/*! ../shapesPanel/shapesPanel */ 133);
+	
+	var _shapesPanel2 = _interopRequireDefault(_shapesPanel);
+	
+	var _stage = __webpack_require__(/*! ../stage/stage */ 135);
+	
+	var _stage2 = _interopRequireDefault(_stage);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Workspace = function (_React$Component) {
+	    _inherits(Workspace, _React$Component);
+	
+	    function Workspace(props) {
+	        _classCallCheck(this, Workspace);
+	
+	        var _this = _possibleConstructorReturn(this, (Workspace.__proto__ || Object.getPrototypeOf(Workspace)).call(this, props));
+	
+	        _this.state = {
+	            stageZoom: 1
+	        };
+	
+	        _this.updateZoom = _this.updateZoom.bind(_this);
+	        return _this;
+	    }
+	
+	    _createClass(Workspace, [{
+	        key: 'updateZoom',
+	        value: function updateZoom(zoomVal) {
+	            console.log("Workspace zoom", this.state.stageZoom);
+	            this.setState({ stageZoom: zoomVal });
+	        }
+	    }, {
+	        key: 'updateDimensions',
+	        value: function updateDimensions() {
+	
+	            var toolbarHeight = (0, _jquery2.default)("#designer-toolbar").height();
+	            var windowWidth = (0, _jquery2.default)(window).width();
+	            var windowHeight = (0, _jquery2.default)(window).height();
+	
+	            (0, _jquery2.default)("#shapes-panel").height(windowHeight - toolbarHeight);
+	        }
+	    }, {
+	        key: 'componentWillMount',
+	        value: function componentWillMount() {
+	            this.updateDimensions();
+	        }
+	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            this.updateDimensions();
+	            window.addEventListener("resize", this.updateDimensions.bind(this));
+	        }
+	    }, {
+	        key: 'componentWillUnmount',
+	        value: function componentWillUnmount() {
+	            window.removeEventListener("resize", this.updateDimensions.bind(this));
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return React.createElement(
+	                'div',
+	                null,
+	                React.createElement(
+	                    'div',
+	                    { id: 'designer-workspace' },
+	                    React.createElement(_toolbar2.default, { onUpdateZoom: this.updateZoom, appCfg: this.props.appCfg }),
+	                    React.createElement(_shapesPanel2.default, null),
+	                    React.createElement(_stage2.default, { zoom: this.state.stageZoom })
+	                )
+	            );
+	        }
+	    }]);
+	
+	    return Workspace;
+	}(React.Component);
+	
+	Workspace.displayName = "Workspace";
+	
+	exports.default = Workspace;
+	
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(/*! ./~/react-hot-loader/makeExportsHot.js */ 9); if (makeExportsHot(module, __webpack_require__(/*! react */ 2))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "workspace.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../../../~/webpack/buildin/module.js */ 10)(module)))
+
+/***/ }
+
+})
+//# sourceMappingURL=0.8324dc5fa272f523595e.hot-update.js.map

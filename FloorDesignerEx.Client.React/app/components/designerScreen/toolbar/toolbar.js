@@ -1,5 +1,6 @@
 ﻿import * as React from 'react';
 import $ from 'jquery';
+import { TweenMax } from 'gsap';
 
 import LogoImg from '../../../assets/logo/logo.png';
 import SearchPanel from '../searchPanel/searchPanel';
@@ -9,13 +10,13 @@ class Toolbar extends React.Component {
     constructor(props) {
         super(props)
 
-        this.debugMode = this.props.appCfg.debugMode;
+        this.debugMode = false;//this.props.appCfg.debugMode;
         this.stageScaleNum = 1;
+        this.stageScaleNumMin = 0.2;
+        this.stageScaleNumMax = 2;
 
         this.state = {
-            stageScaleNumMin: 0.2,
-            stageScaleNumMax: 2,
-            floorData:{}
+            floorData: {}
         }
 
         this.onZoomStage = this.onZoomStage.bind(this);
@@ -29,106 +30,41 @@ class Toolbar extends React.Component {
     }
 
     /*ZOOM START*/
-    onZoomStage() {
+    onZoomStage(evt) {
 
-        var stage = $('#stage');
-        var stageContainer = $('#stage-container');
+        this.stageScaleNum = evt.detail;
+        document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
 
-        //TweenLite.killTweensOf(room);
-        //TweenLite.killTweensOf(roomContainer);
-
-        let stageScaleNum = this.stageScaleNum;
-        let { stageScaleNumMin, stageScaleNumMax } = this.state
-
-        if (stageScaleNum < stageScaleNumMin) {
-            stageScaleNum = stageScaleNumMin;
-        }
-        if (stageScaleNum > stageScaleNumMax) {
-            stageScaleNum = stageScaleNumMax;
-        }
-
-        TweenMax.to(stage, 0.3, {
-            scaleX: stageScaleNum,
-            scaleY: stageScaleNum,
-        });
-
-        var posX = (stageContainer.width() / 2 - stage.width() / 2)
-        var stageWidthAfterScale = stage.width() * stageScaleNum;
-
-        var posY = (stageContainer.height() / 2 - stage.height() / 2)
-        var stageHeightAfterScale = stage.height() * stageScaleNum;
-
-        //First for horizontal scale scroll issue
-        //check if scaled room width is bigger than room conatiner
-        //if true align to left
-        if (stageWidthAfterScale >= stageContainer.width()) {
-            TweenMax.set(stage, {
-                transformOrigin: "0 50%",
-                x: 0,
-                y: posY
-            });
-
-            //then check if scaled room height is bigger than room conatiner 
-            //and align to top
-            if (stageHeightAfterScale >= stageContainer.height()) {
-                TweenMax.set(stage, {
-                    transformOrigin: "0% 0%",
-                    x: 0,
-                    y: 0
-                });
-            }
-
-        }
-        //for vertical scale scroll issue
-        //check if scaled room height is bigger than room conatiner 
-        //if true align to top
-        else if (stageHeightAfterScale >= stageContainer.height()) {
-            TweenMax.set(stage, {
-                transformOrigin: "50% 0%",
-                x: posX,
-                y: 0
-            });
-
-            //then check if scaled room width is bigger than room conatiner 
-            //and align to left
-            if (stageWidthAfterScale >= stageContainer.width()) {
-                TweenMax.set(stage, {
-                    transformOrigin: "0 0",
-                    x: 0,
-                    y: 0
-                });
-            }
-
-        }
-        //otherwise appply regular scale with centerd point
-        else {
-            TweenMax.set(stage, {
-                transformOrigin: "50% 50%",
-                x: posX,
-                y: posY
-            });
-        }
     }
     /*ZOOM END*/
 
-     /**
-     * Btns Actions START
-     */
+    /**
+    * Btns Actions START
+    */
 
     /*SLIDER*/
     onZoomSliderChange(evt) {
-        //if (this.debugMode) console.log("onZoomSliderChange", evt)
+        if (this.debugMode) console.log("onZoomSliderChange", evt)
+
         this.stageScaleNum = (evt.target.value * 0.1) + 1
-        this.onZoomStage();
-        //document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
+        this.props.onZoomUpdate(this.stageScaleNum);
+
+        var event = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
+        window.dispatchEvent(event);
+        document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
     }
 
     /*ZOOM IN BTN*/
     onZoomInClick(evt) {
         if (this.debugMode) console.log("onZoomIn", evt)
 
-        this.stageScaleNum += 0.1;
-        this.onZoomStage();
+        if (this.stageScaleNum < this.stageScaleNumMax)
+            this.stageScaleNum += 0.1;
+
+        this.props.onZoomUpdate(this.stageScaleNum);
+
+        var event = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
+        window.dispatchEvent(event);
         document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
     }
 
@@ -137,8 +73,13 @@ class Toolbar extends React.Component {
     onZoomOutClick(evt) {
         if (this.debugMode) console.log("onZoomOutClick", evt)
 
-        this.stageScaleNum -= 0.1;
-        this.onZoomStage();
+        if (this.stageScaleNum > this.stageScaleNumMin)
+            this.stageScaleNum -= 0.1;
+
+        this.props.onZoomUpdate(this.stageScaleNum);
+
+        var event = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
+        window.dispatchEvent(event);
         document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
     }
 
@@ -148,7 +89,10 @@ class Toolbar extends React.Component {
         if (this.debugMode) console.log("onZoomResetClick", evt)
 
         this.stageScaleNum = 1;
-        this.onZoomStage();
+        this.props.onZoomUpdate(this.stageScaleNum);
+
+        var event = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
+        window.dispatchEvent(event);
         document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
     };
 
@@ -161,7 +105,7 @@ class Toolbar extends React.Component {
     /*SAVE START*/
     onSaveFloorClick(evt) {
 
-        if (this.debugMode) console.log("onSaveFloorClick",evt)
+        if (this.debugMode) console.log("onSaveFloorClick", evt)
 
         //let rooms = [];
         //$('.item-box').each(function (i, val) {
@@ -242,11 +186,12 @@ class Toolbar extends React.Component {
         //    //this.onZoomStage.bind(this);
         //});
 
+        window.addEventListener('zoomOccured', this.onZoomStage);
     }
 
     componentWillUnmount() {
         //window.removeEventListener("resize", this.updateDimensions);
-    } 
+    }
 
     render() {
         return (
