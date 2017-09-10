@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "8a9bd3abcdf510cfbe34"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "f77084f3513e75734205"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -597,7 +597,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "8a9bd3abcdf510cfbe34"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "f77084f3513e75734205"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -31414,10 +31414,9 @@
 	
 	        _this.state = {
 	            floorData: {}
-	        };
 	
-	        _this.onZoomStage = _this.onZoomStage.bind(_this);
-	        _this.onZoomSliderChange = _this.onZoomSliderChange.bind(_this);
+	            //this.onZoomStage = this.onZoomStage.bind(this);
+	        };_this.onZoomSliderChange = _this.onZoomSliderChange.bind(_this);
 	        _this.onZoomInClick = _this.onZoomInClick.bind(_this);
 	        _this.onZoomOutClick = _this.onZoomOutClick.bind(_this);
 	        _this.onZoomResetClick = _this.onZoomResetClick.bind(_this);
@@ -31428,24 +31427,20 @@
 	    }
 	
 	    /*ZOOM START*/
+	    //onZoomStage(evt) {
+	    //    this.stageScaleNum = evt.detail;
+	    //    document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
+	    //}
+	    /*ZOOM END*/
+	
+	    /**
+	    * Btns Actions START
+	    */
+	
+	    /*SLIDER*/
 	
 	
 	    _createClass(Toolbar, [{
-	        key: 'onZoomStage',
-	        value: function onZoomStage(evt) {
-	
-	            this.stageScaleNum = evt.detail;
-	            document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
-	        }
-	        /*ZOOM END*/
-	
-	        /**
-	        * Btns Actions START
-	        */
-	
-	        /*SLIDER*/
-	
-	    }, {
 	        key: 'onZoomSliderChange',
 	        value: function onZoomSliderChange(evt) {
 	            if (this.debugMode) console.log("onZoomSliderChange", evt);
@@ -31453,9 +31448,10 @@
 	            this.stageScaleNum = evt.target.value * 0.1 + 1;
 	            this.props.onZoomUpdate(this.stageScaleNum);
 	
-	            var event = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
-	            window.dispatchEvent(event);
-	            document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
+	            //var event = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
+	            //window.dispatchEvent(event);
+	
+	            //document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
 	        }
 	
 	        /*ZOOM IN BTN*/
@@ -31469,8 +31465,9 @@
 	
 	            this.props.onZoomUpdate(this.stageScaleNum);
 	
-	            var event = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
-	            window.dispatchEvent(event);
+	            //var event = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
+	            //window.dispatchEvent(event);
+	
 	            document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
 	        }
 	
@@ -31486,8 +31483,9 @@
 	
 	            this.props.onZoomUpdate(this.stageScaleNum);
 	
-	            var event = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
-	            window.dispatchEvent(event);
+	            //var event = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
+	            //window.dispatchEvent(event);
+	
 	            document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
 	        }
 	
@@ -31502,8 +31500,9 @@
 	            this.stageScaleNum = 1;
 	            this.props.onZoomUpdate(this.stageScaleNum);
 	
-	            var event = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
-	            window.dispatchEvent(event);
+	            //var event = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
+	            //window.dispatchEvent(event);
+	
 	            document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
 	        }
 	    }, {
@@ -40139,12 +40138,6 @@
 	
 	        var _this = _possibleConstructorReturn(this, (Stage.__proto__ || Object.getPrototypeOf(Stage)).call(this, props));
 	
-	        _this.zoomMouse = false;
-	        _this.dragStage = false;
-	        _this.stageScaleNum = 1;
-	        _this.stageScaleNumMin = 0.2;
-	        _this.stageScaleNumMax = 2;
-	
 	        _this.state = {
 	            floorCfg: {
 	                id: 4,
@@ -40177,12 +40170,6 @@
 	        _this.initStageAsDraggable = _this.initStageAsDraggable.bind(_this);
 	        _this.createGrid = _this.createGrid.bind(_this);
 	        _this.clearStage = _this.clearStage.bind(_this);
-	        _this.updateDimensions = _this.updateDimensions.bind(_this);
-	        _this.onZoomStage = _this.onZoomStage.bind(_this);
-	        _this.zoomStage = _this.zoomStage.bind(_this);
-	        _this.onMouseWheel = _this.onMouseWheel.bind(_this);
-	        _this.onKeyDown = _this.onKeyDown.bind(_this);
-	        _this.onKeyUp = _this.onKeyUp.bind(_this);
 	        return _this;
 	    }
 	
@@ -40322,216 +40309,24 @@
 	            return null;
 	        }
 	    }, {
-	        key: 'updateDimensions',
-	        value: function updateDimensions() {
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
 	
-	            var toolbarHeight = (0, _jquery2.default)("#designer-toolbar").height();
-	            var windowWidth = (0, _jquery2.default)(window).width();
-	            var windowHeight = (0, _jquery2.default)(window).height();
-	
-	            (0, _jquery2.default)("#stage-container").height(windowHeight - toolbarHeight);
-	
-	            var parentHeight = (0, _jquery2.default)("#stage-container").height();
-	            var parentWidth = (0, _jquery2.default)("#stage-container").width();
-	
-	            if ((0, _jquery2.default)("#stage").height() <= (0, _jquery2.default)("#stage-container").height()) {
-	
-	                var posY = parentHeight / 2 - (0, _jquery2.default)("#stage").height() / 2;
-	                _gsap.TweenMax.to((0, _jquery2.default)("#stage"), 0, { y: posY });
-	            } else {
-	                _gsap.TweenMax.to((0, _jquery2.default)("#stage"), 0, { y: 0 });
-	            }
-	
-	            if ((0, _jquery2.default)("#stage").width() <= (0, _jquery2.default)("#stage-container").width()) {
-	                var posX = parentWidth / 2 - (0, _jquery2.default)("#stage").width() / 2;
-	                _gsap.TweenMax.to((0, _jquery2.default)("#stage"), 0, { x: posX });
-	            } else {
-	                _gsap.TweenMax.to((0, _jquery2.default)("#stage"), 0, { x: 0 });
-	            }
-	        }
-	
-	        /*ZOOM START*/
-	
-	    }, {
-	        key: 'onZoomStage',
-	        value: function onZoomStage(evt) {
-	            this.stageScaleNum = evt.detail;
-	            this.zoomStage();
-	        }
-	    }, {
-	        key: 'zoomStage',
-	        value: function zoomStage() {
-	
-	            var stage = (0, _jquery2.default)('#stage');
-	            var stageContainer = (0, _jquery2.default)('#stage-container');
-	
-	            //TweenMax.killTweensOf(room);
-	            //TweenMax.killTweensOf(roomContainer);
-	            //let stageScaleNum = this.stageScaleNum;
-	            //let { stageScaleNumMin, stageScaleNumMax } = this.state
-	
-	            if (this.stageScaleNum < this.stageScaleNumMin) {
-	                this.stageScaleNum = this.stageScaleNumMin;
-	            }
-	            if (this.stageScaleNum > this.stageScaleNumMax) {
-	                this.stageScaleNum = this.stageScaleNumMax;
-	            }
-	
-	            _gsap.TweenMax.to(stage, 0.3, {
-	                scaleX: this.stageScaleNum,
-	                scaleY: this.stageScaleNum
-	            });
-	
-	            var posX = stageContainer.width() / 2 - stage.width() / 2;
-	            var stageWidthAfterScale = stage.width() * this.stageScaleNum;
-	
-	            var posY = stageContainer.height() / 2 - stage.height() / 2;
-	            var stageHeightAfterScale = stage.height() * this.stageScaleNum;
-	
-	            //First for horizontal scale scroll issue
-	            //check if scaled room width is bigger than room conatiner
-	            //if true align to left
-	            if (stageWidthAfterScale >= stageContainer.width()) {
-	                _gsap.TweenMax.set(stage, {
-	                    transformOrigin: "0 50%",
-	                    x: 0,
-	                    y: posY
-	                });
-	
-	                //then check if scaled room height is bigger than room conatiner 
-	                //and align to top
-	                if (stageHeightAfterScale >= stageContainer.height()) {
-	                    _gsap.TweenMax.set(stage, {
-	                        transformOrigin: "0% 0%",
-	                        x: 0,
-	                        y: 0
-	                    });
-	                }
-	            }
-	            //for vertical scale scroll issue
-	            //check if scaled room height is bigger than room conatiner 
-	            //if true align to top
-	            else if (stageHeightAfterScale >= stageContainer.height()) {
-	                    _gsap.TweenMax.set(stage, {
-	                        transformOrigin: "50% 0%",
-	                        x: posX,
-	                        y: 0
-	                    });
-	
-	                    //then check if scaled room width is bigger than room conatiner 
-	                    //and align to left
-	                    if (stageWidthAfterScale >= stageContainer.width()) {
-	                        _gsap.TweenMax.set(stage, {
-	                            transformOrigin: "0 0",
-	                            x: 0,
-	                            y: 0
-	                        });
-	                    }
-	                }
-	                //otherwise appply regular scale with centerd point
-	                else {
-	                        _gsap.TweenMax.set(stage, {
-	                            transformOrigin: "50% 50%",
-	                            x: posX,
-	                            y: posY
-	                        });
-	                    }
-	        }
-	    }, {
-	        key: 'onMouseWheel',
-	        value: function onMouseWheel(evt) {
-	
-	            if (this.zoomMouse) {
-	                var delta = void 0;
-	
-	                if (evt.wheelDelta !== undefined) delta = evt.wheelDelta;else delta = evt.deltaY * -1;
-	
-	                if (delta > 0) {
-	                    this.stageScaleNum += 0.1;
-	                } else {
-	                    this.stageScaleNum -= 0.1;
-	                }
-	
-	                var event = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
-	                window.dispatchEvent(event);
+	            if (nextProps.zoom != this.props.zoom) {
+	                this.stageScaleNum = nextProps.zoom;
 	                this.zoomStage();
-	
-	                document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
-	                //$("#zoom-slider").get(0).MaterialTextfield.change((stageScaleNum - 1) * 10);
 	            }
+	
+	            return false;
 	        }
-	        /*ZOOM END*/
-	
-	        /*ON KEY UP/DOWN START*/
-	
-	    }, {
-	        key: 'onKeyDown',
-	        value: function onKeyDown(evt) {
-	
-	            //zoom with "Z"
-	            if (evt.keyCode === 90) {
-	
-	                if (this.zoomMouse === false) {
-	
-	                    this.zoomMouse = true;
-	                    var stageContainer = (0, _jquery2.default)("#stage-container");
-	                    stageContainer.css({ "overflow-x": "hidden" });
-	                    stageContainer.css({ "overflow-y": "hidden" });
-	                }
-	            }
-	
-	            //drag stage with "X"
-	            if (evt.keyCode === 88) {
-	
-	                if (this.dragStage === false) {
-	                    this.dragStage = true;
-	                    _Draggable2.default.get("#stage-container").enable();
-	                }
-	            }
-	        }
-	    }, {
-	        key: 'onKeyUp',
-	        value: function onKeyUp(evt) {
-	
-	            //zoom with "Z"
-	            if (evt.keyCode === 90) {
-	
-	                if (this.zoomMouse === true) {
-	
-	                    this.zoomMouse = false;
-	                    var stageContainer = (0, _jquery2.default)("#stage-container");
-	                    (0, _jquery2.default)("#stage-container").css({ "overflow-x": "auto" });
-	                    (0, _jquery2.default)("#stage-container").css({ "overflow-y": "auto" });
-	                }
-	            }
-	
-	            //drag stage with "X"
-	            if (evt.keyCode === 88) {
-	
-	                if (this.dragStage === true) {
-	                    this.dragStage = false;
-	                    if ((0, _jquery2.default)('#stage-blocker').length > 0) (0, _jquery2.default)('#stage-blocker').remove();
-	                    _Draggable2.default.get("#stage-container").disable();
-	                }
-	            }
-	        }
-	        /*ON KEY UP/DOWN END*/
-	
-	    }, {
-	        key: 'componentWillUpdate',
-	        value: function componentWillUpdate() {}
 	    }, {
 	        key: 'componentDidUpdate',
 	        value: function componentDidUpdate() {
-	            console.log("zoom from update comp", this.props.zoom);
 	            /*every rerender slows down animation
 	             *so it's better to use event listeners
 	             */
 	            //this.onZoomStage(this.props.zoom);
 	        }
-	    }, {
-	        key: 'componentWillMount',
-	        value: function componentWillMount() {}
 	    }, {
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
@@ -40539,22 +40334,6 @@
 	            this.stageInit();
 	            this.createGrid();
 	            this.initStageAsDraggable();
-	            this.updateDimensions();
-	
-	            window.addEventListener("resize", this.updateDimensions);
-	            window.addEventListener('zoomOccured', this.onZoomStage);
-	            window.addEventListener('wheel', this.onMouseWheel);
-	            window.addEventListener("keydown", this.onKeyDown);
-	            window.addEventListener("keyup", this.onKeyUp);
-	        }
-	    }, {
-	        key: 'componentWillUnmount',
-	        value: function componentWillUnmount() {
-	            window.removeEventListener("resize", this.updateDimensions);
-	            window.removeEventListener('zoomOccured', this.onZoomStage);
-	            window.removeEventListener('wheel', this.onMouseWheel);
-	            window.removeEventListener("keydown", this.onKeyDown);
-	            window.removeEventListener("keyup", this.onKeyUp);
 	        }
 	    }, {
 	        key: 'render',
@@ -40761,9 +40540,17 @@
 	
 	        var _this = _possibleConstructorReturn(this, (Workspace.__proto__ || Object.getPrototypeOf(Workspace)).call(this, props));
 	
-	        _this.state = {
-	            zoom: 1
-	        };
+	        _this.zoomMouse = false;
+	        _this.dragStage = false;
+	        _this.stageScaleNum = 1;
+	        _this.stageScaleNumMin = 0.2;
+	        _this.stageScaleNumMax = 2;
+	
+	        _this.onZoomStage = _this.onZoomStage.bind(_this);
+	        _this.zoomStage = _this.zoomStage.bind(_this);
+	        _this.onMouseWheel = _this.onMouseWheel.bind(_this);
+	        _this.onKeyDown = _this.onKeyDown.bind(_this);
+	        _this.onKeyUp = _this.onKeyUp.bind(_this);
 	        return _this;
 	    }
 	
@@ -40774,32 +40561,216 @@
 	            var toolbarHeight = (0, _jquery2.default)("#designer-toolbar").height();
 	            var windowWidth = (0, _jquery2.default)(window).width();
 	            var windowHeight = (0, _jquery2.default)(window).height();
-	
+	            /*shapes panel*/
 	            (0, _jquery2.default)("#shapes-panel").height(windowHeight - toolbarHeight);
+	
+	            (0, _jquery2.default)("#stage-container").height(windowHeight - toolbarHeight);
+	            /*stage*/
+	            var parentHeight = (0, _jquery2.default)("#stage-container").height();
+	            var parentWidth = (0, _jquery2.default)("#stage-container").width();
+	
+	            if ((0, _jquery2.default)("#stage").height() <= (0, _jquery2.default)("#stage-container").height()) {
+	
+	                var posY = parentHeight / 2 - (0, _jquery2.default)("#stage").height() / 2;
+	                TweenMax.to((0, _jquery2.default)("#stage"), 0, { y: posY });
+	            } else {
+	                TweenMax.to((0, _jquery2.default)("#stage"), 0, { y: 0 });
+	            }
+	
+	            if ((0, _jquery2.default)("#stage").width() <= (0, _jquery2.default)("#stage-container").width()) {
+	                var posX = parentWidth / 2 - (0, _jquery2.default)("#stage").width() / 2;
+	                TweenMax.to((0, _jquery2.default)("#stage"), 0, { x: posX });
+	            } else {
+	                TweenMax.to((0, _jquery2.default)("#stage"), 0, { x: 0 });
+	            }
 	        }
+	
+	        /*ZOOM START*/
+	
+	    }, {
+	        key: 'onZoomStage',
+	        value: function onZoomStage(zoom) {
+	            this.stageScaleNum = zoom;
+	            this.zoomStage();
+	        }
+	    }, {
+	        key: 'zoomStage',
+	        value: function zoomStage() {
+	
+	            var stage = (0, _jquery2.default)('#stage');
+	            var stageContainer = (0, _jquery2.default)('#stage-container');
+	
+	            //TweenMax.killTweensOf(room);
+	            //TweenMax.killTweensOf(roomContainer);
+	            //let stageScaleNum = this.stageScaleNum;
+	            //let { stageScaleNumMin, stageScaleNumMax } = this.state
+	
+	            if (this.stageScaleNum < this.stageScaleNumMin) {
+	                this.stageScaleNum = this.stageScaleNumMin;
+	            }
+	            if (this.stageScaleNum > this.stageScaleNumMax) {
+	                this.stageScaleNum = this.stageScaleNumMax;
+	            }
+	
+	            TweenMax.to(stage, 0.3, {
+	                scaleX: this.stageScaleNum,
+	                scaleY: this.stageScaleNum
+	            });
+	
+	            var posX = stageContainer.width() / 2 - stage.width() / 2;
+	            var stageWidthAfterScale = stage.width() * this.stageScaleNum;
+	
+	            var posY = stageContainer.height() / 2 - stage.height() / 2;
+	            var stageHeightAfterScale = stage.height() * this.stageScaleNum;
+	
+	            //First for horizontal scale scroll issue
+	            //check if scaled room width is bigger than room conatiner
+	            //if true align to left
+	            if (stageWidthAfterScale >= stageContainer.width()) {
+	                TweenMax.set(stage, {
+	                    transformOrigin: "0 50%",
+	                    x: 0,
+	                    y: posY
+	                });
+	
+	                //then check if scaled room height is bigger than room conatiner 
+	                //and align to top
+	                if (stageHeightAfterScale >= stageContainer.height()) {
+	                    TweenMax.set(stage, {
+	                        transformOrigin: "0% 0%",
+	                        x: 0,
+	                        y: 0
+	                    });
+	                }
+	            }
+	            //for vertical scale scroll issue
+	            //check if scaled room height is bigger than room conatiner 
+	            //if true align to top
+	            else if (stageHeightAfterScale >= stageContainer.height()) {
+	                    TweenMax.set(stage, {
+	                        transformOrigin: "50% 0%",
+	                        x: posX,
+	                        y: 0
+	                    });
+	
+	                    //then check if scaled room width is bigger than room conatiner 
+	                    //and align to left
+	                    if (stageWidthAfterScale >= stageContainer.width()) {
+	                        TweenMax.set(stage, {
+	                            transformOrigin: "0 0",
+	                            x: 0,
+	                            y: 0
+	                        });
+	                    }
+	                }
+	                //otherwise appply regular scale with centerd point
+	                else {
+	                        TweenMax.set(stage, {
+	                            transformOrigin: "50% 50%",
+	                            x: posX,
+	                            y: posY
+	                        });
+	                    }
+	        }
+	    }, {
+	        key: 'onMouseWheel',
+	        value: function onMouseWheel(evt) {
+	
+	            if (this.zoomMouse) {
+	                var delta = void 0;
+	
+	                if (evt.wheelDelta !== undefined) delta = evt.wheelDelta;else delta = evt.deltaY * -1;
+	
+	                if (delta > 0) {
+	                    this.stageScaleNum += 0.1;
+	                } else {
+	                    this.stageScaleNum -= 0.1;
+	                }
+	
+	                //var event = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
+	                //window.dispatchEvent(event);
+	                this.zoomStage();
+	
+	                document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
+	                //$("#zoom-slider").get(0).MaterialTextfield.change((stageScaleNum - 1) * 10);
+	            }
+	        }
+	        /*ZOOM END*/
+	
+	        /*ON KEY UP/DOWN START*/
+	
+	    }, {
+	        key: 'onKeyDown',
+	        value: function onKeyDown(evt) {
+	
+	            //zoom with "Z"
+	            if (evt.keyCode === 90) {
+	                if (this.zoomMouse === false) {
+	                    this.zoomMouse = true;
+	                    var stageContainer = (0, _jquery2.default)("#stage-container");
+	                    stageContainer.css({ "overflow-x": "hidden" });
+	                    stageContainer.css({ "overflow-y": "hidden" });
+	                }
+	            }
+	
+	            ////drag stage with "X"
+	            if (evt.keyCode === 88) {
+	
+	                if (this.dragStage === false) {
+	                    this.dragStage = true;
+	                    Draggable.get("#stage-container").enable();
+	                }
+	            }
+	        }
+	    }, {
+	        key: 'onKeyUp',
+	        value: function onKeyUp(evt) {
+	
+	            //zoom with "Z"
+	            if (evt.keyCode === 90) {
+	
+	                if (this.zoomMouse === true) {
+	
+	                    this.zoomMouse = false;
+	                    var stageContainer = (0, _jquery2.default)("#stage-container");
+	                    (0, _jquery2.default)("#stage-container").css({ "overflow-x": "auto" });
+	                    (0, _jquery2.default)("#stage-container").css({ "overflow-y": "auto" });
+	                }
+	            }
+	
+	            //drag stage with "X"
+	            if (evt.keyCode === 88) {
+	
+	                if (this.dragStage === true) {
+	                    this.dragStage = false;
+	                    if ((0, _jquery2.default)('#stage-blocker').length > 0) (0, _jquery2.default)('#stage-blocker').remove();
+	                    Draggable.get("#stage-container").disable();
+	                }
+	            }
+	        }
+	        /*ON KEY UP/DOWN END*/
 	
 	        /*we get zoom value from toolbar and set in current comp state*/
+	        //updateZoom(zoom) {
+	        //    this.setState({zoom})
+	        //}
 	
-	    }, {
-	        key: 'updateZoom',
-	        value: function updateZoom(zoom) {
-	            this.setState({ zoom: zoom });
-	        }
-	    }, {
-	        key: 'componentWillMount',
-	        value: function componentWillMount() {
-	            this.updateDimensions();
-	        }
 	    }, {
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
 	            this.updateDimensions();
-	            window.addEventListener("resize", this.updateDimensions.bind(this));
+	            window.addEventListener("resize", this.updateDimensions);
+	            window.addEventListener('wheel', this.onMouseWheel);
+	            window.addEventListener("keydown", this.onKeyDown);
+	            window.addEventListener("keyup", this.onKeyUp);
 	        }
 	    }, {
 	        key: 'componentWillUnmount',
 	        value: function componentWillUnmount() {
-	            window.removeEventListener("resize", this.updateDimensions.bind(this));
+	            window.removeEventListener("resize", this.updateDimensions);
+	            window.removeEventListener('wheel', this.onMouseWheel);
+	            window.removeEventListener("keydown", this.onKeyDown);
+	            window.removeEventListener("keyup", this.onKeyUp);
 	        }
 	    }, {
 	        key: 'render',
@@ -40809,14 +40780,16 @@
 	                { id: 'designer-workspace' },
 	                React.createElement(_toolbar2.default, {
 	                    appCfg: this.props.appCfg,
-	                    onZoomUpdate: this.updateZoom.bind(this)
+	                    zoom: this.stageScaleNum,
+	                    onZoomUpdate: this.onZoomStage
 	                }),
 	                React.createElement(_shapesPanel2.default, {
 	                    appCfg: this.props.appCfg
 	                }),
 	                React.createElement(_stage2.default, {
 	                    appCfg: this.props.appCfg,
-	                    zoom: this.state.zoom
+	                    zoom: this.stageScaleNum,
+	                    onZoomUpdate: this.onZoomStage
 	                })
 	            );
 	        }
