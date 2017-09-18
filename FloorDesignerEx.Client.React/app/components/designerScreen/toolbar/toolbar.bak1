@@ -51,7 +51,6 @@ class Toolbar extends React.Component {
 
         var event = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
         window.dispatchEvent(event);
-
         document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
     }
 
@@ -176,10 +175,6 @@ class Toolbar extends React.Component {
      * Btns Actions END
      */
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return true;
-    }
-
     componentDidMount() {
         //window.addEventListener("resize", this.updateDimensions);
         //$('#zoom-slider').on('input', function () {
@@ -217,7 +212,7 @@ class Toolbar extends React.Component {
                                         className="mdl-slider mdl-js-slider"
                                         type="range" min="-10" max="10" value=""
                                         tabindex="0"
-                                        //onchange="function(evt){OnSliderChange(evt.target.value)}"
+                                        onchange="function(evt){OnSliderChange(evt.target.value)}"
                                         onChange={this.onZoomSliderChange}
                                     />
                                     <button

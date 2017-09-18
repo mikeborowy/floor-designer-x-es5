@@ -60,18 +60,9 @@ class Stage extends React.Component {
         this.updateDimensions = this.updateDimensions.bind(this);
         this.onZoomStage = this.onZoomStage.bind(this);
         this.zoomStage = this.zoomStage.bind(this);
-
         this.onMouseWheel = this.onMouseWheel.bind(this);
-
         this.onKeyDown = this.onKeyDown.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
-
-        this.onTest = this.onTest.bind(this);
-    }
-
-    onTest(param)
-    {
-         console.log(`This is param ${param}`)
     }
 
     stageInit() {
@@ -407,8 +398,7 @@ class Stage extends React.Component {
         return false;
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return true;
+    componentWillMount() {
     }
 
     componentDidMount() {
@@ -436,10 +426,8 @@ class Stage extends React.Component {
     render() {
 
         let { stageBoardsList } = this.state.stageCfg;
-        let onTest = this.onTest;
 
         return (
-
             <div id="stage-container">
                 <div id="stage-top"></div>
                 <div id="stage">
@@ -470,7 +458,6 @@ class Stage extends React.Component {
                                     height={boardItem.height}
                                     top={boardItem.top}
                                     left={boardItem.left}
-                                    onMouseOver={onTest}
                                 />
                             })
                         }

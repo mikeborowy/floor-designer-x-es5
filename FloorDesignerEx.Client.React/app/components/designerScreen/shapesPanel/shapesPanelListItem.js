@@ -1,10 +1,17 @@
 ﻿import * as React from 'react';
 import $ from 'jquery';
 import { TweenLite } from 'gsap';
+import RoomsCfg from '../common/roomsCfg';
 
 const ShapesPanelListItem = (props) => {
 
     let { shape } = props;
+
+    let debugMode = true;
+    let currentAction = '';
+    let gridCellWidth = RoomsCfg().CELL_WIDTH;
+    let gridCellHeight = RoomsCfg().CELL_HEIGHT;
+    let draggedObj = null;
 
     const shapeListBtnConfig = {
 
@@ -23,7 +30,7 @@ const ShapesPanelListItem = (props) => {
         }
     }
 
-    function onMouseOverFn(evt) {
+    function onMouseOver(evt) {
 
         let cfg = shapeListBtnConfig.over;
         let btn = $(evt.currentTarget);
@@ -34,13 +41,13 @@ const ShapesPanelListItem = (props) => {
             backgroundColor: cfg.color
         });
 
-        let primaryContent = btn.find('.mdl-list__item-primary-content')
+        let primaryContent = btn.find('.mdl-list__item-primary-content');
         TweenLite.to(primaryContent, cfg.animationTime + cfg.primaryContentAnimationDelay, {
             x: cfg.primaryContentX
         });
     };
 
-    function onMouseOutFn(evt) {
+    function onMouseOut(evt) {
 
         let cfg = shapeListBtnConfig.normal;
         let btn = $(evt.currentTarget);
@@ -57,14 +64,59 @@ const ShapesPanelListItem = (props) => {
         });
     };
 
+    function OnDragStart(evt) {
+
+        currentAction = 'addItem';
+
+        var target = $(evt.target);
+        var w = target.data('shape-w');
+        var h = target.data('shape-h');
+        var sh = target.attr('name');
+        var parent = target.attr('data-parent');
+
+        $('#stage-grid-live')
+            .find('.stage-board-field-highlight')
+            .css({
+                width: (gridCellWidth * w),
+                height: (gridCellHeight * h)
+            });
+
+        var newId = getCurrentId() + 1;
+
+        draggedObj = null;
+        draggedObj = {
+            id: newId,
+            x: 0,
+            y: 0,
+            w: (gridCellWidth * w),
+            h: (gridCellHeight * h),
+            sh: sh
+        };
+
+        console.log('OnDragStart', draggedObj)
+    }
+
+    function getCurrentId() {
+
+        var _a = 0;
+
+        $.each($('.item-box'), function (i, val) {
+
+            _a = $($('.item-box')[i]).data('box-id');
+        });
+
+        return _a;
+    }
+
     return (
         <li className="mdl-list__item mdl-list__item--two-line shape-list-btn drag-element"
             name={shape.name}
             data-shape-w={shape.width}
             data-shape-h={shape.height}
             draggable={shape.isDraggable}
-            onMouseOver={onMouseOverFn}
-            onMouseOut={onMouseOutFn}
+            onMouseOver={onMouseOver}
+            onMouseOut={onMouseOut}
+            onDragStart={OnDragStart}
             >
             <div className="shape-list-sml-bar"></div>
             <div className="mdl-list__item-primary-content">
