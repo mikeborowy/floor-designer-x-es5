@@ -2,21 +2,30 @@
 import ShapesListCfg from './shapesCfg';
 import ShapesPanelListItem from './shapesPanelListItem';
 
-const ShapesPanel = (props) => {
+class ShapesPanel extends React.Component {
 
-    let shapesList = ShapesListCfg();
+    constructor(props) {
+        super(props)
 
-    return (
-        <div id="shapes-panel">
-            <div id="shapes-box">
-                <ul id="shapes-list" className="demo-list-two mdl-list ">
-                    {shapesList.map(function (shapeItem) {
-                        return <ShapesPanelListItem key={shapeItem.id} shape={shapeItem} />
-                    })}
-                </ul>
+        this.shapesList = ShapesListCfg();
+    }
+
+    render() {
+        return (
+            <div id="shapes-panel">
+                <div id="shapes-box">
+                    <ul id="shapes-list" className="demo-list-two mdl-list ">
+                        {this.shapesList.map(function (shapeItem) {
+                            return <ShapesPanelListItem
+                                key={shapeItem.id}
+                                shape={shapeItem}
+                            />
+                        })}
+                    </ul>
+                </div>
             </div>
-        </div>
-    )
+        )
+    }
 }
 
 export default ShapesPanel;

@@ -3,36 +3,39 @@ import $ from 'jquery';
 import { TweenLite } from 'gsap';
 import RoomsCfg from '../common/roomsCfg';
 
-const ShapesPanelListItem = (props) => {
+class ShapesPanelListItem extends React.Component {
 
-    let { shape } = props;
+    constructor(props) {
+        super(props)
 
-    let debugMode = true;
-    let currentAction = '';
-    let gridCellWidth = RoomsCfg().CELL_WIDTH;
-    let gridCellHeight = RoomsCfg().CELL_HEIGHT;
-    let draggedObj = null;
+        this.debugMode = true;
+        this.shape = props.shape;
 
-    const shapeListBtnConfig = {
+        this.currentAction = '';
+        this.gridCellWidth = RoomsCfg().CELL_WIDTH;
+        this.gridCellHeight = RoomsCfg().CELL_HEIGHT;
 
-        normal: {
-            smlBarWidth: 5,
-            color: 'rgb(68,138,255)',
-            primaryContentX: 0,
-            animationTime: 0.2
-        },
-        over: {
-            smlBarWidth: 15,
-            color: 'rgb(255,235,59)',
-            primaryContentX: 20,
-            primaryContentAnimationDelay: 0.1,
-            animationTime: 0.2
+        this.shapeListBtnConfig = {
+
+            normal: {
+                smlBarWidth: 5,
+                color: 'rgb(68,138,255)',
+                primaryContentX: 0,
+                animationTime: 0.2
+            },
+            over: {
+                smlBarWidth: 15,
+                color: 'rgb(255,235,59)',
+                primaryContentX: 20,
+                primaryContentAnimationDelay: 0.1,
+                animationTime: 0.2
+            }
         }
     }
 
-    function onMouseOver(evt) {
+    onMouseOver(evt) {
 
-        let cfg = shapeListBtnConfig.over;
+        let cfg = this.shapeListBtnConfig.over;
         let btn = $(evt.currentTarget);
         let bar = btn.find('.shape-list-sml-bar');
 
@@ -47,9 +50,9 @@ const ShapesPanelListItem = (props) => {
         });
     };
 
-    function onMouseOut(evt) {
+    onMouseOut(evt) {
 
-        let cfg = shapeListBtnConfig.normal;
+        let cfg = this.shapeListBtnConfig.normal;
         let btn = $(evt.currentTarget);
         let bar = btn.find('.shape-list-sml-bar');
 
@@ -58,74 +61,73 @@ const ShapesPanelListItem = (props) => {
             backgroundColor: cfg.color
         });
 
-        var primaryContent = btn.find('.mdl-list__item-primary-content')
+        let primaryContent = btn.find('.mdl-list__item-primary-content')
         TweenLite.to(primaryContent, cfg.animationTime, {
             x: cfg.primaryContentX
         });
     };
 
-    function OnDragStart(evt) {
+    onMouseDown(evt) {
 
-        currentAction = 'addItem';
+        console.log('mouse down');
 
-        var target = $(evt.target);
-        var w = target.data('shape-w');
-        var h = target.data('shape-h');
-        var sh = target.attr('name');
-        var parent = target.attr('data-parent');
+        var target = $(evt.currentTarget);
+        target.bind('dragstart', this.onDragStart.bind(this));
+
+    }
+
+    onDragStart(evt) {
+
+        console.log('onDragStart');
+
+        this.currentAction = 'addItem';
+
+        let target = $(this);
+        let w = target.data('shape-w');
+        let h = target.data('shape-h');
+        let sh = target.attr('name');
+        let parent = target.attr('data-parent');
 
         $('#stage-grid-live')
             .find('.stage-board-field-highlight')
             .css({
-                width: (gridCellWidth * w),
-                height: (gridCellHeight * h)
+                width: (this.gridCellWidth * w),
+                height: (this.gridCellHeight * h)
             });
 
-        var newId = getCurrentId() + 1;
+        let newId = ''//getCurrentId() + 1;
 
-        draggedObj = null;
-        draggedObj = {
+        this.draggedObj = null;
+        this.draggedObj = {
             id: newId,
             x: 0,
             y: 0,
-            w: (gridCellWidth * w),
-            h: (gridCellHeight * h),
+            w: (this.gridCellWidth * w),
+            h: (this.gridCellHeight * h),
             sh: sh
         };
-
-        console.log('OnDragStart', draggedObj)
     }
 
-    function getCurrentId() {
-
-        var _a = 0;
-
-        $.each($('.item-box'), function (i, val) {
-
-            _a = $($('.item-box')[i]).data('box-id');
-        });
-
-        return _a;
-    }
-
-    return (
-        <li className="mdl-list__item mdl-list__item--two-line shape-list-btn drag-element"
-            name={shape.name}
-            data-shape-w={shape.width}
-            data-shape-h={shape.height}
-            draggable={shape.isDraggable}
-            onMouseOver={onMouseOver}
-            onMouseOut={onMouseOut}
-            onDragStart={OnDragStart}
+    render() {
+        return (
+            <li className="mdl-list__item mdl-list__item--two-line shape-list-btn drag-element"
+                draggable="true"
+                name={this.shape.name}
+                data-shape-w={this.shape.width}
+                data-shape-h={this.shape.height}
+                onMouseOver={this.onMouseOver.bind(this)}
+                onMouseOut={this.onMouseOut.bind(this)}
+                onMouseDown={this.onMouseDown.bind(this)}
             >
-            <div className="shape-list-sml-bar"></div>
-            <div className="mdl-list__item-primary-content">
-                <img className="shape-list-img-sml" src={shape.image} />
-                <span className="mdl-list__item-sub-title shape-list-size">Size {shape.width}x{shape.height}</span>
-                <span className="shape-list-title">{shape.desc}</span>
-            </div>
-        </li>
-    )
+                <div className="shape-list-sml-bar"></div>
+                <div className="mdl-list__item-primary-content">
+                    <img className="shape-list-img-sml" src={this.shape.image} />
+                    <span className="mdl-list__item-sub-title shape-list-size">Size {this.shape.width}x{this.shape.height}</span>
+                    <span className="shape-list-title">{this.shape.desc}</span>
+                </div>
+            </li>
+        )
+    }
 }
 
 export default ShapesPanelListItem;

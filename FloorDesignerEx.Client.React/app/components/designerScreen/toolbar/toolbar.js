@@ -216,7 +216,7 @@ class Toolbar extends React.Component {
                                     <input id="zoom-slider"
                                         className="mdl-slider mdl-js-slider"
                                         type="range" min="-10" max="10" value=""
-                                        tabindex="0"
+                                        tabIndex="0"
                                         //onchange="function(evt){OnSliderChange(evt.target.value)}"
                                         onChange={this.onZoomSliderChange}
                                     />

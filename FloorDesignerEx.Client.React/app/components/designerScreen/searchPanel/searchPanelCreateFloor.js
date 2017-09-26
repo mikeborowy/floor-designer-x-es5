@@ -9,17 +9,17 @@ const SearchPanelCreateFloor = () => {
                     <span>Floor:</span>
                     <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input className="mdl-textfield__input floor-textfield" type="text" id="floor-num" pattern="^[0-9]*" />
-                        <label className="mdl-textfield__label floor-textfield" for="floor-num">Number</label>
+                        <label className="mdl-textfield__label floor-textfield" htmlFor="floor-num">Number</label>
                     </div>
                     <span>Width:</span>
                     <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input className="mdl-textfield__input floor-textfield" type="text" id="floor-width" pattern="^[0-9]*" />
-                        <label className="mdl-textfield__label floor-textfield" for="floor-width">Meters</label>
+                        <label className="mdl-textfield__label floor-textfield" htmlFor="floor-width">Meters</label>
                     </div>
                     <span>Height:</span>
                     <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input className="mdl-textfield__input floor-textfield" type="text" id="floor-height" pattern="^[0-9]*" />
-                        <label className="mdl-textfield__label floor-textfield" for="floor-height">Meters</label>
+                        <label className="mdl-textfield__label floor-textfield" htmlFor="floor-height">Meters</label>
                     </div>
                 </form>
             </div>

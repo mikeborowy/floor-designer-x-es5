@@ -431,7 +431,7 @@ class Stage extends React.Component {
         window.removeEventListener('wheel', this.onMouseWheel);
         window.removeEventListener("keydown", this.onKeyDown);
         window.removeEventListener("keyup", this.onKeyUp);
-    }
+         }
 
     render() {
 
@@ -475,8 +475,7 @@ class Stage extends React.Component {
                             })
                         }
                     </div>
-                    <div id="stage-items-container">
-                    </div>
+                    <div id="stage-items-container"></div>
                 </div>
                 <div id="stage-bottom"></div>
             </div>
