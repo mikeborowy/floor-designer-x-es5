@@ -49,8 +49,8 @@ class Toolbar extends React.Component {
         this.stageScaleNum = (evt.target.value * 0.1) + 1
         this.props.onZoomUpdate(this.stageScaleNum);
 
-        var event = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
-        window.dispatchEvent(event);
+        var evt = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
+        window.dispatchEvent(evt);
 
         document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
     }
@@ -64,8 +64,9 @@ class Toolbar extends React.Component {
 
         this.props.onZoomUpdate(this.stageScaleNum);
 
-        var event = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
-        window.dispatchEvent(event);
+        var evt = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
+        window.dispatchEvent(evt);
+
         document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
     }
 
@@ -79,8 +80,9 @@ class Toolbar extends React.Component {
 
         this.props.onZoomUpdate(this.stageScaleNum);
 
-        var event = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
-        window.dispatchEvent(event);
+        var evt = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
+        window.dispatchEvent(evt);
+
         document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
     }
 
@@ -92,8 +94,9 @@ class Toolbar extends React.Component {
         this.stageScaleNum = 1;
         this.props.onZoomUpdate(this.stageScaleNum);
 
-        var event = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
-        window.dispatchEvent(event);
+        var evt = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
+        window.dispatchEvent(evt);
+
         document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
     };
 

@@ -1,5 +1,6 @@
 ﻿//react libs
 import * as React from 'react';
+//import { assign } from 'babel-polyfill';
 //3rd party libs
 import $ from 'jquery';
 import { TweenMax } from 'gsap';
@@ -23,6 +24,18 @@ class Stage extends React.Component {
         this.stageScaleNum = 1;
         this.stageScaleNumMin = 0.2;
         this.stageScaleNumMax = 2;
+
+        this.draggedObj = {
+            id: -1,
+            x: 0,
+            y: 0,
+            r: 0,
+            tox: 0,
+            toy: 0,
+            w: 0,
+            h: 0,
+            sh: ''
+        };
 
         this.state = {
             floorCfg: {
@@ -66,12 +79,14 @@ class Stage extends React.Component {
         this.onKeyDown = this.onKeyDown.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
 
+        this.onSetupDraggedObj = this.onSetupDraggedObj.bind(this);
+        this.createStageItem = this.createStageItem.bind(this);
+
         this.onTest = this.onTest.bind(this);
     }
 
-    onTest(param)
-    {
-         console.log(`This is param ${param}`)
+    onTest(param) {
+        console.log(`This is param ${param}`)
     }
 
     stageInit() {
@@ -123,16 +138,95 @@ class Stage extends React.Component {
         }
     };
 
-    initStageAsDraggable() {
+    onSetupDraggedObj(evt) {
 
-        let draggableObj = Draggable.create($("#stage-container"), {
-            type: "scroll",
-            edgeResistance: 1,
-            throwProps: true,
-            lockAxis: true
+        this.draggedObj = Object.assign(this.draggedObj, evt.detail);
+
+        this.createStageItem(this.draggedObj);
+    }
+
+    createStageItem(draggedObj) {
+
+        let { id, x, y, r, tox, toy, w, h, sh } = draggedObj;
+
+        let stageItemsContainer = $('#stage-items-container');
+
+        var item = $(
+            "<div>" +
+            "<div class='shape-rotate-btn shape-button' data-btn-r='" + (r * (-1)) + "'>" +
+            "<div class='shape-rotate-inv-btn'/>" +
+            "<i class='material-icons shape-rotate-inv-icon'>rotate_right</i>" +
+            "</div>" +
+            "<div class='shape-drag-btn shape-button' data-btn-r='" + (r * (-1)) + "'>" +
+            "<div class='shape-drag-inv-btn'/>" +
+            "<i class='material-icons shape-drag-inv-icon'>drag_handle</i>" +
+            "</div>" +
+            "<div class='shape-delete-btn shape-button' data-btn-r='" + (r * (-1)) + "'>" +
+            "<div class='shape-delete-inv-btn'/>" +
+            "<i class='material-icons shape-delete-inv-icon'>delete</i>" +
+            "</div>" +
+            "<div class='shape-resize-btn shape-button' data-btn-r='" + (r * (-1)) + "'>" +
+            "<div class='shape-resize-inv-btn'/>" +
+            "<i class='material-icons shape-resize-inv-icon'>photo_size_select_small</i>" +
+            "</div>" +
+            "</div>"
+        ).
+            attr('class', 'item-box').
+            attr('data-box-id', id).
+            attr('data-box-x', x).
+            attr('data-box-y', y).
+            attr('data-box-r', r).
+            attr('data-box-tox', tox).
+            attr('data-box-toy', toy).
+            attr('data-box-w', w).
+            attr('data-box-h', h).
+            attr('data-box-shape', sh).
+            attr('data-box-selected', false).
+            attr('data-parent', 'stage').
+            css({
+                position: 'absolute',
+                width: w,
+                height: h
+            }).
+            appendTo(stageItemsContainer);
+
+        //if (item.data('box-shape') === "shape-room-l-3x2") {
+        //    this.createLShapeRoom()
+        //        .appendTo(item);
+        //}
+        //else {
+        //    this.createRegularShapeRoom()
+        //        .appendTo(item);
+        //}
+
+        var newOriginX = (item.data('box-w')) * 0.5;
+        var newOriginY = (item.data('box-h')) * 0.5;
+
+        if (item.width() > item.height()) {
+            newOriginX = (item.data('box-w')) - (0.5);
+            newOriginY = (item.data('box-h')) - (0.5);
+        }
+
+        TweenLite.set(item, { transformOrigin: "" + newOriginX + "px " + newOriginY + "px" });
+        TweenLite.set(item, { rotation: r });
+        TweenLite.set(item.find('.shape-button'), { rotation: (360 - r) });
+
+        item.attr('data-box-tox', newOriginX);
+        item.attr('data-box-toy', newOriginY);
+
+        removeDuplicate('.item-box');
+
+        //setup item container on stage
+        TweenLite.from(item, 0.3, {
+            scaleX: 0,
+            scaleY: 0,
+            onComplete: initItem,
+            onCompleteParams: [item]
         });
 
-        Draggable.get("#stage-container").disable();
+        TweenLite.to(item, 0, { x: x, y: y });
+
+        return item;
     }
 
     loadItems() {
@@ -179,6 +273,19 @@ class Stage extends React.Component {
         //        });
         //    }
     }
+
+    initStageAsDraggable() {
+
+        let draggableObj = Draggable.create($("#stage-container"), {
+            type: "scroll",
+            edgeResistance: 1,
+            throwProps: true,
+            lockAxis: true
+        });
+
+        Draggable.get("#stage-container").disable();
+    }
+
 
     clearStage() {
 
@@ -333,8 +440,9 @@ class Stage extends React.Component {
                 this.stageScaleNum -= 0.1;
             }
 
-            var event = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
-            window.dispatchEvent(event);
+            var evt = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
+            window.dispatchEvent(evt);
+
             this.zoomStage();
 
             document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
@@ -419,19 +527,25 @@ class Stage extends React.Component {
         this.updateDimensions();
 
         window.addEventListener("resize", this.updateDimensions);
-        window.addEventListener('zoomOccured', this.onZoomStage);
         window.addEventListener('wheel', this.onMouseWheel);
         window.addEventListener("keydown", this.onKeyDown);
         window.addEventListener("keyup", this.onKeyUp);
+        //custom events
+        window.addEventListener('zoomOccured', this.onZoomStage);
+        window.addEventListener('onDragObject', this.onSetupDraggedObj);
+        window.addEventListener('onDropObject', this.onSetupDraggedObj);
     }
 
     componentWillUnmount() {
         window.removeEventListener("resize", this.updateDimensions);
-        window.removeEventListener('zoomOccured', this.onZoomStage);
         window.removeEventListener('wheel', this.onMouseWheel);
         window.removeEventListener("keydown", this.onKeyDown);
         window.removeEventListener("keyup", this.onKeyUp);
-         }
+        //custom events
+        window.removeEventListener('zoomOccured', this.onZoomStage);
+        window.removeEventListener('onDragObject', this.onSetupDraggedObj);
+        window.removeEventListener('onDropObject', this.onSetupDraggedObj);
+    }
 
     render() {
 

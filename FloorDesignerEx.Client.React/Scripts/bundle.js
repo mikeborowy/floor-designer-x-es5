@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "86b5421541ce0e1909bd"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "142681ff864f65ba2ec5"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -597,7 +597,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "86b5421541ce0e1909bd"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "142681ff864f65ba2ec5"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -33823,8 +33823,8 @@
 	            this.stageScaleNum = evt.target.value * 0.1 + 1;
 	            this.props.onZoomUpdate(this.stageScaleNum);
 	
-	            var event = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
-	            window.dispatchEvent(event);
+	            var evt = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
+	            window.dispatchEvent(evt);
 	
 	            document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
 	        }
@@ -33840,8 +33840,9 @@
 	
 	            this.props.onZoomUpdate(this.stageScaleNum);
 	
-	            var event = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
-	            window.dispatchEvent(event);
+	            var evt = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
+	            window.dispatchEvent(evt);
+	
 	            document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
 	        }
 	
@@ -33857,8 +33858,9 @@
 	
 	            this.props.onZoomUpdate(this.stageScaleNum);
 	
-	            var event = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
-	            window.dispatchEvent(event);
+	            var evt = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
+	            window.dispatchEvent(evt);
+	
 	            document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
 	        }
 	
@@ -33873,8 +33875,9 @@
 	            this.stageScaleNum = 1;
 	            this.props.onZoomUpdate(this.stageScaleNum);
 	
-	            var event = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
-	            window.dispatchEvent(event);
+	            var evt = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
+	            window.dispatchEvent(evt);
+	
 	            document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
 	        }
 	    }, {
@@ -50477,6 +50480,8 @@
 	        _this.gridCellWidth = (0, _roomsCfg2.default)().CELL_WIDTH;
 	        _this.gridCellHeight = (0, _roomsCfg2.default)().CELL_HEIGHT;
 	
+	        _this.draggedObj = {};
+	
 	        _this.shapeListBtnConfig = {
 	
 	            normal: {
@@ -50536,8 +50541,6 @@
 	        key: 'onMouseDown',
 	        value: function onMouseDown(evt) {
 	
-	            console.log('mouse down');
-	
 	            var target = (0, _jquery2.default)(evt.currentTarget);
 	            target.bind('dragstart', this.onDragStart.bind(this));
 	        }
@@ -50545,11 +50548,11 @@
 	        key: 'onDragStart',
 	        value: function onDragStart(evt) {
 	
-	            console.log('onDragStart');
+	            console.log('onDragStart', evt);
 	
 	            this.currentAction = 'addItem';
 	
-	            var target = (0, _jquery2.default)(this);
+	            var target = (0, _jquery2.default)(evt.currentTarget);
 	            var w = target.data('shape-w');
 	            var h = target.data('shape-h');
 	            var sh = target.attr('name');
@@ -50560,17 +50563,13 @@
 	                height: this.gridCellHeight * h
 	            });
 	
-	            var newId = ''; //getCurrentId() + 1;
+	            this.draggedObj.id = new Date().valueOf();
+	            this.draggedObj.w = this.gridCellWidth * w;
+	            this.draggedObj.h = this.gridCellHeight * h;
+	            this.draggedObj.sh = sh;
 	
-	            this.draggedObj = null;
-	            this.draggedObj = {
-	                id: newId,
-	                x: 0,
-	                y: 0,
-	                w: this.gridCellWidth * w,
-	                h: this.gridCellHeight * h,
-	                sh: sh
-	            };
+	            var evt = new CustomEvent('onDragObject', { detail: this.draggedObj });
+	            window.dispatchEvent(evt);
 	        }
 	    }, {
 	        key: 'render',
@@ -50682,6 +50681,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } //react libs
 	
+	//import { assign } from 'babel-polyfill';
 	//3rd party libs
 	
 	//cfg files
@@ -50702,6 +50702,18 @@
 	        _this.stageScaleNum = 1;
 	        _this.stageScaleNumMin = 0.2;
 	        _this.stageScaleNumMax = 2;
+	
+	        _this.draggedObj = {
+	            id: -1,
+	            x: 0,
+	            y: 0,
+	            r: 0,
+	            tox: 0,
+	            toy: 0,
+	            w: 0,
+	            h: 0,
+	            sh: ''
+	        };
 	
 	        _this.state = {
 	            floorCfg: {
@@ -50743,6 +50755,9 @@
 	
 	        _this.onKeyDown = _this.onKeyDown.bind(_this);
 	        _this.onKeyUp = _this.onKeyUp.bind(_this);
+	
+	        _this.onSetupDraggedObj = _this.onSetupDraggedObj.bind(_this);
+	        _this.createStageItem = _this.createStageItem.bind(_this);
 	
 	        _this.onTest = _this.onTest.bind(_this);
 	        return _this;
@@ -50809,17 +50824,72 @@
 	            }
 	        }
 	    }, {
-	        key: 'initStageAsDraggable',
-	        value: function initStageAsDraggable() {
+	        key: 'onSetupDraggedObj',
+	        value: function onSetupDraggedObj(evt) {
 	
-	            var draggableObj = _Draggable2.default.create((0, _jquery2.default)("#stage-container"), {
-	                type: "scroll",
-	                edgeResistance: 1,
-	                throwProps: true,
-	                lockAxis: true
+	            this.draggedObj = Object.assign(this.draggedObj, evt.detail);
+	
+	            this.createStageItem(this.draggedObj);
+	        }
+	    }, {
+	        key: 'createStageItem',
+	        value: function createStageItem(draggedObj) {
+	            var id = draggedObj.id,
+	                x = draggedObj.x,
+	                y = draggedObj.y,
+	                r = draggedObj.r,
+	                tox = draggedObj.tox,
+	                toy = draggedObj.toy,
+	                w = draggedObj.w,
+	                h = draggedObj.h,
+	                sh = draggedObj.sh;
+	
+	
+	            var stageItemsContainer = (0, _jquery2.default)('#stage-items-container');
+	
+	            var item = (0, _jquery2.default)("<div>" + "<div class='shape-rotate-btn shape-button' data-btn-r='" + r * -1 + "'>" + "<div class='shape-rotate-inv-btn'/>" + "<i class='material-icons shape-rotate-inv-icon'>rotate_right</i>" + "</div>" + "<div class='shape-drag-btn shape-button' data-btn-r='" + r * -1 + "'>" + "<div class='shape-drag-inv-btn'/>" + "<i class='material-icons shape-drag-inv-icon'>drag_handle</i>" + "</div>" + "<div class='shape-delete-btn shape-button' data-btn-r='" + r * -1 + "'>" + "<div class='shape-delete-inv-btn'/>" + "<i class='material-icons shape-delete-inv-icon'>delete</i>" + "</div>" + "<div class='shape-resize-btn shape-button' data-btn-r='" + r * -1 + "'>" + "<div class='shape-resize-inv-btn'/>" + "<i class='material-icons shape-resize-inv-icon'>photo_size_select_small</i>" + "</div>" + "</div>").attr('class', 'item-box').attr('data-box-id', id).attr('data-box-x', x).attr('data-box-y', y).attr('data-box-r', r).attr('data-box-tox', tox).attr('data-box-toy', toy).attr('data-box-w', w).attr('data-box-h', h).attr('data-box-shape', sh).attr('data-box-selected', false).attr('data-parent', 'stage').css({
+	                position: 'absolute',
+	                width: w,
+	                height: h
+	            }).appendTo(stageItemsContainer);
+	
+	            //if (item.data('box-shape') === "shape-room-l-3x2") {
+	            //    this.createLShapeRoom()
+	            //        .appendTo(item);
+	            //}
+	            //else {
+	            //    this.createRegularShapeRoom()
+	            //        .appendTo(item);
+	            //}
+	
+	            var newOriginX = item.data('box-w') * 0.5;
+	            var newOriginY = item.data('box-h') * 0.5;
+	
+	            if (item.width() > item.height()) {
+	                newOriginX = item.data('box-w') - 0.5;
+	                newOriginY = item.data('box-h') - 0.5;
+	            }
+	
+	            TweenLite.set(item, { transformOrigin: "" + newOriginX + "px " + newOriginY + "px" });
+	            TweenLite.set(item, { rotation: r });
+	            TweenLite.set(item.find('.shape-button'), { rotation: 360 - r });
+	
+	            item.attr('data-box-tox', newOriginX);
+	            item.attr('data-box-toy', newOriginY);
+	
+	            removeDuplicate('.item-box');
+	
+	            //setup item container on stage
+	            TweenLite.from(item, 0.3, {
+	                scaleX: 0,
+	                scaleY: 0,
+	                onComplete: initItem,
+	                onCompleteParams: [item]
 	            });
 	
-	            _Draggable2.default.get("#stage-container").disable();
+	            TweenLite.to(item, 0, { x: x, y: y });
+	
+	            return item;
 	        }
 	    }, {
 	        key: 'loadItems',
@@ -50866,6 +50936,19 @@
 	            //            })
 	            //        });
 	            //    }
+	        }
+	    }, {
+	        key: 'initStageAsDraggable',
+	        value: function initStageAsDraggable() {
+	
+	            var draggableObj = _Draggable2.default.create((0, _jquery2.default)("#stage-container"), {
+	                type: "scroll",
+	                edgeResistance: 1,
+	                throwProps: true,
+	                lockAxis: true
+	            });
+	
+	            _Draggable2.default.get("#stage-container").disable();
 	        }
 	    }, {
 	        key: 'clearStage',
@@ -51019,8 +51102,9 @@
 	                    this.stageScaleNum -= 0.1;
 	                }
 	
-	                var event = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
-	                window.dispatchEvent(event);
+	                var evt = new CustomEvent('zoomOccured', { detail: this.stageScaleNum });
+	                window.dispatchEvent(evt);
+	
 	                this.zoomStage();
 	
 	                document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
@@ -51113,19 +51197,25 @@
 	            this.updateDimensions();
 	
 	            window.addEventListener("resize", this.updateDimensions);
-	            window.addEventListener('zoomOccured', this.onZoomStage);
 	            window.addEventListener('wheel', this.onMouseWheel);
 	            window.addEventListener("keydown", this.onKeyDown);
 	            window.addEventListener("keyup", this.onKeyUp);
+	            //custom events
+	            window.addEventListener('zoomOccured', this.onZoomStage);
+	            window.addEventListener('onDragObject', this.onSetupDraggedObj);
+	            window.addEventListener('onDropObject', this.onSetupDraggedObj);
 	        }
 	    }, {
 	        key: 'componentWillUnmount',
 	        value: function componentWillUnmount() {
 	            window.removeEventListener("resize", this.updateDimensions);
-	            window.removeEventListener('zoomOccured', this.onZoomStage);
 	            window.removeEventListener('wheel', this.onMouseWheel);
 	            window.removeEventListener("keydown", this.onKeyDown);
 	            window.removeEventListener("keyup", this.onKeyUp);
+	            //custom events
+	            window.removeEventListener('zoomOccured', this.onZoomStage);
+	            window.removeEventListener('onDragObject', this.onSetupDraggedObj);
+	            window.removeEventListener('onDropObject', this.onSetupDraggedObj);
 	        }
 	    }, {
 	        key: 'render',
@@ -51259,6 +51349,10 @@
 	
 	var _jquery2 = _interopRequireDefault(_jquery);
 	
+	var _roomsCfg = __webpack_require__(/*! ../common/roomsCfg */ 87);
+	
+	var _roomsCfg2 = _interopRequireDefault(_roomsCfg);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -51287,7 +51381,13 @@
 	        };
 	
 	        _this.currentAction = '';
-	        _this.draggedObj = {};
+	        _this.gridCellWidth = (0, _roomsCfg2.default)().CELL_WIDTH;
+	        _this.gridCellHeight = (0, _roomsCfg2.default)().CELL_HEIGHT;
+	
+	        _this.draggedObj = {
+	            x: 0,
+	            y: 0
+	        };
 	        return _this;
 	    }
 	
@@ -51295,24 +51395,19 @@
 	        key: 'onDragOver',
 	        value: function onDragOver(evt) {
 	
-	            console.log('onDragOver');
-	            //if (evt.originalEvent.preventDefault) {
-	            //    evt.originalEvent.preventDefault();
-	            //}
+	            if (evt.preventDefault) {
+	                evt.preventDefault();
+	            }
 	
 	            evt.dataTransfer.dropEffect = 'move';
-	
-	            //return false;
 	        }
 	    }, {
 	        key: 'onDragEnter',
 	        value: function onDragEnter(evt) {
 	
-	            console.log('onDragEnter');
-	
-	            //if (evt.originalEvent.preventDefault) {
-	            //    evt.originalEvent.preventDefault();
-	            //}
+	            if (evt.preventDefault) {
+	                evt.preventDefault();
+	            }
 	
 	            this.currentAction = 'drag';
 	
@@ -51326,77 +51421,57 @@
 	
 	            this.draggedObj.x = gridPos.x;
 	            this.draggedObj.y = gridPos.y;
-	            this.draggedObj.r = 0;
-	            this.draggedObj.tox = 0;
-	            this.draggedObj.toy = 0;
-	        }
-	    }, {
-	        key: 'onDragDrop',
-	        value: function onDragDrop(evt) {
-	
-	            console.log('onDragDrop');
-	
-	            var currentField = (0, _jquery2.default)(event.currentTarget);
-	            currentField.removeClass('board-highlight-over');
-	
-	            if (evt.originalEvent.preventDefault) {
-	                evt.originalEvent.preventDefault(); // stops the browser from redirecting.
-	            }
-	
-	            (0, _jquery2.default)('#stage-grid-live').find('.stage-board-field-highlight').css({
-	                width: gridCellWidth,
-	                height: gridCellHeight
-	            });
-	
-	            console.log(draggedObj);
-	
-	            //get freshly created item container
-	            var currentItem = createStageItem(draggedObj.id, draggedObj.x, draggedObj.y, draggedObj.r, draggedObj.tox, draggedObj.toy, draggedObj.w, draggedObj.h, draggedObj.sh);
-	
-	            return currentItem;
 	        }
 	    }, {
 	        key: 'onDragEnd',
 	        value: function onDragEnd(evt) {
-	
-	            console.log('onDragEnd');
-	
 	            var currentField = (0, _jquery2.default)(evt.currentTarget);
 	            currentField.removeClass('board-highlight-over');
 	        }
 	    }, {
 	        key: 'onDragLeave',
 	        value: function onDragLeave(evt) {
-	
-	            console.log('onDragLeave');
-	
 	            var currentField = (0, _jquery2.default)(evt.currentTarget);
 	            currentField.removeClass('board-highlight-over');
 	        }
 	    }, {
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            var target = (0, _jquery2.default)(this);
-	            //$(this).unbind('mousedown', this);
-	            target.bind('dragover', this.onDragOver.bind(this));
-	            target.bind('dragenter', this.onDragEnter.bind(this));
-	            target.bind('dragleave', this.onDragLeave.bind(this));
-	            target.bind('drop', this.onDragDrop.bind(this));
-	            target.bind('dragend', this.onDragEnd.bind(this));
+	        key: 'onDrop',
+	        value: function onDrop(evt) {
 	
-	            console.log('tatata');
+	            console.log('onDragDrop');
+	            if (evt.preventDefault) {
+	                evt.preventDefault(); // stops the browser from redirecting.
+	            }
+	
+	            (0, _jquery2.default)('#stage-grid-live').find('.stage-board-field-highlight').css({
+	                width: this.gridCellWidth,
+	                height: this.gridCellHeight
+	            });
+	
+	            var currentField = (0, _jquery2.default)(evt.currentTarget);
+	            currentField.removeClass('board-highlight-over');
+	
+	            var evt = new CustomEvent('onDropObject', { detail: this.draggedObj });
+	            window.dispatchEvent(evt);
+	
+	            //get freshly created item container
+	            //let currentItem = createStageItem(
+	            //    draggedObj.id,
+	            //    draggedObj.x,
+	            //    draggedObj.y,
+	            //    draggedObj.r,
+	            //    draggedObj.tox,
+	            //    draggedObj.toy,
+	            //    draggedObj.w,
+	            //    draggedObj.h,
+	            //    draggedObj.sh);
 	        }
 	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {}
+	    }, {
 	        key: 'componentWillUnmount',
-	        value: function componentWillUnmount() {
-	            var target = (0, _jquery2.default)(this);
-	            //$(this).unbind('mousedown', this);
-	            target.unbind('dragover', this.onDragOver.bind(this));
-	            target.unbind('dragenter', this.onDragEnter.bind(this));
-	            target.unbind('dragleave', this.onDragLeave.bind(this));
-	            target.unbind('drop', this.onDragDrop.bind(this));
-	            target.unbind('dragend', this.onDragEnd.bind(this));
-	        }
+	        value: function componentWillUnmount() {}
 	    }, {
 	        key: 'render',
 	        value: function render() {
@@ -51405,7 +51480,10 @@
 	                className: 'stage-board-field-highlight',
 	                style: this.divStyle,
 	                onDragOver: this.onDragOver.bind(this),
-	                onDragEnter: this.onDragEnter.bind(this)
+	                onDragEnter: this.onDragEnter.bind(this),
+	                onDragLeave: this.onDragLeave.bind(this),
+	                onDragEnd: this.onDragEnd.bind(this),
+	                onDrop: this.onDrop.bind(this)
 	            });
 	        }
 	    }]);
@@ -51518,58 +51596,6 @@
 	        key: 'updateZoom',
 	        value: function updateZoom(zoom) {}
 	    }, {
-	        key: 'onDragStart',
-	        value: function onDragStart(evt) {
-	
-	            //this.dragged = e.currentTarget;
-	            evt.dataTransfer.effectAllowed = 'move';
-	            evt.dataTransfer.setData('text/html', this.dragged);
-	
-	            this.currentAction = 'addItem';
-	
-	            var target = (0, _jquery2.default)(evt.target);
-	            var w = target.data('shape-w');
-	            var h = target.data('shape-h');
-	            var sh = target.attr('name');
-	            var parent = target.attr('data-parent');
-	
-	            (0, _jquery2.default)('#stage-grid-live').find('.stage-board-field-highlight').css({
-	                width: this.gridCellWidth * w,
-	                height: this.gridCellHeight * h
-	            });
-	
-	            var newId = this.getCurrentId() + 1;
-	
-	            this.draggedObj = null;
-	            this.draggedObj = {
-	                id: newId,
-	                x: 0,
-	                y: 0,
-	                w: this.gridCellWidth * w,
-	                h: this.gridCellHeight * h,
-	                sh: sh
-	            };
-	
-	            console.log('OnDragStart', this.draggedObj);
-	        }
-	    }, {
-	        key: 'onDrop',
-	        value: function onDrop(evt) {
-	            console.log('onDrop');
-	        }
-	    }, {
-	        key: 'onDragEnd',
-	        value: function onDragEnd(evt) {
-	            console.log('onDragEnd');
-	        }
-	    }, {
-	        key: 'onDragDrop',
-	        value: function onDragDrop(evt) {
-	
-	            console.log('onDragDrop', evt.dataTransfer);
-	            evt.preventDefault();
-	        }
-	    }, {
 	        key: 'getCurrentId',
 	        value: function getCurrentId() {
 	
@@ -51593,10 +51619,7 @@
 	                    onZoomUpdate: this.updateZoom.bind(this)
 	                }),
 	                React.createElement(_shapesPanel2.default, {
-	                    appCfg: this.props.appCfg,
-	                    onDragStart: this.onDragStart.bind(this),
-	                    onDragEnd: this.onDragEnd.bind(this),
-	                    onDrop: this.onDrop.bind(this)
+	                    appCfg: this.props.appCfg
 	                }),
 	                React.createElement(_stage2.default, {
 	                    appCfg: this.props.appCfg

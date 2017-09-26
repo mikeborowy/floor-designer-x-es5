@@ -1,6 +1,7 @@
 ﻿import * as React from 'react';
 import $ from 'jquery';
 import { TweenLite } from 'gsap';
+
 import RoomsCfg from '../common/roomsCfg';
 
 class ShapesPanelListItem extends React.Component {
@@ -14,6 +15,8 @@ class ShapesPanelListItem extends React.Component {
         this.currentAction = '';
         this.gridCellWidth = RoomsCfg().CELL_WIDTH;
         this.gridCellHeight = RoomsCfg().CELL_HEIGHT;
+
+        this.draggedObj = {};
 
         this.shapeListBtnConfig = {
 
@@ -69,20 +72,17 @@ class ShapesPanelListItem extends React.Component {
 
     onMouseDown(evt) {
 
-        console.log('mouse down');
-
         var target = $(evt.currentTarget);
         target.bind('dragstart', this.onDragStart.bind(this));
-
     }
 
     onDragStart(evt) {
 
-        console.log('onDragStart');
+        console.log('onDragStart', evt);
 
         this.currentAction = 'addItem';
 
-        let target = $(this);
+        let target = $(evt.currentTarget);
         let w = target.data('shape-w');
         let h = target.data('shape-h');
         let sh = target.attr('name');
@@ -95,17 +95,13 @@ class ShapesPanelListItem extends React.Component {
                 height: (this.gridCellHeight * h)
             });
 
-        let newId = ''//getCurrentId() + 1;
+        this.draggedObj.id = new Date().valueOf();
+        this.draggedObj.w = (this.gridCellWidth * w);
+        this.draggedObj.h = (this.gridCellHeight * h);
+        this.draggedObj.sh = sh
 
-        this.draggedObj = null;
-        this.draggedObj = {
-            id: newId,
-            x: 0,
-            y: 0,
-            w: (this.gridCellWidth * w),
-            h: (this.gridCellHeight * h),
-            sh: sh
-        };
+        var evt = new CustomEvent('onDragObject', { detail: this.draggedObj });
+        window.dispatchEvent(evt);
     }
 
     render() {

@@ -51,59 +51,6 @@ class Workspace extends React.Component {
 
     }
 
-    onDragStart(evt) {
-
-        //this.dragged = e.currentTarget;
-        evt.dataTransfer.effectAllowed = 'move';
-        evt.dataTransfer.setData('text/html', this.dragged);
-
-        this.currentAction = 'addItem';
-
-        var target = $(evt.target);
-        var w = target.data('shape-w');
-        var h = target.data('shape-h');
-        var sh = target.attr('name');
-        var parent = target.attr('data-parent');
-
-        $('#stage-grid-live')
-            .find('.stage-board-field-highlight')
-            .css({
-                width: (this.gridCellWidth * w),
-                height: (this.gridCellHeight * h)
-            });
-
-        var newId = this.getCurrentId() + 1;
-
-        this.draggedObj = null;
-        this.draggedObj = {
-            id: newId,
-            x: 0,
-            y: 0,
-            w: (this.gridCellWidth * w),
-            h: (this.gridCellHeight * h),
-            sh: sh
-        };
-
-        console.log('OnDragStart', this.draggedObj)
-    }
-
-
-    onDrop(evt) {
-        console.log('onDrop')
-    }
-
-
-    onDragEnd(evt) {
-        console.log('onDragEnd')
-    }
-
-
-    onDragDrop(evt) {
-
-        console.log('onDragDrop', evt.dataTransfer)
-        evt.preventDefault();
-    }
-
 
     getCurrentId() {
 
@@ -126,9 +73,6 @@ class Workspace extends React.Component {
                 />
                 <ShapesPanel
                     appCfg={this.props.appCfg}
-                    onDragStart={this.onDragStart.bind(this)}
-                    onDragEnd={this.onDragEnd.bind(this)}
-                    onDrop={this.onDrop.bind(this)}
                 />
                 <Stage
                     appCfg={this.props.appCfg}
