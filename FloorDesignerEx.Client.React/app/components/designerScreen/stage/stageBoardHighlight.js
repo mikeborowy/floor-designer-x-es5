@@ -9,7 +9,7 @@ class StageBoardHighlight extends React.Component {
     constructor(props) {
         super(props)
 
-        this.divStyle = {
+        this.style = {
             position: 'absolute',
             top: props.top,
             left: props.left,
@@ -111,7 +111,7 @@ class StageBoardHighlight extends React.Component {
             <div
                 id={this.props.id}
                 className="stage-board-field-highlight"
-                style={this.divStyle}
+                style={this.style}
                 onDragOver={this.onDragOver.bind(this)}
                 onDragEnter={this.onDragEnter.bind(this)}
                 onDragLeave={this.onDragLeave.bind(this)}

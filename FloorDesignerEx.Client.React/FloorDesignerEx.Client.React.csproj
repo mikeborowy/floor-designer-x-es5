@@ -173,6 +173,7 @@
     <None Include="app\components\designerScreen\stage\stage.bak" />
     <Content Include="app\components\designerScreen\stage\stageBoard.js" />
     <Content Include="app\components\designerScreen\stage\stageBoardHighlight.js" />
+    <Content Include="app\components\designerScreen\stage\stageItem.js" />
     <Content Include="app\components\designerScreen\toolbar\toolbar.js" />
     <None Include="app\components\designerScreen\toolbar\toolbar.bak" />
     <Content Include="app\components\designerScreen\workspace\workspace.js" />

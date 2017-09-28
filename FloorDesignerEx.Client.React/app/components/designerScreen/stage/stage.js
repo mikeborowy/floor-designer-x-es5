@@ -13,6 +13,7 @@ import BlueprintImg from '../../../assets/blueprints/bgnd_12x10.jpg';
 import StageBoard from './stageBoard';
 import StageBoardHighlight from './stageBoardHighlight';
 import Toolbar from '../toolbar/toolbar';
+import StageItem from './stageItem';
 
 class Stage extends React.Component {
 
@@ -25,19 +26,8 @@ class Stage extends React.Component {
         this.stageScaleNumMin = 0.2;
         this.stageScaleNumMax = 2;
 
-        this.draggedObj = {
-            id: -1,
-            x: 0,
-            y: 0,
-            r: 0,
-            tox: 0,
-            toy: 0,
-            w: 0,
-            h: 0,
-            sh: ''
-        };
-
         this.state = {
+            imgPath: BlueprintImg,
             floorCfg: {
                 id: 4,
                 officeId: 1,
@@ -60,9 +50,18 @@ class Stage extends React.Component {
             stageCfg: {
                 stageBoardsList: []
             },
-            loadedItems: [],
-            imgPath: BlueprintImg,
-            draggedObj: null
+            stageItems: [],
+            draggedStageItem: {
+                id: -1,
+                x: 0,
+                y: 0,
+                r: 0,
+                tox: 0,
+                toy: 0,
+                w: 0,
+                h: 0,
+                sh: ''
+            }
         }
 
         //bind functions to this class
@@ -79,7 +78,9 @@ class Stage extends React.Component {
         this.onKeyDown = this.onKeyDown.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
 
-        this.onSetupDraggedObj = this.onSetupDraggedObj.bind(this);
+        this.onDraggedItemStart = this.onDraggedItemStart.bind(this);
+        this.onDraggedItemDrop = this.onDraggedItemDrop.bind(this);
+
         this.createStageItem = this.createStageItem.bind(this);
 
         this.onTest = this.onTest.bind(this);
@@ -107,11 +108,11 @@ class Stage extends React.Component {
 
     createGrid() {
 
-        let { stageBoardsList } = this.state;
-        let { gridCellWidth, gridCellHeight } = this.state.roomCfg;
+        let { stageBoardsList, roomCfg, floorCfg } = this.state;
+        let { gridCellWidth, gridCellHeight } = roomCfg;
 
-        let gridColumns = this.state.floorCfg.width;
-        let gridRows = this.state.floorCfg.height;
+        let gridColumns = floorCfg.width;
+        let gridRows = floorCfg.height;
         let list = [];
 
         const w = 1;
@@ -138,11 +139,26 @@ class Stage extends React.Component {
         }
     };
 
-    onSetupDraggedObj(evt) {
+    onDraggedItemStart(evt) {
 
-        this.draggedObj = Object.assign(this.draggedObj, evt.detail);
+        let draggedStageItem = Object.assign(this.state.draggedStageItem, evt.detail);
+        this.setState({ draggedStageItem });
 
-        this.createStageItem(this.draggedObj);
+        console.log(this.state.draggedStageItem)
+    }
+
+    onDraggedItemDrop(evt) {
+
+        let draggedStageItem = Object.assign(this.state.draggedStageItem, evt.detail);
+        //this.setState({ draggedStageItem });
+
+        let tempStageItems = this.state.stageItems;
+        tempStageItems.push(draggedStageItem);
+
+        this.setState([...this.state.stageItems, draggedStageItem]);
+
+        console.log(this.state.stageItems);
+       // this.createStageItem(this.draggedObj);
     }
 
     createStageItem(draggedObj) {
@@ -532,8 +548,8 @@ class Stage extends React.Component {
         window.addEventListener("keyup", this.onKeyUp);
         //custom events
         window.addEventListener('zoomOccured', this.onZoomStage);
-        window.addEventListener('onDragObject', this.onSetupDraggedObj);
-        window.addEventListener('onDropObject', this.onSetupDraggedObj);
+        window.addEventListener('onDragObject', this.onDraggedItemStart);
+        window.addEventListener('onDropObject', this.onDraggedItemDrop);
     }
 
     componentWillUnmount() {
