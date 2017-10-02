@@ -10,10 +10,8 @@ class StageItem extends React.Component {
 
         this.style = {
             position: 'absolute',
-            top: props.top,
-            left: props.left,
-            width: props.width,
-            height: props.height
+            width: props.w,
+            height: props.h
         };
 
     }

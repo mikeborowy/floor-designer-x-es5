@@ -25,6 +25,18 @@ class Stage extends React.Component {
         this.stageScaleNum = 1;
         this.stageScaleNumMin = 0.2;
         this.stageScaleNumMax = 2;
+        this.droppedItems = [];
+        this.draggedObj = {
+            id: -1,
+            x: 0,
+            y: 0,
+            r: 0,
+            tox: 0,
+            toy: 0,
+            w: 0,
+            h: 0,
+            sh: ''
+        };
 
         this.state = {
             imgPath: BlueprintImg,
@@ -47,21 +59,8 @@ class Stage extends React.Component {
                 paddingTop: RoomsCfg().SHAPE_CFG.PADDING_TOP,
                 itemBorderSize: RoomsCfg().SHAPE_CFG.BORDER_SIZE
             },
-            stageCfg: {
-                stageBoardsList: []
-            },
-            stageItems: [],
-            draggedStageItem: {
-                id: -1,
-                x: 0,
-                y: 0,
-                r: 0,
-                tox: 0,
-                toy: 0,
-                w: 0,
-                h: 0,
-                sh: ''
-            }
+            stageBoardsList: [],
+            stageItems: []
         }
 
         //bind functions to this class
@@ -131,118 +130,110 @@ class Stage extends React.Component {
                 left: x
             })
 
-            this.setState({
-                stageCfg: {
-                    stageBoardsList: list
-                }
-            });
+            this.setState({stageBoardsList: list});
         }
     };
 
     onDraggedItemStart(evt) {
-
-        let draggedStageItem = Object.assign(this.state.draggedStageItem, evt.detail);
-        this.setState({ draggedStageItem });
-
-        console.log(this.state.draggedStageItem)
+        //combine x,y to draggedObj
+        let draggedObj = Object.assign(this.draggedObj, evt.detail);
     }
 
     onDraggedItemDrop(evt) {
-
-        let draggedStageItem = Object.assign(this.state.draggedStageItem, evt.detail);
-        //this.setState({ draggedStageItem });
-
-        let tempStageItems = this.state.stageItems;
-        tempStageItems.push(draggedStageItem);
-
-        this.setState([...this.state.stageItems, draggedStageItem]);
-
-        console.log(this.state.stageItems);
-       // this.createStageItem(this.draggedObj);
+        //combine id,w,h,sh to draggedObj
+        let draggedObj = Object.assign(this.draggedObj, evt.detail);
+        //extract items
+        let { id, x, y, r, tox, toy, w, h, sh } = draggedObj;
+        //pass extracted items
+        this.createStageItem(id, x, y, r, tox, toy, w, h, sh);
     }
 
-    createStageItem(draggedObj) {
+    createStageItem(id, x, y, r, tox, toy, w, h, sh) {
 
-        let { id, x, y, r, tox, toy, w, h, sh } = draggedObj;
+        //save all items to state 
+        this.setState({
+            stageItems: [...this.state.stageItems, { id, x, y, r, tox, toy, w, h, sh }]
+        })
 
-        let stageItemsContainer = $('#stage-items-container');
+        //this.droppedItems.push({ id, x, y, r, tox, toy, w, h, sh });
 
-        var item = $(
-            "<div>" +
-            "<div class='shape-rotate-btn shape-button' data-btn-r='" + (r * (-1)) + "'>" +
-            "<div class='shape-rotate-inv-btn'/>" +
-            "<i class='material-icons shape-rotate-inv-icon'>rotate_right</i>" +
-            "</div>" +
-            "<div class='shape-drag-btn shape-button' data-btn-r='" + (r * (-1)) + "'>" +
-            "<div class='shape-drag-inv-btn'/>" +
-            "<i class='material-icons shape-drag-inv-icon'>drag_handle</i>" +
-            "</div>" +
-            "<div class='shape-delete-btn shape-button' data-btn-r='" + (r * (-1)) + "'>" +
-            "<div class='shape-delete-inv-btn'/>" +
-            "<i class='material-icons shape-delete-inv-icon'>delete</i>" +
-            "</div>" +
-            "<div class='shape-resize-btn shape-button' data-btn-r='" + (r * (-1)) + "'>" +
-            "<div class='shape-resize-inv-btn'/>" +
-            "<i class='material-icons shape-resize-inv-icon'>photo_size_select_small</i>" +
-            "</div>" +
-            "</div>"
-        ).
-            attr('class', 'item-box').
-            attr('data-box-id', id).
-            attr('data-box-x', x).
-            attr('data-box-y', y).
-            attr('data-box-r', r).
-            attr('data-box-tox', tox).
-            attr('data-box-toy', toy).
-            attr('data-box-w', w).
-            attr('data-box-h', h).
-            attr('data-box-shape', sh).
-            attr('data-box-selected', false).
-            attr('data-parent', 'stage').
-            css({
-                position: 'absolute',
-                width: w,
-                height: h
-            }).
-            appendTo(stageItemsContainer);
+        //let stageItemsContainer = $('#stage-items-container');
 
-        //if (item.data('box-shape') === "shape-room-l-3x2") {
-        //    this.createLShapeRoom()
-        //        .appendTo(item);
+        //var item = $(
+        //    "<div>" +
+        //    "<div class='shape-rotate-btn shape-button' data-btn-r='" + (r * (-1)) + "'>" +
+        //    "<div class='shape-rotate-inv-btn'/>" +
+        //    "<i class='material-icons shape-rotate-inv-icon'>rotate_right</i>" +
+        //    "</div>" +
+        //    "<div class='shape-drag-btn shape-button' data-btn-r='" + (r * (-1)) + "'>" +
+        //    "<div class='shape-drag-inv-btn'/>" +
+        //    "<i class='material-icons shape-drag-inv-icon'>drag_handle</i>" +
+        //    "</div>" +
+        //    "<div class='shape-delete-btn shape-button' data-btn-r='" + (r * (-1)) + "'>" +
+        //    "<div class='shape-delete-inv-btn'/>" +
+        //    "<i class='material-icons shape-delete-inv-icon'>delete</i>" +
+        //    "</div>" +
+        //    "<div class='shape-resize-btn shape-button' data-btn-r='" + (r * (-1)) + "'>" +
+        //    "<div class='shape-resize-inv-btn'/>" +
+        //    "<i class='material-icons shape-resize-inv-icon'>photo_size_select_small</i>" +
+        //    "</div>" +
+        //    "</div>"
+        //).
+        //    attr('class', 'item-box').
+        //    attr('data-box-id', id).
+        //    attr('data-box-x', x).
+        //    attr('data-box-y', y).
+        //    attr('data-box-r', r).
+        //    attr('data-box-tox', tox).
+        //    attr('data-box-toy', toy).
+        //    attr('data-box-w', w).
+        //    attr('data-box-h', h).
+        //    attr('data-box-shape', sh).
+        //    attr('data-box-selected', false).
+        //    attr('data-parent', 'stage').
+        //    css({
+        //        position: 'absolute',
+        //        width: w,
+        //        height: h
+        //    }).
+        //    appendTo(stageItemsContainer);
+
+        ////if (item.data('box-shape') === "shape-room-l-3x2") {
+        ////    this.createLShapeRoom()
+        ////        .appendTo(item);
+        ////}
+        ////else {
+        ////    this.createRegularShapeRoom()
+        ////        .appendTo(item);
+        ////}
+
+        //var newOriginX = (item.data('box-w')) * 0.5;
+        //var newOriginY = (item.data('box-h')) * 0.5;
+
+        //if (item.width() > item.height()) {
+        //    newOriginX = (item.data('box-w')) - (0.5);
+        //    newOriginY = (item.data('box-h')) - (0.5);
         //}
-        //else {
-        //    this.createRegularShapeRoom()
-        //        .appendTo(item);
-        //}
 
-        var newOriginX = (item.data('box-w')) * 0.5;
-        var newOriginY = (item.data('box-h')) * 0.5;
+        //TweenLite.set(item, { transformOrigin: "" + newOriginX + "px " + newOriginY + "px" });
+        //TweenLite.set(item, { rotation: r });
+        //TweenLite.set(item.find('.shape-button'), { rotation: (360 - r) });
 
-        if (item.width() > item.height()) {
-            newOriginX = (item.data('box-w')) - (0.5);
-            newOriginY = (item.data('box-h')) - (0.5);
-        }
+        //item.attr('data-box-tox', newOriginX);
+        //item.attr('data-box-toy', newOriginY);
 
-        TweenLite.set(item, { transformOrigin: "" + newOriginX + "px " + newOriginY + "px" });
-        TweenLite.set(item, { rotation: r });
-        TweenLite.set(item.find('.shape-button'), { rotation: (360 - r) });
+        ////removeDuplicate('.item-box');
 
-        item.attr('data-box-tox', newOriginX);
-        item.attr('data-box-toy', newOriginY);
+        ////setup item container on stage
+        //TweenLite.from(item, 0.3, {
+        //    scaleX: 0,
+        //    scaleY: 0
+        //    //onComplete: initItem,
+        //    //onCompleteParams: [item]
+        //});
 
-        removeDuplicate('.item-box');
+        //TweenLite.to(item, 0, { x: x, y: y });
 
-        //setup item container on stage
-        TweenLite.from(item, 0.3, {
-            scaleX: 0,
-            scaleY: 0,
-            onComplete: initItem,
-            onCompleteParams: [item]
-        });
-
-        TweenLite.to(item, 0, { x: x, y: y });
-
-        return item;
     }
 
     loadItems() {
@@ -301,7 +292,6 @@ class Stage extends React.Component {
 
         Draggable.get("#stage-container").disable();
     }
-
 
     clearStage() {
 
@@ -527,12 +517,21 @@ class Stage extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+
+        //if (nextProps.myProp !== this.props.draggedObj) {
+        //}
+
         console.log("zoom from update comp", this.props.zoom);
         return false;
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return true;
+
+        if (this.state.stageItems.length != nextState.stageItems)
+            return true;
+
+        if (this.state.stageBoardsList.length != nextState.stageBoardsList.length)
+            return true;
     }
 
     componentDidMount() {
@@ -559,13 +558,13 @@ class Stage extends React.Component {
         window.removeEventListener("keyup", this.onKeyUp);
         //custom events
         window.removeEventListener('zoomOccured', this.onZoomStage);
-        window.removeEventListener('onDragObject', this.onSetupDraggedObj);
-        window.removeEventListener('onDropObject', this.onSetupDraggedObj);
+        window.removeEventListener('onDragObject', this.onDraggedItemStart);
+        window.removeEventListener('onDropObject', this.onDraggedItemDrop);
     }
 
     render() {
 
-        let { stageBoardsList } = this.state.stageCfg;
+        let { stageBoardsList, stageItems } = this.state;
         let onTest = this.onTest;
 
         return (
@@ -580,11 +579,7 @@ class Stage extends React.Component {
 
                                 return <StageBoard
                                     key={boardItem.id}
-                                    id={boardItem.id}
-                                    width={boardItem.width}
-                                    height={boardItem.height}
-                                    top={boardItem.top}
-                                    left={boardItem.left}
+                                    {...boardItem}
                                 />
                             })
                         }
@@ -595,17 +590,22 @@ class Stage extends React.Component {
 
                                 return <StageBoardHighlight
                                     key={boardItem.id}
-                                    id={boardItem.id}
-                                    width={boardItem.width}
-                                    height={boardItem.height}
-                                    top={boardItem.top}
-                                    left={boardItem.left}
+                                    {...boardItem}
                                     onMouseOver={onTest}
                                 />
                             })
                         }
                     </div>
-                    <div id="stage-items-container"></div>
+                    <div id="stage-items-container">
+                        {
+                            stageItems.map(function (stageItem) {
+                                return <StageItem
+                                    key={stageItem.id}
+                                    {...stageItem}
+                                />
+                            })
+                        }
+                    </div>
                 </div>
                 <div id="stage-bottom"></div>
             </div>

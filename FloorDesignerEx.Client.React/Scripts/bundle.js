@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "32d5f2bc531e17714e9e"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "328a10c8cc2859907b2f"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -597,7 +597,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "32d5f2bc531e17714e9e"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "328a10c8cc2859907b2f"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -50631,6 +50631,8 @@
 	    value: true
 	});
 	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _react = __webpack_require__(/*! react */ 2);
@@ -50708,6 +50710,18 @@
 	        _this.stageScaleNum = 1;
 	        _this.stageScaleNumMin = 0.2;
 	        _this.stageScaleNumMax = 2;
+	        _this.droppedItems = [];
+	        _this.draggedObj = {
+	            id: -1,
+	            x: 0,
+	            y: 0,
+	            r: 0,
+	            tox: 0,
+	            toy: 0,
+	            w: 0,
+	            h: 0,
+	            sh: ''
+	        };
 	
 	        _this.state = {
 	            imgPath: _bgnd_12x2.default,
@@ -50730,21 +50744,8 @@
 	                paddingTop: (0, _roomsCfg2.default)().SHAPE_CFG.PADDING_TOP,
 	                itemBorderSize: (0, _roomsCfg2.default)().SHAPE_CFG.BORDER_SIZE
 	            },
-	            stageCfg: {
-	                stageBoardsList: []
-	            },
-	            stageItems: [],
-	            draggedStageItem: {
-	                id: -1,
-	                x: 0,
-	                y: 0,
-	                r: 0,
-	                tox: 0,
-	                toy: 0,
-	                w: 0,
-	                h: 0,
-	                sh: ''
-	            }
+	            stageBoardsList: [],
+	            stageItems: []
 	
 	            //bind functions to this class
 	        };_this.stageInit = _this.stageInit.bind(_this);
@@ -50824,40 +50825,21 @@
 	                    left: x
 	                });
 	
-	                this.setState({
-	                    stageCfg: {
-	                        stageBoardsList: list
-	                    }
-	                });
+	                this.setState({ stageBoardsList: list });
 	            }
 	        }
 	    }, {
 	        key: 'onDraggedItemStart',
 	        value: function onDraggedItemStart(evt) {
-	
-	            var draggedStageItem = Object.assign(this.state.draggedStageItem, evt.detail);
-	            this.setState({ draggedStageItem: draggedStageItem });
-	
-	            console.log(this.state.draggedStageItem);
+	            //combine x,y to draggedObj
+	            var draggedObj = Object.assign(this.draggedObj, evt.detail);
 	        }
 	    }, {
 	        key: 'onDraggedItemDrop',
 	        value: function onDraggedItemDrop(evt) {
-	
-	            var draggedStageItem = Object.assign(this.state.draggedStageItem, evt.detail);
-	            //this.setState({ draggedStageItem });
-	
-	            var tempStageItems = this.state.stageItems;
-	            tempStageItems.push(draggedStageItem);
-	
-	            this.setState([].concat(_toConsumableArray(this.state.stageItems), [draggedStageItem]));
-	
-	            console.log(this.state.stageItems);
-	            // this.createStageItem(this.draggedObj);
-	        }
-	    }, {
-	        key: 'createStageItem',
-	        value: function createStageItem(draggedObj) {
+	            //combine id,w,h,sh to draggedObj
+	            var draggedObj = Object.assign(this.draggedObj, evt.detail);
+	            //extract items
 	            var id = draggedObj.id,
 	                x = draggedObj.x,
 	                y = draggedObj.y,
@@ -50867,53 +50849,97 @@
 	                w = draggedObj.w,
 	                h = draggedObj.h,
 	                sh = draggedObj.sh;
+	            //pass extracted items
 	
+	            this.createStageItem(id, x, y, r, tox, toy, w, h, sh);
+	        }
+	    }, {
+	        key: 'createStageItem',
+	        value: function createStageItem(id, x, y, r, tox, toy, w, h, sh) {
 	
-	            var stageItemsContainer = (0, _jquery2.default)('#stage-items-container');
-	
-	            var item = (0, _jquery2.default)("<div>" + "<div class='shape-rotate-btn shape-button' data-btn-r='" + r * -1 + "'>" + "<div class='shape-rotate-inv-btn'/>" + "<i class='material-icons shape-rotate-inv-icon'>rotate_right</i>" + "</div>" + "<div class='shape-drag-btn shape-button' data-btn-r='" + r * -1 + "'>" + "<div class='shape-drag-inv-btn'/>" + "<i class='material-icons shape-drag-inv-icon'>drag_handle</i>" + "</div>" + "<div class='shape-delete-btn shape-button' data-btn-r='" + r * -1 + "'>" + "<div class='shape-delete-inv-btn'/>" + "<i class='material-icons shape-delete-inv-icon'>delete</i>" + "</div>" + "<div class='shape-resize-btn shape-button' data-btn-r='" + r * -1 + "'>" + "<div class='shape-resize-inv-btn'/>" + "<i class='material-icons shape-resize-inv-icon'>photo_size_select_small</i>" + "</div>" + "</div>").attr('class', 'item-box').attr('data-box-id', id).attr('data-box-x', x).attr('data-box-y', y).attr('data-box-r', r).attr('data-box-tox', tox).attr('data-box-toy', toy).attr('data-box-w', w).attr('data-box-h', h).attr('data-box-shape', sh).attr('data-box-selected', false).attr('data-parent', 'stage').css({
-	                position: 'absolute',
-	                width: w,
-	                height: h
-	            }).appendTo(stageItemsContainer);
-	
-	            //if (item.data('box-shape') === "shape-room-l-3x2") {
-	            //    this.createLShapeRoom()
-	            //        .appendTo(item);
-	            //}
-	            //else {
-	            //    this.createRegularShapeRoom()
-	            //        .appendTo(item);
-	            //}
-	
-	            var newOriginX = item.data('box-w') * 0.5;
-	            var newOriginY = item.data('box-h') * 0.5;
-	
-	            if (item.width() > item.height()) {
-	                newOriginX = item.data('box-w') - 0.5;
-	                newOriginY = item.data('box-h') - 0.5;
-	            }
-	
-	            TweenLite.set(item, { transformOrigin: "" + newOriginX + "px " + newOriginY + "px" });
-	            TweenLite.set(item, { rotation: r });
-	            TweenLite.set(item.find('.shape-button'), { rotation: 360 - r });
-	
-	            item.attr('data-box-tox', newOriginX);
-	            item.attr('data-box-toy', newOriginY);
-	
-	            removeDuplicate('.item-box');
-	
-	            //setup item container on stage
-	            TweenLite.from(item, 0.3, {
-	                scaleX: 0,
-	                scaleY: 0,
-	                onComplete: initItem,
-	                onCompleteParams: [item]
+	            //save all items to state 
+	            this.setState({
+	                stageItems: [].concat(_toConsumableArray(this.state.stageItems), [{ id: id, x: x, y: y, r: r, tox: tox, toy: toy, w: w, h: h, sh: sh }])
 	            });
 	
-	            TweenLite.to(item, 0, { x: x, y: y });
+	            //this.droppedItems.push({ id, x, y, r, tox, toy, w, h, sh });
 	
-	            return item;
+	            //let stageItemsContainer = $('#stage-items-container');
+	
+	            //var item = $(
+	            //    "<div>" +
+	            //    "<div class='shape-rotate-btn shape-button' data-btn-r='" + (r * (-1)) + "'>" +
+	            //    "<div class='shape-rotate-inv-btn'/>" +
+	            //    "<i class='material-icons shape-rotate-inv-icon'>rotate_right</i>" +
+	            //    "</div>" +
+	            //    "<div class='shape-drag-btn shape-button' data-btn-r='" + (r * (-1)) + "'>" +
+	            //    "<div class='shape-drag-inv-btn'/>" +
+	            //    "<i class='material-icons shape-drag-inv-icon'>drag_handle</i>" +
+	            //    "</div>" +
+	            //    "<div class='shape-delete-btn shape-button' data-btn-r='" + (r * (-1)) + "'>" +
+	            //    "<div class='shape-delete-inv-btn'/>" +
+	            //    "<i class='material-icons shape-delete-inv-icon'>delete</i>" +
+	            //    "</div>" +
+	            //    "<div class='shape-resize-btn shape-button' data-btn-r='" + (r * (-1)) + "'>" +
+	            //    "<div class='shape-resize-inv-btn'/>" +
+	            //    "<i class='material-icons shape-resize-inv-icon'>photo_size_select_small</i>" +
+	            //    "</div>" +
+	            //    "</div>"
+	            //).
+	            //    attr('class', 'item-box').
+	            //    attr('data-box-id', id).
+	            //    attr('data-box-x', x).
+	            //    attr('data-box-y', y).
+	            //    attr('data-box-r', r).
+	            //    attr('data-box-tox', tox).
+	            //    attr('data-box-toy', toy).
+	            //    attr('data-box-w', w).
+	            //    attr('data-box-h', h).
+	            //    attr('data-box-shape', sh).
+	            //    attr('data-box-selected', false).
+	            //    attr('data-parent', 'stage').
+	            //    css({
+	            //        position: 'absolute',
+	            //        width: w,
+	            //        height: h
+	            //    }).
+	            //    appendTo(stageItemsContainer);
+	
+	            ////if (item.data('box-shape') === "shape-room-l-3x2") {
+	            ////    this.createLShapeRoom()
+	            ////        .appendTo(item);
+	            ////}
+	            ////else {
+	            ////    this.createRegularShapeRoom()
+	            ////        .appendTo(item);
+	            ////}
+	
+	            //var newOriginX = (item.data('box-w')) * 0.5;
+	            //var newOriginY = (item.data('box-h')) * 0.5;
+	
+	            //if (item.width() > item.height()) {
+	            //    newOriginX = (item.data('box-w')) - (0.5);
+	            //    newOriginY = (item.data('box-h')) - (0.5);
+	            //}
+	
+	            //TweenLite.set(item, { transformOrigin: "" + newOriginX + "px " + newOriginY + "px" });
+	            //TweenLite.set(item, { rotation: r });
+	            //TweenLite.set(item.find('.shape-button'), { rotation: (360 - r) });
+	
+	            //item.attr('data-box-tox', newOriginX);
+	            //item.attr('data-box-toy', newOriginY);
+	
+	            ////removeDuplicate('.item-box');
+	
+	            ////setup item container on stage
+	            //TweenLite.from(item, 0.3, {
+	            //    scaleX: 0,
+	            //    scaleY: 0
+	            //    //onComplete: initItem,
+	            //    //onCompleteParams: [item]
+	            //});
+	
+	            //TweenLite.to(item, 0, { x: x, y: y });
 	        }
 	    }, {
 	        key: 'loadItems',
@@ -51203,13 +51229,20 @@
 	    }, {
 	        key: 'componentWillReceiveProps',
 	        value: function componentWillReceiveProps(nextProps) {
+	
+	            //if (nextProps.myProp !== this.props.draggedObj) {
+	            //}
+	
 	            console.log("zoom from update comp", this.props.zoom);
 	            return false;
 	        }
 	    }, {
 	        key: 'shouldComponentUpdate',
 	        value: function shouldComponentUpdate(nextProps, nextState) {
-	            return true;
+	
+	            if (this.state.stageItems.length != nextState.stageItems) return true;
+	
+	            if (this.state.stageBoardsList.length != nextState.stageBoardsList.length) return true;
 	        }
 	    }, {
 	        key: 'componentDidMount',
@@ -51238,13 +51271,15 @@
 	            window.removeEventListener("keyup", this.onKeyUp);
 	            //custom events
 	            window.removeEventListener('zoomOccured', this.onZoomStage);
-	            window.removeEventListener('onDragObject', this.onSetupDraggedObj);
-	            window.removeEventListener('onDropObject', this.onSetupDraggedObj);
+	            window.removeEventListener('onDragObject', this.onDraggedItemStart);
+	            window.removeEventListener('onDropObject', this.onDraggedItemDrop);
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var stageBoardsList = this.state.stageCfg.stageBoardsList;
+	            var _state3 = this.state,
+	                stageBoardsList = _state3.stageBoardsList,
+	                stageItems = _state3.stageItems;
 	
 	            var onTest = this.onTest;
 	
@@ -51261,14 +51296,9 @@
 	                        { id: 'stage-grid-bgnd' },
 	                        stageBoardsList.map(function (boardItem) {
 	
-	                            return React.createElement(_stageBoard2.default, {
-	                                key: boardItem.id,
-	                                id: boardItem.id,
-	                                width: boardItem.width,
-	                                height: boardItem.height,
-	                                top: boardItem.top,
-	                                left: boardItem.left
-	                            });
+	                            return React.createElement(_stageBoard2.default, _extends({
+	                                key: boardItem.id
+	                            }, boardItem));
 	                        })
 	                    ),
 	                    React.createElement(
@@ -51276,18 +51306,22 @@
 	                        { id: 'stage-grid-live' },
 	                        stageBoardsList.map(function (boardItem) {
 	
-	                            return React.createElement(_stageBoardHighlight2.default, {
-	                                key: boardItem.id,
-	                                id: boardItem.id,
-	                                width: boardItem.width,
-	                                height: boardItem.height,
-	                                top: boardItem.top,
-	                                left: boardItem.left,
+	                            return React.createElement(_stageBoardHighlight2.default, _extends({
+	                                key: boardItem.id
+	                            }, boardItem, {
 	                                onMouseOver: onTest
-	                            });
+	                            }));
 	                        })
 	                    ),
-	                    React.createElement('div', { id: 'stage-items-container' })
+	                    React.createElement(
+	                        'div',
+	                        { id: 'stage-items-container' },
+	                        stageItems.map(function (stageItem) {
+	                            return React.createElement(_stageItem2.default, _extends({
+	                                key: stageItem.id
+	                            }, stageItem));
+	                        })
+	                    )
 	                ),
 	                React.createElement('div', { id: 'stage-bottom' })
 	            );
@@ -51569,10 +51603,8 @@
 	
 	        _this.style = {
 	            position: 'absolute',
-	            top: props.top,
-	            left: props.left,
-	            width: props.width,
-	            height: props.height
+	            width: props.w,
+	            height: props.h
 	        };
 	
 	        return _this;
