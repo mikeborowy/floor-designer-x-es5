@@ -20,11 +20,23 @@ class Stage extends React.Component {
     constructor(props) {
         super(props)
 
-        this.zoomMouse = false;
-        this.dragStage = false;
-        this.stageScaleNum = 1;
-        this.stageScaleNumMin = 0.2;
-        this.stageScaleNumMax = 2;
+        const roomsCfg = RoomsCfg();
+
+        this.cfg = {
+            gridCellWidth: roomsCfg.CELL_WIDTH,
+            gridCellHeight: roomsCfg.CELL_HEIGHT,
+            paddingLeft: roomsCfg.SHAPE_CFG.PADDING_LEFT,
+            paddingTop: roomsCfg.SHAPE_CFG.PADDING_TOP,
+            itemBorderSize: roomsCfg.SHAPE_CFG.BORDER_SIZE,
+            style: {
+                position: 'absolute',
+                width: props.w,
+                height: props.h,
+                left: props.x,
+                top: props.y
+            }
+        };
+
         this.droppedItems = [];
         this.draggedObj = {
             id: -1,
@@ -37,6 +49,12 @@ class Stage extends React.Component {
             h: 0,
             sh: ''
         };
+
+        this.zoomMouse = false;
+        this.dragStage = false;
+        this.stageScaleNum = 1;
+        this.stageScaleNumMin = 0.2;
+        this.stageScaleNumMax = 2;
 
         this.state = {
             imgPath: BlueprintImg,
@@ -51,14 +69,6 @@ class Stage extends React.Component {
                 image: null,
                 rooms: []
             },
-            roomCfg: {
-                gridCellWidth: RoomsCfg().CELL_WIDTH,
-                gridCellHeight: RoomsCfg().CELL_HEIGHT,
-                shapeSizes: RoomsCfg().SHAPES_SIZES,
-                paddingLeft: RoomsCfg().SHAPE_CFG,
-                paddingTop: RoomsCfg().SHAPE_CFG.PADDING_TOP,
-                itemBorderSize: RoomsCfg().SHAPE_CFG.BORDER_SIZE
-            },
             stageBoardsList: [],
             stageItems: []
         }
@@ -68,7 +78,6 @@ class Stage extends React.Component {
         this.initStageAsDraggable = this.initStageAsDraggable.bind(this);
         this.createGrid = this.createGrid.bind(this);
         this.clearStage = this.clearStage.bind(this);
-        this.updateDimensions = this.updateDimensions.bind(this);
         this.onZoomStage = this.onZoomStage.bind(this);
         this.zoomStage = this.zoomStage.bind(this);
 
@@ -91,13 +100,14 @@ class Stage extends React.Component {
 
     stageInit() {
 
-        let { floorCfg, roomCfg } = this.state;
+        let { gridCellWidth, gridCellHeight }= this.cfg;
+        let { floorCfg } = this.state;
 
-        $('#stage').width(floorCfg.width * roomCfg.gridCellWidth);
-        $('#stage').height(floorCfg.height * roomCfg.gridCellHeight);
+        $('#stage').width(floorCfg.width * gridCellWidth);
+        $('#stage').height(floorCfg.height * gridCellHeight);
 
-        $('#stage-items-container').width(floorCfg.width * roomCfg.gridCellWidth);
-        $('#stage-items-container').height(floorCfg.height * roomCfg.gridCellHeight);
+        $('#stage-items-container').width(floorCfg.width * gridCellWidth);
+        $('#stage-items-container').height(floorCfg.height * gridCellHeight);
 
         //const img = $('#stage').find('img');
         //img.attr('src', floorCfg.image);
@@ -107,8 +117,8 @@ class Stage extends React.Component {
 
     createGrid() {
 
-        let { stageBoardsList, roomCfg, floorCfg } = this.state;
-        let { gridCellWidth, gridCellHeight } = roomCfg;
+        let { gridCellWidth, gridCellHeight } = this.cfg;
+        let { stageBoardsList,  floorCfg } = this.state;
 
         let gridColumns = floorCfg.width;
         let gridRows = floorCfg.height;
@@ -312,37 +322,7 @@ class Stage extends React.Component {
         return null;
     };
 
-    updateDimensions() {
-
-        let toolbarHeight = $("#designer-toolbar").height();
-        let windowWidth = $(window).width();
-        let windowHeight = $(window).height();
-
-        $("#stage-container").height(
-            windowHeight - toolbarHeight
-        )
-
-        let parentHeight = $("#stage-container").height();
-        let parentWidth = $("#stage-container").width();
-
-        if ($("#stage").height() <= $("#stage-container").height()) {
-
-            let posY = (parentHeight / 2 - $("#stage").height() / 2);
-            TweenMax.to($("#stage"), 0, { y: posY })
-        }
-        else {
-            TweenMax.to($("#stage"), 0, { y: 0 })
-        }
-
-        if ($("#stage").width() <= $("#stage-container").width()) {
-            let posX = (parentWidth / 2 - $("#stage").width() / 2)
-            TweenMax.to($("#stage"), 0, { x: posX })
-        }
-        else {
-            TweenMax.to($("#stage"), 0, { x: 0 })
-        }
-    }
-
+   
     /*ZOOM START*/
     onZoomStage(evt) {
         this.stageScaleNum = evt.detail;
@@ -534,6 +514,37 @@ class Stage extends React.Component {
             return true;
     }
 
+    updateDimensions() {
+
+        let toolbarHeight = $("#designer-toolbar").height();
+        let windowWidth = $(window).width();
+        let windowHeight = $(window).height();
+
+        $("#stage-container").height(
+            windowHeight - toolbarHeight
+        )
+
+        let parentHeight = $("#stage-container").height();
+        let parentWidth = $("#stage-container").width();
+
+        if ($("#stage").height() <= $("#stage-container").height()) {
+
+            let posY = (parentHeight / 2 - $("#stage").height() / 2);
+            TweenMax.to($("#stage"), 0, { y: posY })
+        }
+        else {
+            TweenMax.to($("#stage"), 0, { y: 0 })
+        }
+
+        if ($("#stage").width() <= $("#stage-container").width()) {
+            let posX = (parentWidth / 2 - $("#stage").width() / 2)
+            TweenMax.to($("#stage"), 0, { x: posX })
+        }
+        else {
+            TweenMax.to($("#stage"), 0, { x: 0 })
+        }
+    }
+
     componentDidMount() {
 
         this.stageInit();
@@ -541,7 +552,7 @@ class Stage extends React.Component {
         this.initStageAsDraggable();
         this.updateDimensions();
 
-        window.addEventListener("resize", this.updateDimensions);
+        window.addEventListener("resize", this.updateDimensions.bind(this));
         window.addEventListener('wheel', this.onMouseWheel);
         window.addEventListener("keydown", this.onKeyDown);
         window.addEventListener("keyup", this.onKeyUp);
@@ -552,7 +563,7 @@ class Stage extends React.Component {
     }
 
     componentWillUnmount() {
-        window.removeEventListener("resize", this.updateDimensions);
+        window.removeEventListener("resize", this.updateDimensions.bind(this));
         window.removeEventListener('wheel', this.onMouseWheel);
         window.removeEventListener("keydown", this.onKeyDown);
         window.removeEventListener("keyup", this.onKeyUp);

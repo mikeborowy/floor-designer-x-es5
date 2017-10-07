@@ -213,14 +213,14 @@
   .mdl-layout__header {
     min-height: 64px; } }
 
-@media (min-width: 840px) {
+@media (min-width: 640px) {
   .mdl-grid {
     padding: 0 !important; } }
 
 .mdl-cell {
   position: relative; }
 
-@media (min-width: 840px) {
+@media (min-width: 640px) {
   .mdl-cell {
     margin: 0px !important; } }
 
@@ -352,7 +352,7 @@
   background-color: #448aff; }
 
 #stage-items-container .item-box {
-  background-color: blue !important; }
+  /*background-color:blue !important;*/ }
   #stage-items-container .item-box.item-selected .item-bgnd.shape-room-sqr-2x2, #stage-items-container .item-box.item-selected .item-bgnd.shape-room-rct-3x2, #stage-items-container .item-box.item-selected .item-bgnd.shape-room-sqr-3x3 {
     border: 4px solid #448aff;
     background-color: white; }
