@@ -9,7 +9,7 @@ class ShapesPanelListItem extends React.Component {
     constructor(props) {
         super(props)
 
-        this.debugMode = true;
+        this.debugMode = false;
         this.shape = props.shape;
 
         this.currentAction = '';
@@ -78,7 +78,7 @@ class ShapesPanelListItem extends React.Component {
 
     onDragStart(evt) {
 
-        console.log('onDragStart', evt);
+        if (this.debugMode) console.log('onDragStart', evt);
 
         this.currentAction = 'addItem';
 

@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "1891a50bf0e0da9d0365"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "614084314a34c9c17151"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -597,7 +597,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "1891a50bf0e0da9d0365"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "614084314a34c9c17151"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -1512,14 +1512,14 @@
 	
 	var DOMLazyTree = __webpack_require__(/*! ./DOMLazyTree */ 25);
 	var DOMProperty = __webpack_require__(/*! ./DOMProperty */ 20);
-	var ReactBrowserEventEmitter = __webpack_require__(/*! ./ReactBrowserEventEmitter */ 35);
+	var ReactBrowserEventEmitter = __webpack_require__(/*! ./ReactBrowserEventEmitter */ 36);
 	var ReactCurrentOwner = __webpack_require__(/*! ./ReactCurrentOwner */ 21);
 	var ReactDOMComponentTree = __webpack_require__(/*! ./ReactDOMComponentTree */ 11);
 	var ReactDOMContainerInfo = __webpack_require__(/*! ./ReactDOMContainerInfo */ 163);
 	var ReactDOMFeatureFlags = __webpack_require__(/*! ./ReactDOMFeatureFlags */ 167);
 	var ReactElement = __webpack_require__(/*! ./ReactElement */ 14);
 	var ReactFeatureFlags = __webpack_require__(/*! ./ReactFeatureFlags */ 81);
-	var ReactInstrumentation = __webpack_require__(/*! ./ReactInstrumentation */ 36);
+	var ReactInstrumentation = __webpack_require__(/*! ./ReactInstrumentation */ 37);
 	var ReactMarkupChecksum = __webpack_require__(/*! ./ReactMarkupChecksum */ 186);
 	var ReactPerf = __webpack_require__(/*! ./ReactPerf */ 13);
 	var ReactReconciler = __webpack_require__(/*! ./ReactReconciler */ 26);
@@ -16300,7 +16300,7 @@
 	'use strict';
 	
 	var ReactRef = __webpack_require__(/*! ./ReactRef */ 190);
-	var ReactInstrumentation = __webpack_require__(/*! ./ReactInstrumentation */ 36);
+	var ReactInstrumentation = __webpack_require__(/*! ./ReactInstrumentation */ 37);
 	
 	/**
 	 * Helper to call ReactRef.attachRefs with this composite component, split out
@@ -16438,6 +16438,8 @@
 	var config = function config() {
 	
 	    var roomsCfg = {};
+	    roomsCfg.COLOR_WHITE_01 = "white";
+	    roomsCfg.COLOR_BLUE_01 = "blue";
 	    roomsCfg.CELL_WIDTH = 60;
 	    roomsCfg.CELL_HEIGHT = 60;
 	    roomsCfg.SHAPE_CFG = {
@@ -16515,7 +16517,7 @@
 	
 	'use strict';
 	
-	var EventPluginRegistry = __webpack_require__(/*! ./EventPluginRegistry */ 34);
+	var EventPluginRegistry = __webpack_require__(/*! ./EventPluginRegistry */ 35);
 	var EventPluginUtils = __webpack_require__(/*! ./EventPluginUtils */ 44);
 	var ReactErrorUtils = __webpack_require__(/*! ./ReactErrorUtils */ 48);
 	
@@ -17034,852 +17036,6 @@
 
 /***/ },
 /* 33 */
-/*!*******************************************!*\
-  !*** ./~/react/lib/DisabledInputUtils.js ***!
-  \*******************************************/
-/***/ function(module, exports) {
-
-	/**
-	 * Copyright 2013-present, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule DisabledInputUtils
-	 */
-	
-	'use strict';
-	
-	var disableableMouseListenerNames = {
-	  onClick: true,
-	  onDoubleClick: true,
-	  onMouseDown: true,
-	  onMouseMove: true,
-	  onMouseUp: true,
-	
-	  onClickCapture: true,
-	  onDoubleClickCapture: true,
-	  onMouseDownCapture: true,
-	  onMouseMoveCapture: true,
-	  onMouseUpCapture: true
-	};
-	
-	/**
-	 * Implements a native component that does not receive mouse events
-	 * when `disabled` is set.
-	 */
-	var DisabledInputUtils = {
-	  getNativeProps: function (inst, props) {
-	    if (!props.disabled) {
-	      return props;
-	    }
-	
-	    // Copy the props, except the mouse listeners
-	    var nativeProps = {};
-	    for (var key in props) {
-	      if (!disableableMouseListenerNames[key] && props.hasOwnProperty(key)) {
-	        nativeProps[key] = props[key];
-	      }
-	    }
-	
-	    return nativeProps;
-	  }
-	};
-	
-	module.exports = DisabledInputUtils;
-
-/***/ },
-/* 34 */
-/*!********************************************!*\
-  !*** ./~/react/lib/EventPluginRegistry.js ***!
-  \********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2013-present, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule EventPluginRegistry
-	 */
-	
-	'use strict';
-	
-	var invariant = __webpack_require__(/*! fbjs/lib/invariant */ 3);
-	
-	/**
-	 * Injectable ordering of event plugins.
-	 */
-	var EventPluginOrder = null;
-	
-	/**
-	 * Injectable mapping from names to event plugin modules.
-	 */
-	var namesToPlugins = {};
-	
-	/**
-	 * Recomputes the plugin list using the injected plugins and plugin ordering.
-	 *
-	 * @private
-	 */
-	function recomputePluginOrdering() {
-	  if (!EventPluginOrder) {
-	    // Wait until an `EventPluginOrder` is injected.
-	    return;
-	  }
-	  for (var pluginName in namesToPlugins) {
-	    var PluginModule = namesToPlugins[pluginName];
-	    var pluginIndex = EventPluginOrder.indexOf(pluginName);
-	    !(pluginIndex > -1) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'EventPluginRegistry: Cannot inject event plugins that do not exist in ' + 'the plugin ordering, `%s`.', pluginName) : invariant(false) : void 0;
-	    if (EventPluginRegistry.plugins[pluginIndex]) {
-	      continue;
-	    }
-	    !PluginModule.extractEvents ? process.env.NODE_ENV !== 'production' ? invariant(false, 'EventPluginRegistry: Event plugins must implement an `extractEvents` ' + 'method, but `%s` does not.', pluginName) : invariant(false) : void 0;
-	    EventPluginRegistry.plugins[pluginIndex] = PluginModule;
-	    var publishedEvents = PluginModule.eventTypes;
-	    for (var eventName in publishedEvents) {
-	      !publishEventForPlugin(publishedEvents[eventName], PluginModule, eventName) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'EventPluginRegistry: Failed to publish event `%s` for plugin `%s`.', eventName, pluginName) : invariant(false) : void 0;
-	    }
-	  }
-	}
-	
-	/**
-	 * Publishes an event so that it can be dispatched by the supplied plugin.
-	 *
-	 * @param {object} dispatchConfig Dispatch configuration for the event.
-	 * @param {object} PluginModule Plugin publishing the event.
-	 * @return {boolean} True if the event was successfully published.
-	 * @private
-	 */
-	function publishEventForPlugin(dispatchConfig, PluginModule, eventName) {
-	  !!EventPluginRegistry.eventNameDispatchConfigs.hasOwnProperty(eventName) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'EventPluginHub: More than one plugin attempted to publish the same ' + 'event name, `%s`.', eventName) : invariant(false) : void 0;
-	  EventPluginRegistry.eventNameDispatchConfigs[eventName] = dispatchConfig;
-	
-	  var phasedRegistrationNames = dispatchConfig.phasedRegistrationNames;
-	  if (phasedRegistrationNames) {
-	    for (var phaseName in phasedRegistrationNames) {
-	      if (phasedRegistrationNames.hasOwnProperty(phaseName)) {
-	        var phasedRegistrationName = phasedRegistrationNames[phaseName];
-	        publishRegistrationName(phasedRegistrationName, PluginModule, eventName);
-	      }
-	    }
-	    return true;
-	  } else if (dispatchConfig.registrationName) {
-	    publishRegistrationName(dispatchConfig.registrationName, PluginModule, eventName);
-	    return true;
-	  }
-	  return false;
-	}
-	
-	/**
-	 * Publishes a registration name that is used to identify dispatched events and
-	 * can be used with `EventPluginHub.putListener` to register listeners.
-	 *
-	 * @param {string} registrationName Registration name to add.
-	 * @param {object} PluginModule Plugin publishing the event.
-	 * @private
-	 */
-	function publishRegistrationName(registrationName, PluginModule, eventName) {
-	  !!EventPluginRegistry.registrationNameModules[registrationName] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'EventPluginHub: More than one plugin attempted to publish the same ' + 'registration name, `%s`.', registrationName) : invariant(false) : void 0;
-	  EventPluginRegistry.registrationNameModules[registrationName] = PluginModule;
-	  EventPluginRegistry.registrationNameDependencies[registrationName] = PluginModule.eventTypes[eventName].dependencies;
-	
-	  if (process.env.NODE_ENV !== 'production') {
-	    var lowerCasedName = registrationName.toLowerCase();
-	    EventPluginRegistry.possibleRegistrationNames[lowerCasedName] = registrationName;
-	  }
-	}
-	
-	/**
-	 * Registers plugins so that they can extract and dispatch events.
-	 *
-	 * @see {EventPluginHub}
-	 */
-	var EventPluginRegistry = {
-	
-	  /**
-	   * Ordered list of injected plugins.
-	   */
-	  plugins: [],
-	
-	  /**
-	   * Mapping from event name to dispatch config
-	   */
-	  eventNameDispatchConfigs: {},
-	
-	  /**
-	   * Mapping from registration name to plugin module
-	   */
-	  registrationNameModules: {},
-	
-	  /**
-	   * Mapping from registration name to event name
-	   */
-	  registrationNameDependencies: {},
-	
-	  /**
-	   * Mapping from lowercase registration names to the properly cased version,
-	   * used to warn in the case of missing event handlers. Available
-	   * only in __DEV__.
-	   * @type {Object}
-	   */
-	  possibleRegistrationNames: process.env.NODE_ENV !== 'production' ? {} : null,
-	
-	  /**
-	   * Injects an ordering of plugins (by plugin name). This allows the ordering
-	   * to be decoupled from injection of the actual plugins so that ordering is
-	   * always deterministic regardless of packaging, on-the-fly injection, etc.
-	   *
-	   * @param {array} InjectedEventPluginOrder
-	   * @internal
-	   * @see {EventPluginHub.injection.injectEventPluginOrder}
-	   */
-	  injectEventPluginOrder: function (InjectedEventPluginOrder) {
-	    !!EventPluginOrder ? process.env.NODE_ENV !== 'production' ? invariant(false, 'EventPluginRegistry: Cannot inject event plugin ordering more than ' + 'once. You are likely trying to load more than one copy of React.') : invariant(false) : void 0;
-	    // Clone the ordering so it cannot be dynamically mutated.
-	    EventPluginOrder = Array.prototype.slice.call(InjectedEventPluginOrder);
-	    recomputePluginOrdering();
-	  },
-	
-	  /**
-	   * Injects plugins to be used by `EventPluginHub`. The plugin names must be
-	   * in the ordering injected by `injectEventPluginOrder`.
-	   *
-	   * Plugins can be injected as part of page initialization or on-the-fly.
-	   *
-	   * @param {object} injectedNamesToPlugins Map from names to plugin modules.
-	   * @internal
-	   * @see {EventPluginHub.injection.injectEventPluginsByName}
-	   */
-	  injectEventPluginsByName: function (injectedNamesToPlugins) {
-	    var isOrderingDirty = false;
-	    for (var pluginName in injectedNamesToPlugins) {
-	      if (!injectedNamesToPlugins.hasOwnProperty(pluginName)) {
-	        continue;
-	      }
-	      var PluginModule = injectedNamesToPlugins[pluginName];
-	      if (!namesToPlugins.hasOwnProperty(pluginName) || namesToPlugins[pluginName] !== PluginModule) {
-	        !!namesToPlugins[pluginName] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'EventPluginRegistry: Cannot inject two different event plugins ' + 'using the same name, `%s`.', pluginName) : invariant(false) : void 0;
-	        namesToPlugins[pluginName] = PluginModule;
-	        isOrderingDirty = true;
-	      }
-	    }
-	    if (isOrderingDirty) {
-	      recomputePluginOrdering();
-	    }
-	  },
-	
-	  /**
-	   * Looks up the plugin for the supplied event.
-	   *
-	   * @param {object} event A synthetic event.
-	   * @return {?object} The plugin that created the supplied event.
-	   * @internal
-	   */
-	  getPluginModuleForEvent: function (event) {
-	    var dispatchConfig = event.dispatchConfig;
-	    if (dispatchConfig.registrationName) {
-	      return EventPluginRegistry.registrationNameModules[dispatchConfig.registrationName] || null;
-	    }
-	    for (var phase in dispatchConfig.phasedRegistrationNames) {
-	      if (!dispatchConfig.phasedRegistrationNames.hasOwnProperty(phase)) {
-	        continue;
-	      }
-	      var PluginModule = EventPluginRegistry.registrationNameModules[dispatchConfig.phasedRegistrationNames[phase]];
-	      if (PluginModule) {
-	        return PluginModule;
-	      }
-	    }
-	    return null;
-	  },
-	
-	  /**
-	   * Exposed for unit testing.
-	   * @private
-	   */
-	  _resetEventPlugins: function () {
-	    EventPluginOrder = null;
-	    for (var pluginName in namesToPlugins) {
-	      if (namesToPlugins.hasOwnProperty(pluginName)) {
-	        delete namesToPlugins[pluginName];
-	      }
-	    }
-	    EventPluginRegistry.plugins.length = 0;
-	
-	    var eventNameDispatchConfigs = EventPluginRegistry.eventNameDispatchConfigs;
-	    for (var eventName in eventNameDispatchConfigs) {
-	      if (eventNameDispatchConfigs.hasOwnProperty(eventName)) {
-	        delete eventNameDispatchConfigs[eventName];
-	      }
-	    }
-	
-	    var registrationNameModules = EventPluginRegistry.registrationNameModules;
-	    for (var registrationName in registrationNameModules) {
-	      if (registrationNameModules.hasOwnProperty(registrationName)) {
-	        delete registrationNameModules[registrationName];
-	      }
-	    }
-	
-	    if (process.env.NODE_ENV !== 'production') {
-	      var possibleRegistrationNames = EventPluginRegistry.possibleRegistrationNames;
-	      for (var lowerCasedName in possibleRegistrationNames) {
-	        if (possibleRegistrationNames.hasOwnProperty(lowerCasedName)) {
-	          delete possibleRegistrationNames[lowerCasedName];
-	        }
-	      }
-	    }
-	  }
-	
-	};
-	
-	module.exports = EventPluginRegistry;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/process/browser.js */ 1)))
-
-/***/ },
-/* 35 */
-/*!*************************************************!*\
-  !*** ./~/react/lib/ReactBrowserEventEmitter.js ***!
-  \*************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-present, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactBrowserEventEmitter
-	 */
-	
-	'use strict';
-	
-	var _assign = __webpack_require__(/*! object-assign */ 6);
-	
-	var EventConstants = __webpack_require__(/*! ./EventConstants */ 17);
-	var EventPluginRegistry = __webpack_require__(/*! ./EventPluginRegistry */ 34);
-	var ReactEventEmitterMixin = __webpack_require__(/*! ./ReactEventEmitterMixin */ 182);
-	var ViewportMetrics = __webpack_require__(/*! ./ViewportMetrics */ 90);
-	
-	var getVendorPrefixedEventName = __webpack_require__(/*! ./getVendorPrefixedEventName */ 210);
-	var isEventSupported = __webpack_require__(/*! ./isEventSupported */ 57);
-	
-	/**
-	 * Summary of `ReactBrowserEventEmitter` event handling:
-	 *
-	 *  - Top-level delegation is used to trap most native browser events. This
-	 *    may only occur in the main thread and is the responsibility of
-	 *    ReactEventListener, which is injected and can therefore support pluggable
-	 *    event sources. This is the only work that occurs in the main thread.
-	 *
-	 *  - We normalize and de-duplicate events to account for browser quirks. This
-	 *    may be done in the worker thread.
-	 *
-	 *  - Forward these native events (with the associated top-level type used to
-	 *    trap it) to `EventPluginHub`, which in turn will ask plugins if they want
-	 *    to extract any synthetic events.
-	 *
-	 *  - The `EventPluginHub` will then process each event by annotating them with
-	 *    "dispatches", a sequence of listeners and IDs that care about that event.
-	 *
-	 *  - The `EventPluginHub` then dispatches the events.
-	 *
-	 * Overview of React and the event system:
-	 *
-	 * +------------+    .
-	 * |    DOM     |    .
-	 * +------------+    .
-	 *       |           .
-	 *       v           .
-	 * +------------+    .
-	 * | ReactEvent |    .
-	 * |  Listener  |    .
-	 * +------------+    .                         +-----------+
-	 *       |           .               +--------+|SimpleEvent|
-	 *       |           .               |         |Plugin     |
-	 * +-----|------+    .               v         +-----------+
-	 * |     |      |    .    +--------------+                    +------------+
-	 * |     +-----------.--->|EventPluginHub|                    |    Event   |
-	 * |            |    .    |              |     +-----------+  | Propagators|
-	 * | ReactEvent |    .    |              |     |TapEvent   |  |------------|
-	 * |  Emitter   |    .    |              |<---+|Plugin     |  |other plugin|
-	 * |            |    .    |              |     +-----------+  |  utilities |
-	 * |     +-----------.--->|              |                    +------------+
-	 * |     |      |    .    +--------------+
-	 * +-----|------+    .                ^        +-----------+
-	 *       |           .                |        |Enter/Leave|
-	 *       +           .                +-------+|Plugin     |
-	 * +-------------+   .                         +-----------+
-	 * | application |   .
-	 * |-------------|   .
-	 * |             |   .
-	 * |             |   .
-	 * +-------------+   .
-	 *                   .
-	 *    React Core     .  General Purpose Event Plugin System
-	 */
-	
-	var hasEventPageXY;
-	var alreadyListeningTo = {};
-	var isMonitoringScrollValue = false;
-	var reactTopListenersCounter = 0;
-	
-	// For events like 'submit' which don't consistently bubble (which we trap at a
-	// lower node than `document`), binding at `document` would cause duplicate
-	// events so we don't include them here
-	var topEventMapping = {
-	  topAbort: 'abort',
-	  topAnimationEnd: getVendorPrefixedEventName('animationend') || 'animationend',
-	  topAnimationIteration: getVendorPrefixedEventName('animationiteration') || 'animationiteration',
-	  topAnimationStart: getVendorPrefixedEventName('animationstart') || 'animationstart',
-	  topBlur: 'blur',
-	  topCanPlay: 'canplay',
-	  topCanPlayThrough: 'canplaythrough',
-	  topChange: 'change',
-	  topClick: 'click',
-	  topCompositionEnd: 'compositionend',
-	  topCompositionStart: 'compositionstart',
-	  topCompositionUpdate: 'compositionupdate',
-	  topContextMenu: 'contextmenu',
-	  topCopy: 'copy',
-	  topCut: 'cut',
-	  topDoubleClick: 'dblclick',
-	  topDrag: 'drag',
-	  topDragEnd: 'dragend',
-	  topDragEnter: 'dragenter',
-	  topDragExit: 'dragexit',
-	  topDragLeave: 'dragleave',
-	  topDragOver: 'dragover',
-	  topDragStart: 'dragstart',
-	  topDrop: 'drop',
-	  topDurationChange: 'durationchange',
-	  topEmptied: 'emptied',
-	  topEncrypted: 'encrypted',
-	  topEnded: 'ended',
-	  topError: 'error',
-	  topFocus: 'focus',
-	  topInput: 'input',
-	  topKeyDown: 'keydown',
-	  topKeyPress: 'keypress',
-	  topKeyUp: 'keyup',
-	  topLoadedData: 'loadeddata',
-	  topLoadedMetadata: 'loadedmetadata',
-	  topLoadStart: 'loadstart',
-	  topMouseDown: 'mousedown',
-	  topMouseMove: 'mousemove',
-	  topMouseOut: 'mouseout',
-	  topMouseOver: 'mouseover',
-	  topMouseUp: 'mouseup',
-	  topPaste: 'paste',
-	  topPause: 'pause',
-	  topPlay: 'play',
-	  topPlaying: 'playing',
-	  topProgress: 'progress',
-	  topRateChange: 'ratechange',
-	  topScroll: 'scroll',
-	  topSeeked: 'seeked',
-	  topSeeking: 'seeking',
-	  topSelectionChange: 'selectionchange',
-	  topStalled: 'stalled',
-	  topSuspend: 'suspend',
-	  topTextInput: 'textInput',
-	  topTimeUpdate: 'timeupdate',
-	  topTouchCancel: 'touchcancel',
-	  topTouchEnd: 'touchend',
-	  topTouchMove: 'touchmove',
-	  topTouchStart: 'touchstart',
-	  topTransitionEnd: getVendorPrefixedEventName('transitionend') || 'transitionend',
-	  topVolumeChange: 'volumechange',
-	  topWaiting: 'waiting',
-	  topWheel: 'wheel'
-	};
-	
-	/**
-	 * To ensure no conflicts with other potential React instances on the page
-	 */
-	var topListenersIDKey = '_reactListenersID' + String(Math.random()).slice(2);
-	
-	function getListeningForDocument(mountAt) {
-	  // In IE8, `mountAt` is a host object and doesn't have `hasOwnProperty`
-	  // directly.
-	  if (!Object.prototype.hasOwnProperty.call(mountAt, topListenersIDKey)) {
-	    mountAt[topListenersIDKey] = reactTopListenersCounter++;
-	    alreadyListeningTo[mountAt[topListenersIDKey]] = {};
-	  }
-	  return alreadyListeningTo[mountAt[topListenersIDKey]];
-	}
-	
-	/**
-	 * `ReactBrowserEventEmitter` is used to attach top-level event listeners. For
-	 * example:
-	 *
-	 *   EventPluginHub.putListener('myID', 'onClick', myFunction);
-	 *
-	 * This would allocate a "registration" of `('onClick', myFunction)` on 'myID'.
-	 *
-	 * @internal
-	 */
-	var ReactBrowserEventEmitter = _assign({}, ReactEventEmitterMixin, {
-	
-	  /**
-	   * Injectable event backend
-	   */
-	  ReactEventListener: null,
-	
-	  injection: {
-	    /**
-	     * @param {object} ReactEventListener
-	     */
-	    injectReactEventListener: function (ReactEventListener) {
-	      ReactEventListener.setHandleTopLevel(ReactBrowserEventEmitter.handleTopLevel);
-	      ReactBrowserEventEmitter.ReactEventListener = ReactEventListener;
-	    }
-	  },
-	
-	  /**
-	   * Sets whether or not any created callbacks should be enabled.
-	   *
-	   * @param {boolean} enabled True if callbacks should be enabled.
-	   */
-	  setEnabled: function (enabled) {
-	    if (ReactBrowserEventEmitter.ReactEventListener) {
-	      ReactBrowserEventEmitter.ReactEventListener.setEnabled(enabled);
-	    }
-	  },
-	
-	  /**
-	   * @return {boolean} True if callbacks are enabled.
-	   */
-	  isEnabled: function () {
-	    return !!(ReactBrowserEventEmitter.ReactEventListener && ReactBrowserEventEmitter.ReactEventListener.isEnabled());
-	  },
-	
-	  /**
-	   * We listen for bubbled touch events on the document object.
-	   *
-	   * Firefox v8.01 (and possibly others) exhibited strange behavior when
-	   * mounting `onmousemove` events at some node that was not the document
-	   * element. The symptoms were that if your mouse is not moving over something
-	   * contained within that mount point (for example on the background) the
-	   * top-level listeners for `onmousemove` won't be called. However, if you
-	   * register the `mousemove` on the document object, then it will of course
-	   * catch all `mousemove`s. This along with iOS quirks, justifies restricting
-	   * top-level listeners to the document object only, at least for these
-	   * movement types of events and possibly all events.
-	   *
-	   * @see http://www.quirksmode.org/blog/archives/2010/09/click_event_del.html
-	   *
-	   * Also, `keyup`/`keypress`/`keydown` do not bubble to the window on IE, but
-	   * they bubble to document.
-	   *
-	   * @param {string} registrationName Name of listener (e.g. `onClick`).
-	   * @param {object} contentDocumentHandle Document which owns the container
-	   */
-	  listenTo: function (registrationName, contentDocumentHandle) {
-	    var mountAt = contentDocumentHandle;
-	    var isListening = getListeningForDocument(mountAt);
-	    var dependencies = EventPluginRegistry.registrationNameDependencies[registrationName];
-	
-	    var topLevelTypes = EventConstants.topLevelTypes;
-	    for (var i = 0; i < dependencies.length; i++) {
-	      var dependency = dependencies[i];
-	      if (!(isListening.hasOwnProperty(dependency) && isListening[dependency])) {
-	        if (dependency === topLevelTypes.topWheel) {
-	          if (isEventSupported('wheel')) {
-	            ReactBrowserEventEmitter.ReactEventListener.trapBubbledEvent(topLevelTypes.topWheel, 'wheel', mountAt);
-	          } else if (isEventSupported('mousewheel')) {
-	            ReactBrowserEventEmitter.ReactEventListener.trapBubbledEvent(topLevelTypes.topWheel, 'mousewheel', mountAt);
-	          } else {
-	            // Firefox needs to capture a different mouse scroll event.
-	            // @see http://www.quirksmode.org/dom/events/tests/scroll.html
-	            ReactBrowserEventEmitter.ReactEventListener.trapBubbledEvent(topLevelTypes.topWheel, 'DOMMouseScroll', mountAt);
-	          }
-	        } else if (dependency === topLevelTypes.topScroll) {
-	
-	          if (isEventSupported('scroll', true)) {
-	            ReactBrowserEventEmitter.ReactEventListener.trapCapturedEvent(topLevelTypes.topScroll, 'scroll', mountAt);
-	          } else {
-	            ReactBrowserEventEmitter.ReactEventListener.trapBubbledEvent(topLevelTypes.topScroll, 'scroll', ReactBrowserEventEmitter.ReactEventListener.WINDOW_HANDLE);
-	          }
-	        } else if (dependency === topLevelTypes.topFocus || dependency === topLevelTypes.topBlur) {
-	
-	          if (isEventSupported('focus', true)) {
-	            ReactBrowserEventEmitter.ReactEventListener.trapCapturedEvent(topLevelTypes.topFocus, 'focus', mountAt);
-	            ReactBrowserEventEmitter.ReactEventListener.trapCapturedEvent(topLevelTypes.topBlur, 'blur', mountAt);
-	          } else if (isEventSupported('focusin')) {
-	            // IE has `focusin` and `focusout` events which bubble.
-	            // @see http://www.quirksmode.org/blog/archives/2008/04/delegating_the.html
-	            ReactBrowserEventEmitter.ReactEventListener.trapBubbledEvent(topLevelTypes.topFocus, 'focusin', mountAt);
-	            ReactBrowserEventEmitter.ReactEventListener.trapBubbledEvent(topLevelTypes.topBlur, 'focusout', mountAt);
-	          }
-	
-	          // to make sure blur and focus event listeners are only attached once
-	          isListening[topLevelTypes.topBlur] = true;
-	          isListening[topLevelTypes.topFocus] = true;
-	        } else if (topEventMapping.hasOwnProperty(dependency)) {
-	          ReactBrowserEventEmitter.ReactEventListener.trapBubbledEvent(dependency, topEventMapping[dependency], mountAt);
-	        }
-	
-	        isListening[dependency] = true;
-	      }
-	    }
-	  },
-	
-	  trapBubbledEvent: function (topLevelType, handlerBaseName, handle) {
-	    return ReactBrowserEventEmitter.ReactEventListener.trapBubbledEvent(topLevelType, handlerBaseName, handle);
-	  },
-	
-	  trapCapturedEvent: function (topLevelType, handlerBaseName, handle) {
-	    return ReactBrowserEventEmitter.ReactEventListener.trapCapturedEvent(topLevelType, handlerBaseName, handle);
-	  },
-	
-	  /**
-	   * Listens to window scroll and resize events. We cache scroll values so that
-	   * application code can access them without triggering reflows.
-	   *
-	   * ViewportMetrics is only used by SyntheticMouse/TouchEvent and only when
-	   * pageX/pageY isn't supported (legacy browsers).
-	   *
-	   * NOTE: Scroll events do not bubble.
-	   *
-	   * @see http://www.quirksmode.org/dom/events/scroll.html
-	   */
-	  ensureScrollValueMonitoring: function () {
-	    if (hasEventPageXY === undefined) {
-	      hasEventPageXY = document.createEvent && 'pageX' in document.createEvent('MouseEvent');
-	    }
-	    if (!hasEventPageXY && !isMonitoringScrollValue) {
-	      var refresh = ViewportMetrics.refreshScrollValues;
-	      ReactBrowserEventEmitter.ReactEventListener.monitorScrollValue(refresh);
-	      isMonitoringScrollValue = true;
-	    }
-	  }
-	
-	});
-	
-	module.exports = ReactBrowserEventEmitter;
-
-/***/ },
-/* 36 */
-/*!*********************************************!*\
-  !*** ./~/react/lib/ReactInstrumentation.js ***!
-  \*********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2016-present, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactInstrumentation
-	 */
-	
-	'use strict';
-	
-	var ReactDebugTool = __webpack_require__(/*! ./ReactDebugTool */ 177);
-	
-	module.exports = { debugTool: ReactDebugTool };
-
-/***/ },
-/* 37 */
-/*!***************************************************!*\
-  !*** ./~/react/lib/ReactPropTypeLocationNames.js ***!
-  \***************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2013-present, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactPropTypeLocationNames
-	 */
-	
-	'use strict';
-	
-	var ReactPropTypeLocationNames = {};
-	
-	if (process.env.NODE_ENV !== 'production') {
-	  ReactPropTypeLocationNames = {
-	    prop: 'prop',
-	    context: 'context',
-	    childContext: 'child context'
-	  };
-	}
-	
-	module.exports = ReactPropTypeLocationNames;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/process/browser.js */ 1)))
-
-/***/ },
-/* 38 */
-/*!***********************************************!*\
-  !*** ./~/react/lib/ReactPropTypeLocations.js ***!
-  \***********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-present, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactPropTypeLocations
-	 */
-	
-	'use strict';
-	
-	var keyMirror = __webpack_require__(/*! fbjs/lib/keyMirror */ 32);
-	
-	var ReactPropTypeLocations = keyMirror({
-	  prop: null,
-	  context: null,
-	  childContext: null
-	});
-	
-	module.exports = ReactPropTypeLocations;
-
-/***/ },
-/* 39 */
-/*!********************************************!*\
-  !*** ./~/react/lib/SyntheticMouseEvent.js ***!
-  \********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-present, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule SyntheticMouseEvent
-	 */
-	
-	'use strict';
-	
-	var SyntheticUIEvent = __webpack_require__(/*! ./SyntheticUIEvent */ 30);
-	var ViewportMetrics = __webpack_require__(/*! ./ViewportMetrics */ 90);
-	
-	var getEventModifierState = __webpack_require__(/*! ./getEventModifierState */ 54);
-	
-	/**
-	 * @interface MouseEvent
-	 * @see http://www.w3.org/TR/DOM-Level-3-Events/
-	 */
-	var MouseEventInterface = {
-	  screenX: null,
-	  screenY: null,
-	  clientX: null,
-	  clientY: null,
-	  ctrlKey: null,
-	  shiftKey: null,
-	  altKey: null,
-	  metaKey: null,
-	  getModifierState: getEventModifierState,
-	  button: function (event) {
-	    // Webkit, Firefox, IE9+
-	    // which:  1 2 3
-	    // button: 0 1 2 (standard)
-	    var button = event.button;
-	    if ('which' in event) {
-	      return button;
-	    }
-	    // IE<9
-	    // which:  undefined
-	    // button: 0 0 0
-	    // button: 1 4 2 (onmouseup)
-	    return button === 2 ? 2 : button === 4 ? 1 : 0;
-	  },
-	  buttons: null,
-	  relatedTarget: function (event) {
-	    return event.relatedTarget || (event.fromElement === event.srcElement ? event.toElement : event.fromElement);
-	  },
-	  // "Proprietary" Interface.
-	  pageX: function (event) {
-	    return 'pageX' in event ? event.pageX : event.clientX + ViewportMetrics.currentScrollLeft;
-	  },
-	  pageY: function (event) {
-	    return 'pageY' in event ? event.pageY : event.clientY + ViewportMetrics.currentScrollTop;
-	  }
-	};
-	
-	/**
-	 * @param {object} dispatchConfig Configuration used to dispatch this event.
-	 * @param {string} dispatchMarker Marker identifying the event target.
-	 * @param {object} nativeEvent Native browser event.
-	 * @extends {SyntheticUIEvent}
-	 */
-	function SyntheticMouseEvent(dispatchConfig, dispatchMarker, nativeEvent, nativeEventTarget) {
-	  return SyntheticUIEvent.call(this, dispatchConfig, dispatchMarker, nativeEvent, nativeEventTarget);
-	}
-	
-	SyntheticUIEvent.augmentClass(SyntheticMouseEvent, MouseEventInterface);
-	
-	module.exports = SyntheticMouseEvent;
-
-/***/ },
-/* 40 */
-/*!****************************************************!*\
-  !*** ./~/react/lib/escapeTextContentForBrowser.js ***!
-  \****************************************************/
-/***/ function(module, exports) {
-
-	/**
-	 * Copyright 2013-present, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule escapeTextContentForBrowser
-	 */
-	
-	'use strict';
-	
-	var ESCAPE_LOOKUP = {
-	  '&': '&amp;',
-	  '>': '&gt;',
-	  '<': '&lt;',
-	  '"': '&quot;',
-	  '\'': '&#x27;'
-	};
-	
-	var ESCAPE_REGEX = /[&><"']/g;
-	
-	function escaper(match) {
-	  return ESCAPE_LOOKUP[match];
-	}
-	
-	/**
-	 * Escapes text to prevent scripting attacks.
-	 *
-	 * @param {*} text Text value to escape.
-	 * @return {string} An escaped string.
-	 */
-	function escapeTextContentForBrowser(text) {
-	  return ('' + text).replace(ESCAPE_REGEX, escaper);
-	}
-	
-	module.exports = escapeTextContentForBrowser;
-
-/***/ },
-/* 41 */
 /*!****************************!*\
   !*** ./~/gsap/TweenMax.js ***!
   \****************************/
@@ -25850,6 +25006,852 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
+/* 34 */
+/*!*******************************************!*\
+  !*** ./~/react/lib/DisabledInputUtils.js ***!
+  \*******************************************/
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule DisabledInputUtils
+	 */
+	
+	'use strict';
+	
+	var disableableMouseListenerNames = {
+	  onClick: true,
+	  onDoubleClick: true,
+	  onMouseDown: true,
+	  onMouseMove: true,
+	  onMouseUp: true,
+	
+	  onClickCapture: true,
+	  onDoubleClickCapture: true,
+	  onMouseDownCapture: true,
+	  onMouseMoveCapture: true,
+	  onMouseUpCapture: true
+	};
+	
+	/**
+	 * Implements a native component that does not receive mouse events
+	 * when `disabled` is set.
+	 */
+	var DisabledInputUtils = {
+	  getNativeProps: function (inst, props) {
+	    if (!props.disabled) {
+	      return props;
+	    }
+	
+	    // Copy the props, except the mouse listeners
+	    var nativeProps = {};
+	    for (var key in props) {
+	      if (!disableableMouseListenerNames[key] && props.hasOwnProperty(key)) {
+	        nativeProps[key] = props[key];
+	      }
+	    }
+	
+	    return nativeProps;
+	  }
+	};
+	
+	module.exports = DisabledInputUtils;
+
+/***/ },
+/* 35 */
+/*!********************************************!*\
+  !*** ./~/react/lib/EventPluginRegistry.js ***!
+  \********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule EventPluginRegistry
+	 */
+	
+	'use strict';
+	
+	var invariant = __webpack_require__(/*! fbjs/lib/invariant */ 3);
+	
+	/**
+	 * Injectable ordering of event plugins.
+	 */
+	var EventPluginOrder = null;
+	
+	/**
+	 * Injectable mapping from names to event plugin modules.
+	 */
+	var namesToPlugins = {};
+	
+	/**
+	 * Recomputes the plugin list using the injected plugins and plugin ordering.
+	 *
+	 * @private
+	 */
+	function recomputePluginOrdering() {
+	  if (!EventPluginOrder) {
+	    // Wait until an `EventPluginOrder` is injected.
+	    return;
+	  }
+	  for (var pluginName in namesToPlugins) {
+	    var PluginModule = namesToPlugins[pluginName];
+	    var pluginIndex = EventPluginOrder.indexOf(pluginName);
+	    !(pluginIndex > -1) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'EventPluginRegistry: Cannot inject event plugins that do not exist in ' + 'the plugin ordering, `%s`.', pluginName) : invariant(false) : void 0;
+	    if (EventPluginRegistry.plugins[pluginIndex]) {
+	      continue;
+	    }
+	    !PluginModule.extractEvents ? process.env.NODE_ENV !== 'production' ? invariant(false, 'EventPluginRegistry: Event plugins must implement an `extractEvents` ' + 'method, but `%s` does not.', pluginName) : invariant(false) : void 0;
+	    EventPluginRegistry.plugins[pluginIndex] = PluginModule;
+	    var publishedEvents = PluginModule.eventTypes;
+	    for (var eventName in publishedEvents) {
+	      !publishEventForPlugin(publishedEvents[eventName], PluginModule, eventName) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'EventPluginRegistry: Failed to publish event `%s` for plugin `%s`.', eventName, pluginName) : invariant(false) : void 0;
+	    }
+	  }
+	}
+	
+	/**
+	 * Publishes an event so that it can be dispatched by the supplied plugin.
+	 *
+	 * @param {object} dispatchConfig Dispatch configuration for the event.
+	 * @param {object} PluginModule Plugin publishing the event.
+	 * @return {boolean} True if the event was successfully published.
+	 * @private
+	 */
+	function publishEventForPlugin(dispatchConfig, PluginModule, eventName) {
+	  !!EventPluginRegistry.eventNameDispatchConfigs.hasOwnProperty(eventName) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'EventPluginHub: More than one plugin attempted to publish the same ' + 'event name, `%s`.', eventName) : invariant(false) : void 0;
+	  EventPluginRegistry.eventNameDispatchConfigs[eventName] = dispatchConfig;
+	
+	  var phasedRegistrationNames = dispatchConfig.phasedRegistrationNames;
+	  if (phasedRegistrationNames) {
+	    for (var phaseName in phasedRegistrationNames) {
+	      if (phasedRegistrationNames.hasOwnProperty(phaseName)) {
+	        var phasedRegistrationName = phasedRegistrationNames[phaseName];
+	        publishRegistrationName(phasedRegistrationName, PluginModule, eventName);
+	      }
+	    }
+	    return true;
+	  } else if (dispatchConfig.registrationName) {
+	    publishRegistrationName(dispatchConfig.registrationName, PluginModule, eventName);
+	    return true;
+	  }
+	  return false;
+	}
+	
+	/**
+	 * Publishes a registration name that is used to identify dispatched events and
+	 * can be used with `EventPluginHub.putListener` to register listeners.
+	 *
+	 * @param {string} registrationName Registration name to add.
+	 * @param {object} PluginModule Plugin publishing the event.
+	 * @private
+	 */
+	function publishRegistrationName(registrationName, PluginModule, eventName) {
+	  !!EventPluginRegistry.registrationNameModules[registrationName] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'EventPluginHub: More than one plugin attempted to publish the same ' + 'registration name, `%s`.', registrationName) : invariant(false) : void 0;
+	  EventPluginRegistry.registrationNameModules[registrationName] = PluginModule;
+	  EventPluginRegistry.registrationNameDependencies[registrationName] = PluginModule.eventTypes[eventName].dependencies;
+	
+	  if (process.env.NODE_ENV !== 'production') {
+	    var lowerCasedName = registrationName.toLowerCase();
+	    EventPluginRegistry.possibleRegistrationNames[lowerCasedName] = registrationName;
+	  }
+	}
+	
+	/**
+	 * Registers plugins so that they can extract and dispatch events.
+	 *
+	 * @see {EventPluginHub}
+	 */
+	var EventPluginRegistry = {
+	
+	  /**
+	   * Ordered list of injected plugins.
+	   */
+	  plugins: [],
+	
+	  /**
+	   * Mapping from event name to dispatch config
+	   */
+	  eventNameDispatchConfigs: {},
+	
+	  /**
+	   * Mapping from registration name to plugin module
+	   */
+	  registrationNameModules: {},
+	
+	  /**
+	   * Mapping from registration name to event name
+	   */
+	  registrationNameDependencies: {},
+	
+	  /**
+	   * Mapping from lowercase registration names to the properly cased version,
+	   * used to warn in the case of missing event handlers. Available
+	   * only in __DEV__.
+	   * @type {Object}
+	   */
+	  possibleRegistrationNames: process.env.NODE_ENV !== 'production' ? {} : null,
+	
+	  /**
+	   * Injects an ordering of plugins (by plugin name). This allows the ordering
+	   * to be decoupled from injection of the actual plugins so that ordering is
+	   * always deterministic regardless of packaging, on-the-fly injection, etc.
+	   *
+	   * @param {array} InjectedEventPluginOrder
+	   * @internal
+	   * @see {EventPluginHub.injection.injectEventPluginOrder}
+	   */
+	  injectEventPluginOrder: function (InjectedEventPluginOrder) {
+	    !!EventPluginOrder ? process.env.NODE_ENV !== 'production' ? invariant(false, 'EventPluginRegistry: Cannot inject event plugin ordering more than ' + 'once. You are likely trying to load more than one copy of React.') : invariant(false) : void 0;
+	    // Clone the ordering so it cannot be dynamically mutated.
+	    EventPluginOrder = Array.prototype.slice.call(InjectedEventPluginOrder);
+	    recomputePluginOrdering();
+	  },
+	
+	  /**
+	   * Injects plugins to be used by `EventPluginHub`. The plugin names must be
+	   * in the ordering injected by `injectEventPluginOrder`.
+	   *
+	   * Plugins can be injected as part of page initialization or on-the-fly.
+	   *
+	   * @param {object} injectedNamesToPlugins Map from names to plugin modules.
+	   * @internal
+	   * @see {EventPluginHub.injection.injectEventPluginsByName}
+	   */
+	  injectEventPluginsByName: function (injectedNamesToPlugins) {
+	    var isOrderingDirty = false;
+	    for (var pluginName in injectedNamesToPlugins) {
+	      if (!injectedNamesToPlugins.hasOwnProperty(pluginName)) {
+	        continue;
+	      }
+	      var PluginModule = injectedNamesToPlugins[pluginName];
+	      if (!namesToPlugins.hasOwnProperty(pluginName) || namesToPlugins[pluginName] !== PluginModule) {
+	        !!namesToPlugins[pluginName] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'EventPluginRegistry: Cannot inject two different event plugins ' + 'using the same name, `%s`.', pluginName) : invariant(false) : void 0;
+	        namesToPlugins[pluginName] = PluginModule;
+	        isOrderingDirty = true;
+	      }
+	    }
+	    if (isOrderingDirty) {
+	      recomputePluginOrdering();
+	    }
+	  },
+	
+	  /**
+	   * Looks up the plugin for the supplied event.
+	   *
+	   * @param {object} event A synthetic event.
+	   * @return {?object} The plugin that created the supplied event.
+	   * @internal
+	   */
+	  getPluginModuleForEvent: function (event) {
+	    var dispatchConfig = event.dispatchConfig;
+	    if (dispatchConfig.registrationName) {
+	      return EventPluginRegistry.registrationNameModules[dispatchConfig.registrationName] || null;
+	    }
+	    for (var phase in dispatchConfig.phasedRegistrationNames) {
+	      if (!dispatchConfig.phasedRegistrationNames.hasOwnProperty(phase)) {
+	        continue;
+	      }
+	      var PluginModule = EventPluginRegistry.registrationNameModules[dispatchConfig.phasedRegistrationNames[phase]];
+	      if (PluginModule) {
+	        return PluginModule;
+	      }
+	    }
+	    return null;
+	  },
+	
+	  /**
+	   * Exposed for unit testing.
+	   * @private
+	   */
+	  _resetEventPlugins: function () {
+	    EventPluginOrder = null;
+	    for (var pluginName in namesToPlugins) {
+	      if (namesToPlugins.hasOwnProperty(pluginName)) {
+	        delete namesToPlugins[pluginName];
+	      }
+	    }
+	    EventPluginRegistry.plugins.length = 0;
+	
+	    var eventNameDispatchConfigs = EventPluginRegistry.eventNameDispatchConfigs;
+	    for (var eventName in eventNameDispatchConfigs) {
+	      if (eventNameDispatchConfigs.hasOwnProperty(eventName)) {
+	        delete eventNameDispatchConfigs[eventName];
+	      }
+	    }
+	
+	    var registrationNameModules = EventPluginRegistry.registrationNameModules;
+	    for (var registrationName in registrationNameModules) {
+	      if (registrationNameModules.hasOwnProperty(registrationName)) {
+	        delete registrationNameModules[registrationName];
+	      }
+	    }
+	
+	    if (process.env.NODE_ENV !== 'production') {
+	      var possibleRegistrationNames = EventPluginRegistry.possibleRegistrationNames;
+	      for (var lowerCasedName in possibleRegistrationNames) {
+	        if (possibleRegistrationNames.hasOwnProperty(lowerCasedName)) {
+	          delete possibleRegistrationNames[lowerCasedName];
+	        }
+	      }
+	    }
+	  }
+	
+	};
+	
+	module.exports = EventPluginRegistry;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/process/browser.js */ 1)))
+
+/***/ },
+/* 36 */
+/*!*************************************************!*\
+  !*** ./~/react/lib/ReactBrowserEventEmitter.js ***!
+  \*************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactBrowserEventEmitter
+	 */
+	
+	'use strict';
+	
+	var _assign = __webpack_require__(/*! object-assign */ 6);
+	
+	var EventConstants = __webpack_require__(/*! ./EventConstants */ 17);
+	var EventPluginRegistry = __webpack_require__(/*! ./EventPluginRegistry */ 35);
+	var ReactEventEmitterMixin = __webpack_require__(/*! ./ReactEventEmitterMixin */ 182);
+	var ViewportMetrics = __webpack_require__(/*! ./ViewportMetrics */ 90);
+	
+	var getVendorPrefixedEventName = __webpack_require__(/*! ./getVendorPrefixedEventName */ 210);
+	var isEventSupported = __webpack_require__(/*! ./isEventSupported */ 57);
+	
+	/**
+	 * Summary of `ReactBrowserEventEmitter` event handling:
+	 *
+	 *  - Top-level delegation is used to trap most native browser events. This
+	 *    may only occur in the main thread and is the responsibility of
+	 *    ReactEventListener, which is injected and can therefore support pluggable
+	 *    event sources. This is the only work that occurs in the main thread.
+	 *
+	 *  - We normalize and de-duplicate events to account for browser quirks. This
+	 *    may be done in the worker thread.
+	 *
+	 *  - Forward these native events (with the associated top-level type used to
+	 *    trap it) to `EventPluginHub`, which in turn will ask plugins if they want
+	 *    to extract any synthetic events.
+	 *
+	 *  - The `EventPluginHub` will then process each event by annotating them with
+	 *    "dispatches", a sequence of listeners and IDs that care about that event.
+	 *
+	 *  - The `EventPluginHub` then dispatches the events.
+	 *
+	 * Overview of React and the event system:
+	 *
+	 * +------------+    .
+	 * |    DOM     |    .
+	 * +------------+    .
+	 *       |           .
+	 *       v           .
+	 * +------------+    .
+	 * | ReactEvent |    .
+	 * |  Listener  |    .
+	 * +------------+    .                         +-----------+
+	 *       |           .               +--------+|SimpleEvent|
+	 *       |           .               |         |Plugin     |
+	 * +-----|------+    .               v         +-----------+
+	 * |     |      |    .    +--------------+                    +------------+
+	 * |     +-----------.--->|EventPluginHub|                    |    Event   |
+	 * |            |    .    |              |     +-----------+  | Propagators|
+	 * | ReactEvent |    .    |              |     |TapEvent   |  |------------|
+	 * |  Emitter   |    .    |              |<---+|Plugin     |  |other plugin|
+	 * |            |    .    |              |     +-----------+  |  utilities |
+	 * |     +-----------.--->|              |                    +------------+
+	 * |     |      |    .    +--------------+
+	 * +-----|------+    .                ^        +-----------+
+	 *       |           .                |        |Enter/Leave|
+	 *       +           .                +-------+|Plugin     |
+	 * +-------------+   .                         +-----------+
+	 * | application |   .
+	 * |-------------|   .
+	 * |             |   .
+	 * |             |   .
+	 * +-------------+   .
+	 *                   .
+	 *    React Core     .  General Purpose Event Plugin System
+	 */
+	
+	var hasEventPageXY;
+	var alreadyListeningTo = {};
+	var isMonitoringScrollValue = false;
+	var reactTopListenersCounter = 0;
+	
+	// For events like 'submit' which don't consistently bubble (which we trap at a
+	// lower node than `document`), binding at `document` would cause duplicate
+	// events so we don't include them here
+	var topEventMapping = {
+	  topAbort: 'abort',
+	  topAnimationEnd: getVendorPrefixedEventName('animationend') || 'animationend',
+	  topAnimationIteration: getVendorPrefixedEventName('animationiteration') || 'animationiteration',
+	  topAnimationStart: getVendorPrefixedEventName('animationstart') || 'animationstart',
+	  topBlur: 'blur',
+	  topCanPlay: 'canplay',
+	  topCanPlayThrough: 'canplaythrough',
+	  topChange: 'change',
+	  topClick: 'click',
+	  topCompositionEnd: 'compositionend',
+	  topCompositionStart: 'compositionstart',
+	  topCompositionUpdate: 'compositionupdate',
+	  topContextMenu: 'contextmenu',
+	  topCopy: 'copy',
+	  topCut: 'cut',
+	  topDoubleClick: 'dblclick',
+	  topDrag: 'drag',
+	  topDragEnd: 'dragend',
+	  topDragEnter: 'dragenter',
+	  topDragExit: 'dragexit',
+	  topDragLeave: 'dragleave',
+	  topDragOver: 'dragover',
+	  topDragStart: 'dragstart',
+	  topDrop: 'drop',
+	  topDurationChange: 'durationchange',
+	  topEmptied: 'emptied',
+	  topEncrypted: 'encrypted',
+	  topEnded: 'ended',
+	  topError: 'error',
+	  topFocus: 'focus',
+	  topInput: 'input',
+	  topKeyDown: 'keydown',
+	  topKeyPress: 'keypress',
+	  topKeyUp: 'keyup',
+	  topLoadedData: 'loadeddata',
+	  topLoadedMetadata: 'loadedmetadata',
+	  topLoadStart: 'loadstart',
+	  topMouseDown: 'mousedown',
+	  topMouseMove: 'mousemove',
+	  topMouseOut: 'mouseout',
+	  topMouseOver: 'mouseover',
+	  topMouseUp: 'mouseup',
+	  topPaste: 'paste',
+	  topPause: 'pause',
+	  topPlay: 'play',
+	  topPlaying: 'playing',
+	  topProgress: 'progress',
+	  topRateChange: 'ratechange',
+	  topScroll: 'scroll',
+	  topSeeked: 'seeked',
+	  topSeeking: 'seeking',
+	  topSelectionChange: 'selectionchange',
+	  topStalled: 'stalled',
+	  topSuspend: 'suspend',
+	  topTextInput: 'textInput',
+	  topTimeUpdate: 'timeupdate',
+	  topTouchCancel: 'touchcancel',
+	  topTouchEnd: 'touchend',
+	  topTouchMove: 'touchmove',
+	  topTouchStart: 'touchstart',
+	  topTransitionEnd: getVendorPrefixedEventName('transitionend') || 'transitionend',
+	  topVolumeChange: 'volumechange',
+	  topWaiting: 'waiting',
+	  topWheel: 'wheel'
+	};
+	
+	/**
+	 * To ensure no conflicts with other potential React instances on the page
+	 */
+	var topListenersIDKey = '_reactListenersID' + String(Math.random()).slice(2);
+	
+	function getListeningForDocument(mountAt) {
+	  // In IE8, `mountAt` is a host object and doesn't have `hasOwnProperty`
+	  // directly.
+	  if (!Object.prototype.hasOwnProperty.call(mountAt, topListenersIDKey)) {
+	    mountAt[topListenersIDKey] = reactTopListenersCounter++;
+	    alreadyListeningTo[mountAt[topListenersIDKey]] = {};
+	  }
+	  return alreadyListeningTo[mountAt[topListenersIDKey]];
+	}
+	
+	/**
+	 * `ReactBrowserEventEmitter` is used to attach top-level event listeners. For
+	 * example:
+	 *
+	 *   EventPluginHub.putListener('myID', 'onClick', myFunction);
+	 *
+	 * This would allocate a "registration" of `('onClick', myFunction)` on 'myID'.
+	 *
+	 * @internal
+	 */
+	var ReactBrowserEventEmitter = _assign({}, ReactEventEmitterMixin, {
+	
+	  /**
+	   * Injectable event backend
+	   */
+	  ReactEventListener: null,
+	
+	  injection: {
+	    /**
+	     * @param {object} ReactEventListener
+	     */
+	    injectReactEventListener: function (ReactEventListener) {
+	      ReactEventListener.setHandleTopLevel(ReactBrowserEventEmitter.handleTopLevel);
+	      ReactBrowserEventEmitter.ReactEventListener = ReactEventListener;
+	    }
+	  },
+	
+	  /**
+	   * Sets whether or not any created callbacks should be enabled.
+	   *
+	   * @param {boolean} enabled True if callbacks should be enabled.
+	   */
+	  setEnabled: function (enabled) {
+	    if (ReactBrowserEventEmitter.ReactEventListener) {
+	      ReactBrowserEventEmitter.ReactEventListener.setEnabled(enabled);
+	    }
+	  },
+	
+	  /**
+	   * @return {boolean} True if callbacks are enabled.
+	   */
+	  isEnabled: function () {
+	    return !!(ReactBrowserEventEmitter.ReactEventListener && ReactBrowserEventEmitter.ReactEventListener.isEnabled());
+	  },
+	
+	  /**
+	   * We listen for bubbled touch events on the document object.
+	   *
+	   * Firefox v8.01 (and possibly others) exhibited strange behavior when
+	   * mounting `onmousemove` events at some node that was not the document
+	   * element. The symptoms were that if your mouse is not moving over something
+	   * contained within that mount point (for example on the background) the
+	   * top-level listeners for `onmousemove` won't be called. However, if you
+	   * register the `mousemove` on the document object, then it will of course
+	   * catch all `mousemove`s. This along with iOS quirks, justifies restricting
+	   * top-level listeners to the document object only, at least for these
+	   * movement types of events and possibly all events.
+	   *
+	   * @see http://www.quirksmode.org/blog/archives/2010/09/click_event_del.html
+	   *
+	   * Also, `keyup`/`keypress`/`keydown` do not bubble to the window on IE, but
+	   * they bubble to document.
+	   *
+	   * @param {string} registrationName Name of listener (e.g. `onClick`).
+	   * @param {object} contentDocumentHandle Document which owns the container
+	   */
+	  listenTo: function (registrationName, contentDocumentHandle) {
+	    var mountAt = contentDocumentHandle;
+	    var isListening = getListeningForDocument(mountAt);
+	    var dependencies = EventPluginRegistry.registrationNameDependencies[registrationName];
+	
+	    var topLevelTypes = EventConstants.topLevelTypes;
+	    for (var i = 0; i < dependencies.length; i++) {
+	      var dependency = dependencies[i];
+	      if (!(isListening.hasOwnProperty(dependency) && isListening[dependency])) {
+	        if (dependency === topLevelTypes.topWheel) {
+	          if (isEventSupported('wheel')) {
+	            ReactBrowserEventEmitter.ReactEventListener.trapBubbledEvent(topLevelTypes.topWheel, 'wheel', mountAt);
+	          } else if (isEventSupported('mousewheel')) {
+	            ReactBrowserEventEmitter.ReactEventListener.trapBubbledEvent(topLevelTypes.topWheel, 'mousewheel', mountAt);
+	          } else {
+	            // Firefox needs to capture a different mouse scroll event.
+	            // @see http://www.quirksmode.org/dom/events/tests/scroll.html
+	            ReactBrowserEventEmitter.ReactEventListener.trapBubbledEvent(topLevelTypes.topWheel, 'DOMMouseScroll', mountAt);
+	          }
+	        } else if (dependency === topLevelTypes.topScroll) {
+	
+	          if (isEventSupported('scroll', true)) {
+	            ReactBrowserEventEmitter.ReactEventListener.trapCapturedEvent(topLevelTypes.topScroll, 'scroll', mountAt);
+	          } else {
+	            ReactBrowserEventEmitter.ReactEventListener.trapBubbledEvent(topLevelTypes.topScroll, 'scroll', ReactBrowserEventEmitter.ReactEventListener.WINDOW_HANDLE);
+	          }
+	        } else if (dependency === topLevelTypes.topFocus || dependency === topLevelTypes.topBlur) {
+	
+	          if (isEventSupported('focus', true)) {
+	            ReactBrowserEventEmitter.ReactEventListener.trapCapturedEvent(topLevelTypes.topFocus, 'focus', mountAt);
+	            ReactBrowserEventEmitter.ReactEventListener.trapCapturedEvent(topLevelTypes.topBlur, 'blur', mountAt);
+	          } else if (isEventSupported('focusin')) {
+	            // IE has `focusin` and `focusout` events which bubble.
+	            // @see http://www.quirksmode.org/blog/archives/2008/04/delegating_the.html
+	            ReactBrowserEventEmitter.ReactEventListener.trapBubbledEvent(topLevelTypes.topFocus, 'focusin', mountAt);
+	            ReactBrowserEventEmitter.ReactEventListener.trapBubbledEvent(topLevelTypes.topBlur, 'focusout', mountAt);
+	          }
+	
+	          // to make sure blur and focus event listeners are only attached once
+	          isListening[topLevelTypes.topBlur] = true;
+	          isListening[topLevelTypes.topFocus] = true;
+	        } else if (topEventMapping.hasOwnProperty(dependency)) {
+	          ReactBrowserEventEmitter.ReactEventListener.trapBubbledEvent(dependency, topEventMapping[dependency], mountAt);
+	        }
+	
+	        isListening[dependency] = true;
+	      }
+	    }
+	  },
+	
+	  trapBubbledEvent: function (topLevelType, handlerBaseName, handle) {
+	    return ReactBrowserEventEmitter.ReactEventListener.trapBubbledEvent(topLevelType, handlerBaseName, handle);
+	  },
+	
+	  trapCapturedEvent: function (topLevelType, handlerBaseName, handle) {
+	    return ReactBrowserEventEmitter.ReactEventListener.trapCapturedEvent(topLevelType, handlerBaseName, handle);
+	  },
+	
+	  /**
+	   * Listens to window scroll and resize events. We cache scroll values so that
+	   * application code can access them without triggering reflows.
+	   *
+	   * ViewportMetrics is only used by SyntheticMouse/TouchEvent and only when
+	   * pageX/pageY isn't supported (legacy browsers).
+	   *
+	   * NOTE: Scroll events do not bubble.
+	   *
+	   * @see http://www.quirksmode.org/dom/events/scroll.html
+	   */
+	  ensureScrollValueMonitoring: function () {
+	    if (hasEventPageXY === undefined) {
+	      hasEventPageXY = document.createEvent && 'pageX' in document.createEvent('MouseEvent');
+	    }
+	    if (!hasEventPageXY && !isMonitoringScrollValue) {
+	      var refresh = ViewportMetrics.refreshScrollValues;
+	      ReactBrowserEventEmitter.ReactEventListener.monitorScrollValue(refresh);
+	      isMonitoringScrollValue = true;
+	    }
+	  }
+	
+	});
+	
+	module.exports = ReactBrowserEventEmitter;
+
+/***/ },
+/* 37 */
+/*!*********************************************!*\
+  !*** ./~/react/lib/ReactInstrumentation.js ***!
+  \*********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2016-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactInstrumentation
+	 */
+	
+	'use strict';
+	
+	var ReactDebugTool = __webpack_require__(/*! ./ReactDebugTool */ 177);
+	
+	module.exports = { debugTool: ReactDebugTool };
+
+/***/ },
+/* 38 */
+/*!***************************************************!*\
+  !*** ./~/react/lib/ReactPropTypeLocationNames.js ***!
+  \***************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactPropTypeLocationNames
+	 */
+	
+	'use strict';
+	
+	var ReactPropTypeLocationNames = {};
+	
+	if (process.env.NODE_ENV !== 'production') {
+	  ReactPropTypeLocationNames = {
+	    prop: 'prop',
+	    context: 'context',
+	    childContext: 'child context'
+	  };
+	}
+	
+	module.exports = ReactPropTypeLocationNames;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/process/browser.js */ 1)))
+
+/***/ },
+/* 39 */
+/*!***********************************************!*\
+  !*** ./~/react/lib/ReactPropTypeLocations.js ***!
+  \***********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactPropTypeLocations
+	 */
+	
+	'use strict';
+	
+	var keyMirror = __webpack_require__(/*! fbjs/lib/keyMirror */ 32);
+	
+	var ReactPropTypeLocations = keyMirror({
+	  prop: null,
+	  context: null,
+	  childContext: null
+	});
+	
+	module.exports = ReactPropTypeLocations;
+
+/***/ },
+/* 40 */
+/*!********************************************!*\
+  !*** ./~/react/lib/SyntheticMouseEvent.js ***!
+  \********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule SyntheticMouseEvent
+	 */
+	
+	'use strict';
+	
+	var SyntheticUIEvent = __webpack_require__(/*! ./SyntheticUIEvent */ 30);
+	var ViewportMetrics = __webpack_require__(/*! ./ViewportMetrics */ 90);
+	
+	var getEventModifierState = __webpack_require__(/*! ./getEventModifierState */ 54);
+	
+	/**
+	 * @interface MouseEvent
+	 * @see http://www.w3.org/TR/DOM-Level-3-Events/
+	 */
+	var MouseEventInterface = {
+	  screenX: null,
+	  screenY: null,
+	  clientX: null,
+	  clientY: null,
+	  ctrlKey: null,
+	  shiftKey: null,
+	  altKey: null,
+	  metaKey: null,
+	  getModifierState: getEventModifierState,
+	  button: function (event) {
+	    // Webkit, Firefox, IE9+
+	    // which:  1 2 3
+	    // button: 0 1 2 (standard)
+	    var button = event.button;
+	    if ('which' in event) {
+	      return button;
+	    }
+	    // IE<9
+	    // which:  undefined
+	    // button: 0 0 0
+	    // button: 1 4 2 (onmouseup)
+	    return button === 2 ? 2 : button === 4 ? 1 : 0;
+	  },
+	  buttons: null,
+	  relatedTarget: function (event) {
+	    return event.relatedTarget || (event.fromElement === event.srcElement ? event.toElement : event.fromElement);
+	  },
+	  // "Proprietary" Interface.
+	  pageX: function (event) {
+	    return 'pageX' in event ? event.pageX : event.clientX + ViewportMetrics.currentScrollLeft;
+	  },
+	  pageY: function (event) {
+	    return 'pageY' in event ? event.pageY : event.clientY + ViewportMetrics.currentScrollTop;
+	  }
+	};
+	
+	/**
+	 * @param {object} dispatchConfig Configuration used to dispatch this event.
+	 * @param {string} dispatchMarker Marker identifying the event target.
+	 * @param {object} nativeEvent Native browser event.
+	 * @extends {SyntheticUIEvent}
+	 */
+	function SyntheticMouseEvent(dispatchConfig, dispatchMarker, nativeEvent, nativeEventTarget) {
+	  return SyntheticUIEvent.call(this, dispatchConfig, dispatchMarker, nativeEvent, nativeEventTarget);
+	}
+	
+	SyntheticUIEvent.augmentClass(SyntheticMouseEvent, MouseEventInterface);
+	
+	module.exports = SyntheticMouseEvent;
+
+/***/ },
+/* 41 */
+/*!****************************************************!*\
+  !*** ./~/react/lib/escapeTextContentForBrowser.js ***!
+  \****************************************************/
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule escapeTextContentForBrowser
+	 */
+	
+	'use strict';
+	
+	var ESCAPE_LOOKUP = {
+	  '&': '&amp;',
+	  '>': '&gt;',
+	  '<': '&lt;',
+	  '"': '&quot;',
+	  '\'': '&#x27;'
+	};
+	
+	var ESCAPE_REGEX = /[&><"']/g;
+	
+	function escaper(match) {
+	  return ESCAPE_LOOKUP[match];
+	}
+	
+	/**
+	 * Escapes text to prevent scripting attacks.
+	 *
+	 * @param {*} text Text value to escape.
+	 * @return {string} An escaped string.
+	 */
+	function escapeTextContentForBrowser(text) {
+	  return ('' + text).replace(ESCAPE_REGEX, escaper);
+	}
+	
+	module.exports = escapeTextContentForBrowser;
+
+/***/ },
 /* 42 */
 /*!**********************************************!*\
   !*** ./~/react/lib/DOMChildrenOperations.js ***!
@@ -26561,7 +26563,7 @@
 	'use strict';
 	
 	var ReactPropTypes = __webpack_require__(/*! ./ReactPropTypes */ 87);
-	var ReactPropTypeLocations = __webpack_require__(/*! ./ReactPropTypeLocations */ 38);
+	var ReactPropTypeLocations = __webpack_require__(/*! ./ReactPropTypeLocations */ 39);
 	
 	var invariant = __webpack_require__(/*! fbjs/lib/invariant */ 3);
 	var warning = __webpack_require__(/*! fbjs/lib/warning */ 4);
@@ -31477,7 +31479,7 @@
 	
 	var _jquery2 = _interopRequireDefault(_jquery);
 	
-	var _gsap = __webpack_require__(/*! gsap */ 41);
+	var _gsap = __webpack_require__(/*! gsap */ 33);
 	
 	var _logo = __webpack_require__(/*! ../../../assets/logo/logo.png */ 113);
 	
@@ -32419,8 +32421,8 @@
 	
 	var ReactComponent = __webpack_require__(/*! ./ReactComponent */ 75);
 	var ReactElement = __webpack_require__(/*! ./ReactElement */ 14);
-	var ReactPropTypeLocations = __webpack_require__(/*! ./ReactPropTypeLocations */ 38);
-	var ReactPropTypeLocationNames = __webpack_require__(/*! ./ReactPropTypeLocationNames */ 37);
+	var ReactPropTypeLocations = __webpack_require__(/*! ./ReactPropTypeLocations */ 39);
+	var ReactPropTypeLocationNames = __webpack_require__(/*! ./ReactPropTypeLocationNames */ 38);
 	var ReactNoopUpdateQueue = __webpack_require__(/*! ./ReactNoopUpdateQueue */ 86);
 	
 	var emptyObject = __webpack_require__(/*! fbjs/lib/emptyObject */ 31);
@@ -33148,7 +33150,7 @@
 	'use strict';
 	
 	var ReactNoopUpdateQueue = __webpack_require__(/*! ./ReactNoopUpdateQueue */ 86);
-	var ReactInstrumentation = __webpack_require__(/*! ./ReactInstrumentation */ 36);
+	var ReactInstrumentation = __webpack_require__(/*! ./ReactInstrumentation */ 37);
 	
 	var canDefineProperty = __webpack_require__(/*! ./canDefineProperty */ 51);
 	var emptyObject = __webpack_require__(/*! fbjs/lib/emptyObject */ 31);
@@ -33357,7 +33359,7 @@
 	
 	var _assign = __webpack_require__(/*! object-assign */ 6);
 	
-	var DisabledInputUtils = __webpack_require__(/*! ./DisabledInputUtils */ 33);
+	var DisabledInputUtils = __webpack_require__(/*! ./DisabledInputUtils */ 34);
 	var LinkedValueUtils = __webpack_require__(/*! ./LinkedValueUtils */ 46);
 	var ReactDOMComponentTree = __webpack_require__(/*! ./ReactDOMComponentTree */ 11);
 	var ReactUpdates = __webpack_require__(/*! ./ReactUpdates */ 16);
@@ -33585,8 +33587,8 @@
 	'use strict';
 	
 	var ReactElement = __webpack_require__(/*! ./ReactElement */ 14);
-	var ReactPropTypeLocations = __webpack_require__(/*! ./ReactPropTypeLocations */ 38);
-	var ReactPropTypeLocationNames = __webpack_require__(/*! ./ReactPropTypeLocationNames */ 37);
+	var ReactPropTypeLocations = __webpack_require__(/*! ./ReactPropTypeLocations */ 39);
+	var ReactPropTypeLocationNames = __webpack_require__(/*! ./ReactPropTypeLocationNames */ 38);
 	var ReactCurrentOwner = __webpack_require__(/*! ./ReactCurrentOwner */ 21);
 	
 	var canDefineProperty = __webpack_require__(/*! ./canDefineProperty */ 51);
@@ -34361,7 +34363,7 @@
 	'use strict';
 	
 	var ReactElement = __webpack_require__(/*! ./ReactElement */ 14);
-	var ReactPropTypeLocationNames = __webpack_require__(/*! ./ReactPropTypeLocationNames */ 37);
+	var ReactPropTypeLocationNames = __webpack_require__(/*! ./ReactPropTypeLocationNames */ 38);
 	
 	var emptyFunction = __webpack_require__(/*! fbjs/lib/emptyFunction */ 15);
 	var getIteratorFn = __webpack_require__(/*! ./getIteratorFn */ 56);
@@ -35384,7 +35386,7 @@
 	'use strict';
 	
 	var ExecutionEnvironment = __webpack_require__(/*! fbjs/lib/ExecutionEnvironment */ 12);
-	var escapeTextContentForBrowser = __webpack_require__(/*! ./escapeTextContentForBrowser */ 40);
+	var escapeTextContentForBrowser = __webpack_require__(/*! ./escapeTextContentForBrowser */ 41);
 	var setInnerHTML = __webpack_require__(/*! ./setInnerHTML */ 58);
 	
 	/**
@@ -39891,7 +39893,7 @@
 	        isDraggable: true
 	    }, {
 	        id: '3',
-	        name: 'shape-room-rect-3x2',
+	        name: 'shape-room-rct-3x2',
 	        image: _shapesCfg.shapesCfg.rq_3x2,
 	        width: 3,
 	        height: 2,
@@ -40021,7 +40023,7 @@
 	
 	var _jquery2 = _interopRequireDefault(_jquery);
 	
-	var _gsap = __webpack_require__(/*! gsap */ 41);
+	var _gsap = __webpack_require__(/*! gsap */ 33);
 	
 	var _roomsCfg = __webpack_require__(/*! ../common/roomsCfg */ 27);
 	
@@ -40045,7 +40047,7 @@
 	
 	        var _this = _possibleConstructorReturn(this, (ShapesPanelListItem.__proto__ || Object.getPrototypeOf(ShapesPanelListItem)).call(this, props));
 	
-	        _this.debugMode = true;
+	        _this.debugMode = false;
 	        _this.shape = props.shape;
 	
 	        _this.currentAction = '';
@@ -40120,7 +40122,7 @@
 	        key: 'onDragStart',
 	        value: function onDragStart(evt) {
 	
-	            console.log('onDragStart', evt);
+	            if (this.debugMode) console.log('onDragStart', evt);
 	
 	            this.currentAction = 'addItem';
 	
@@ -40215,7 +40217,7 @@
 	
 	var _jquery2 = _interopRequireDefault(_jquery);
 	
-	var _gsap = __webpack_require__(/*! gsap */ 41);
+	var _gsap = __webpack_require__(/*! gsap */ 33);
 	
 	var _Draggable = __webpack_require__(/*! gsap/Draggable */ 118);
 	
@@ -40294,9 +40296,10 @@
 	            }
 	        };
 	
-	        _this.droppedItems = [];
+	        //this.droppedItems = [];
 	        _this.draggedObj = {
 	            id: -1,
+	            iteration: -1,
 	            x: 0,
 	            y: 0,
 	            r: 0,
@@ -40327,6 +40330,7 @@
 	                rooms: []
 	            },
 	            stageBoardsList: [],
+	            selectedItem: null,
 	            stageItems: []
 	
 	            //bind functions to this class
@@ -40773,32 +40777,6 @@
 	        /*ON KEY UP/DOWN END*/
 	
 	    }, {
-	        key: 'componentDidUpdate',
-	        value: function componentDidUpdate() {
-	            /*every rerender slows down animation
-	             *so it's better to use event listeners
-	             */
-	            //this.onZoomStage(this.props.zoom);
-	        }
-	    }, {
-	        key: 'componentWillReceiveProps',
-	        value: function componentWillReceiveProps(nextProps) {
-	
-	            //if (nextProps.myProp !== this.props.draggedObj) {
-	            //}
-	
-	            console.log("zoom from update comp", this.props.zoom);
-	            return false;
-	        }
-	    }, {
-	        key: 'shouldComponentUpdate',
-	        value: function shouldComponentUpdate(nextProps, nextState) {
-	
-	            if (this.state.stageItems.length != nextState.stageItems) return true;
-	
-	            if (this.state.stageBoardsList.length != nextState.stageBoardsList.length) return true;
-	        }
-	    }, {
 	        key: 'updateDimensions',
 	        value: function updateDimensions() {
 	
@@ -40825,6 +40803,31 @@
 	            } else {
 	                _gsap.TweenMax.to((0, _jquery2.default)("#stage"), 0, { x: 0 });
 	            }
+	        }
+	    }, {
+	        key: 'componentDidUpdate',
+	        value: function componentDidUpdate() {
+	            /*every rerender slows down animation
+	             *so it's better to use event listeners
+	             */
+	            //this.onZoomStage(this.props.zoom);
+	        }
+	    }, {
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	
+	            //if (nextProps.myProp !== this.props.draggedObj) {
+	            //}
+	            //console.log("zoom from update comp", this.props.zoom);
+	            //return false;
+	        }
+	    }, {
+	        key: 'shouldComponentUpdate',
+	        value: function shouldComponentUpdate(nextProps, nextState) {
+	
+	            if (this.state.stageItems.length != nextState.stageItems) return true;
+	
+	            if (this.state.stageBoardsList.length != nextState.stageBoardsList.length) return true;
 	        }
 	    }, {
 	        key: 'componentDidMount',
@@ -40859,11 +40862,15 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
+	
+	            var onTest = this.onTest;
+	
 	            var _state2 = this.state,
 	                stageBoardsList = _state2.stageBoardsList,
 	                stageItems = _state2.stageItems;
 	
-	            var onTest = this.onTest;
+	            var draggedObjId = this.draggedObj.id;
+	            var i = 0;
 	
 	            return React.createElement(
 	                'div',
@@ -40899,6 +40906,10 @@
 	                        'div',
 	                        { id: 'stage-items-container' },
 	                        stageItems.map(function (stageItem) {
+	
+	                            stageItem.iterator = i++;
+	                            stageItem.isSelected = draggedObjId === stageItem.id ? true : false;
+	
 	                            return React.createElement(_stageItem2.default, _extends({
 	                                key: stageItem.id
 	                            }, stageItem));
@@ -41161,6 +41172,8 @@
 	
 	var _jquery2 = _interopRequireDefault(_jquery);
 	
+	var _gsap = __webpack_require__(/*! gsap */ 33);
+	
 	var _roomsCfg = __webpack_require__(/*! ../common/roomsCfg */ 27);
 	
 	var _roomsCfg2 = _interopRequireDefault(_roomsCfg);
@@ -41184,21 +41197,36 @@
 	        var _this = _possibleConstructorReturn(this, (StageItem.__proto__ || Object.getPrototypeOf(StageItem)).call(this, props));
 	
 	        var roomsCfg = (0, _roomsCfg2.default)();
-	
 	        _this.cfg = {
 	            gridCellWidth: roomsCfg.CELL_WIDTH,
 	            gridCellHeight: roomsCfg.CELL_HEIGHT,
 	            paddingLeft: roomsCfg.SHAPE_CFG.PADDING_LEFT,
 	            paddingTop: roomsCfg.SHAPE_CFG.PADDING_TOP,
 	            itemBorderSize: roomsCfg.SHAPE_CFG.BORDER_SIZE,
-	            style: {
-	                position: 'absolute',
-	                width: props.w,
-	                height: props.h,
-	                left: props.x,
-	                top: props.y
-	            }
+	            itemColor: roomsCfg.COLOR_WHITE_01,
+	            itemSelectedColor: roomsCfg.COLOR_BLUE_01
 	        };
+	
+	        var _this$cfg = _this.cfg,
+	            itemSelectedColor = _this$cfg.itemSelectedColor,
+	            itemColor = _this$cfg.itemColor;
+	
+	        var dragIsOn = false;
+	
+	        var _this$props = _this.props,
+	            id = _this$props.id,
+	            x = _this$props.x,
+	            y = _this$props.y,
+	            r = _this$props.r,
+	            tox = _this$props.tox,
+	            toy = _this$props.toy,
+	            w = _this$props.w,
+	            h = _this$props.h,
+	            sh = _this$props.sh,
+	            iterator = _this$props.iterator,
+	            isSelected = _this$props.isSelected;
+	
+	        _this.state = { id: id, x: x, y: y, r: r, tox: tox, toy: toy, w: w, h: h, sh: sh, iterator: iterator, isSelected: isSelected, dragIsOn: dragIsOn };
 	
 	        _this.createLShapeRoom = _this.createLShapeRoom.bind(_this);
 	        _this.createRegularShapeRoom = _this.createRegularShapeRoom.bind(_this);
@@ -41210,16 +41238,27 @@
 	        value: function createRegularShapeRoom() {
 	            var _cfg = this.cfg,
 	                paddingLeft = _cfg.paddingLeft,
-	                paddingTop = _cfg.paddingTop;
+	                paddingTop = _cfg.paddingTop,
+	                itemSelectedColor = _cfg.itemSelectedColor,
+	                itemColor = _cfg.itemColor;
+	            var _state = this.state,
+	                w = _state.w,
+	                h = _state.h,
+	                sh = _state.sh,
+	                isSelected = _state.isSelected;
 	
-	            var w = this.props.w - paddingLeft * 2;
-	            var h = this.props.h - paddingTop * 2;
+	
+	            var width = w - paddingLeft * 2;
+	            var height = h - paddingTop * 2;
+	            var backgroundColor = isSelected ? itemSelectedColor : itemColor;
+	
 	            var style = {
-	                width: w,
-	                height: h
+	                width: width,
+	                height: height,
+	                backgroundColor: backgroundColor
 	            };
 	
-	            var itemBgnd = React.createElement('div', { className: 'item-bgnd ' + this.props.sh, style: style });
+	            var itemBgnd = React.createElement('div', { className: 'item-bgnd ' + sh, style: style });
 	
 	            return itemBgnd;
 	        }
@@ -41230,29 +41269,40 @@
 	                paddingLeft = _cfg2.paddingLeft,
 	                paddingTop = _cfg2.paddingTop,
 	                itemBorderSize = _cfg2.itemBorderSize,
-	                gridCellWidth = _cfg2.gridCellWidth;
+	                gridCellWidth = _cfg2.gridCellWidth,
+	                itemSelectedColor = _cfg2.itemSelectedColor,
+	                itemColor = _cfg2.itemColor;
+	            var _state2 = this.state,
+	                w = _state2.w,
+	                h = _state2.h,
+	                sh = _state2.sh,
+	                isSelected = _state2.isSelected;
 	
-	            var w = this.props.w - paddingLeft * 2;
-	            var h = this.props.h - paddingTop * 2;
+	
+	            var width = w - paddingLeft * 2;
+	            var height = h - paddingTop * 2;
+	            var backgroundColor = isSelected ? itemSelectedColor : itemColor;
 	
 	            var style = {
-	                width: w,
-	                height: h
+	                width: width,
+	                height: height
 	            };
 	
 	            var styleTop = {
-	                width: w / 3 + (itemBorderSize + 1),
-	                height: h / 3
+	                width: width / 3 + (itemBorderSize + 1),
+	                height: height / 3,
+	                backgroundColor: backgroundColor
 	            };
 	
 	            var styleBottom = {
-	                width: w - gridCellWidth,
-	                height: h
+	                width: width - gridCellWidth,
+	                height: height,
+	                backgroundColor: backgroundColor
 	            };
 	
 	            var itemBgnd = React.createElement(
 	                'div',
-	                { className: 'item-bgnd ' + this.props.sh, style: style },
+	                { className: 'item-bgnd ' + sh, style: style },
 	                React.createElement('div', { className: 'l-shape-top', style: styleTop }),
 	                React.createElement('div', { className: 'l-shape-bottom', style: styleBottom })
 	            );
@@ -41260,33 +41310,131 @@
 	            return itemBgnd;
 	        }
 	    }, {
-	        key: 'comoponentDidMount',
+	        key: 'onSelect',
+	        value: function onSelect(evt) {
 	
+	            if (!this.state.isSelected) this.setState({ isSelected: true });else this.setState({ isSelected: false });
 	
-	        //shouldComponentUpdate (nextState, nextProps) {
-	        //    const differentTitle = this.props.title !== nextProps.title;
-	        //    const differentDone = this.props.done !== nextProps.done
-	        //    return differentTitle || differentDone;
+	            console.log(this.state.isSelected);
+	        }
+	    }, {
+	        key: 'onDragBtnDown',
+	        value: function onDragBtnDown(evt) {
+	
+	            if (!this.state.dragIsOn) {
+	
+	                this.setState({ dragIsOn: true });
+	
+	                //var btn = $(evt.target);
+	                //var invBtn = btn.parent().find('.shape-drag-inv-btn');
+	                //var icon = btn.find('.shape-drag-inv-icon')
+	
+	                //TweenLite.set(invBtn, { scaleX: 5, scaleY: 5 })
+	
+	                //var draggedItem = btn.parent().parent();
+	                //createDraggableStageItem(draggedItem, actionsOfDraggable.drag);
+	
+	                //deslectItems();
+	                //selectItem(draggedItem);
+	            }
+	        }
+	    }, {
+	        key: 'onDragBtnUp',
+	        value: function onDragBtnUp(evt) {
+	
+	            if (this.state.dragIsOn) {
+	
+	                this.setState({ dragIsOn: false });
+	
+	                //var btn = $(evt.target);
+	                //var invBtn = btn.parent().find('.shape-drag-inv-btn');
+	                //var icon = btn.find('.shape-drag-inv-icon')
+	
+	                //TweenLite.set(invBtn, { scaleX: 1, scaleY: 1 })
+	
+	                //var draggedItem = btn.parent().parent();
+	
+	                //if (currentDraggable != null) {
+	                //    draggedItem.attr('data-box-x', Math.ceil(currentDraggable[0].x));
+	                //    draggedItem.attr('data-box-y', Math.ceil(currentDraggable[0].y));
+	
+	                //    //currentDraggable[0].kill();
+	                //    //currentDraggable[0].disable();
+	                //    //keepBounds(draggedItem);
+	
+	                //    //TweenMax.to(draggedItem, 0.2, {
+	                //    //    x: draggedItem.attr('data-box-x'),
+	                //    //    y: draggedItem.attr('data-box-y')
+	                //    //});
+	                //}
+	
+	                //if (debugMode) {
+	                //    console.log('dragIsOn:' + dragIsOn);
+	                //    console.log(currentDraggable);
+	                //};
+	            }
+	        }
+	        //shouldComponentUpdate(nextState, nextProps) {
+	        //    //const differentTitle = this.props.title !== nextProps.title;
+	        //    //const differentDone = this.props.done !== nextProps.done
+	        //    //return differentTitle || differentDone;
+	        //    //const differentIsSelected = this.props.isSelected !== nextProps.isSelected;
+	        //    //const differentIsSelected = this.props.x !== nextProps.y;
+	
+	        //    //return differentIsSelected;
 	        //}
 	
-	        value: function comoponentDidMount() {}
+	    }, {
+	        key: 'shouldComponentUpdate',
+	        value: function shouldComponentUpdate(nextState, nextProps) {
+	
+	            if (this.state.isSelected !== nextState.isSelected) {
+	                this.setState({ isSelected: nextState.isSelected });
+	                return true;
+	            }
+	
+	            return false;
+	        }
+	    }, {
+	        key: 'comoponentDidMount',
+	        value: function comoponentDidMount() {
+	            console.log('taaafaad');
+	            //this.setState({ isSelected: this.props.isSelected })
+	            //TweenLite.from(this, 0.3, {
+	            //    scaleX: 0,
+	            //    scaleY: 0
+	            //    //onComplete: initItem,
+	            //    //onCompleteParams: [item]
+	            //});
+	
+	            //TweenLite.to(item, 0, { x: x, y: y });
+	        }
 	    }, {
 	        key: 'comoponentWillUnmount',
 	        value: function comoponentWillUnmount() {}
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _props = this.props,
-	                id = _props.id,
-	                x = _props.x,
-	                y = _props.y,
-	                r = _props.r,
-	                tox = _props.tox,
-	                toy = _props.toy,
-	                w = _props.w,
-	                h = _props.h,
-	                sh = _props.sh;
-	            var style = this.cfg.style;
+	            var _state3 = this.state,
+	                id = _state3.id,
+	                x = _state3.x,
+	                y = _state3.y,
+	                r = _state3.r,
+	                tox = _state3.tox,
+	                toy = _state3.toy,
+	                w = _state3.w,
+	                h = _state3.h,
+	                sh = _state3.sh,
+	                isSelected = _state3.isSelected;
+	
+	
+	            var style = {
+	                position: 'absolute',
+	                width: w,
+	                height: h,
+	                left: x,
+	                top: y
+	            };
 	
 	            var shapeBoxDiv = void 0;
 	
@@ -41311,7 +41459,8 @@
 	                    'data-box-h': h,
 	                    'data-box-shape': sh,
 	                    'data-box-selected': false,
-	                    'data-parent': 'stage'
+	                    'data-parent': 'stage',
+	                    onClick: this.onSelect.bind(this)
 	                },
 	                shapeBoxDiv,
 	                React.createElement(
@@ -41439,17 +41588,6 @@
 	    }
 	
 	    _createClass(Workspace, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            this.updateDimensions();
-	            window.addEventListener("resize", this.updateDimensions.bind(this));
-	        }
-	    }, {
-	        key: 'componentWillUnmount',
-	        value: function componentWillUnmount() {
-	            window.removeEventListener("resize", this.updateDimensions.bind(this));
-	        }
-	    }, {
 	        key: 'updateDimensions',
 	        value: function updateDimensions() {
 	
@@ -41479,6 +41617,17 @@
 	            return _a;
 	        }
 	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            this.updateDimensions();
+	            window.addEventListener("resize", this.updateDimensions.bind(this));
+	        }
+	    }, {
+	        key: 'componentWillUnmount',
+	        value: function componentWillUnmount() {
+	            window.removeEventListener("resize", this.updateDimensions.bind(this));
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
 	            return React.createElement(
@@ -41493,7 +41642,6 @@
 	                }),
 	                React.createElement(_stage2.default, {
 	                    appCfg: this.props.appCfg
-	
 	                })
 	            );
 	        }
@@ -42764,7 +42912,7 @@
 	var EventConstants = __webpack_require__(/*! ./EventConstants */ 17);
 	var EventPropagators = __webpack_require__(/*! ./EventPropagators */ 29);
 	var ReactDOMComponentTree = __webpack_require__(/*! ./ReactDOMComponentTree */ 11);
-	var SyntheticMouseEvent = __webpack_require__(/*! ./SyntheticMouseEvent */ 39);
+	var SyntheticMouseEvent = __webpack_require__(/*! ./SyntheticMouseEvent */ 40);
 	
 	var keyOf = __webpack_require__(/*! fbjs/lib/keyOf */ 19);
 	
@@ -43431,11 +43579,11 @@
 	var ReactElement = __webpack_require__(/*! ./ReactElement */ 14);
 	var ReactErrorUtils = __webpack_require__(/*! ./ReactErrorUtils */ 48);
 	var ReactInstanceMap = __webpack_require__(/*! ./ReactInstanceMap */ 49);
-	var ReactInstrumentation = __webpack_require__(/*! ./ReactInstrumentation */ 36);
+	var ReactInstrumentation = __webpack_require__(/*! ./ReactInstrumentation */ 37);
 	var ReactNodeTypes = __webpack_require__(/*! ./ReactNodeTypes */ 85);
 	var ReactPerf = __webpack_require__(/*! ./ReactPerf */ 13);
-	var ReactPropTypeLocations = __webpack_require__(/*! ./ReactPropTypeLocations */ 38);
-	var ReactPropTypeLocationNames = __webpack_require__(/*! ./ReactPropTypeLocationNames */ 37);
+	var ReactPropTypeLocations = __webpack_require__(/*! ./ReactPropTypeLocations */ 39);
+	var ReactPropTypeLocationNames = __webpack_require__(/*! ./ReactPropTypeLocationNames */ 38);
 	var ReactReconciler = __webpack_require__(/*! ./ReactReconciler */ 26);
 	var ReactUpdateQueue = __webpack_require__(/*! ./ReactUpdateQueue */ 88);
 	
@@ -44340,7 +44488,7 @@
 	
 	'use strict';
 	
-	var DisabledInputUtils = __webpack_require__(/*! ./DisabledInputUtils */ 33);
+	var DisabledInputUtils = __webpack_require__(/*! ./DisabledInputUtils */ 34);
 	
 	/**
 	 * Implements a <button> native component that does not receive mouse events
@@ -44384,8 +44532,8 @@
 	var DOMPropertyOperations = __webpack_require__(/*! ./DOMPropertyOperations */ 43);
 	var EventConstants = __webpack_require__(/*! ./EventConstants */ 17);
 	var EventPluginHub = __webpack_require__(/*! ./EventPluginHub */ 28);
-	var EventPluginRegistry = __webpack_require__(/*! ./EventPluginRegistry */ 34);
-	var ReactBrowserEventEmitter = __webpack_require__(/*! ./ReactBrowserEventEmitter */ 35);
+	var EventPluginRegistry = __webpack_require__(/*! ./EventPluginRegistry */ 35);
+	var ReactBrowserEventEmitter = __webpack_require__(/*! ./ReactBrowserEventEmitter */ 36);
 	var ReactComponentBrowserEnvironment = __webpack_require__(/*! ./ReactComponentBrowserEnvironment */ 76);
 	var ReactDOMButton = __webpack_require__(/*! ./ReactDOMButton */ 161);
 	var ReactDOMComponentFlags = __webpack_require__(/*! ./ReactDOMComponentFlags */ 77);
@@ -44397,7 +44545,7 @@
 	var ReactMultiChild = __webpack_require__(/*! ./ReactMultiChild */ 187);
 	var ReactPerf = __webpack_require__(/*! ./ReactPerf */ 13);
 	
-	var escapeTextContentForBrowser = __webpack_require__(/*! ./escapeTextContentForBrowser */ 40);
+	var escapeTextContentForBrowser = __webpack_require__(/*! ./escapeTextContentForBrowser */ 41);
 	var invariant = __webpack_require__(/*! fbjs/lib/invariant */ 3);
 	var isEventSupported = __webpack_require__(/*! ./isEventSupported */ 57);
 	var keyOf = __webpack_require__(/*! fbjs/lib/keyOf */ 19);
@@ -45730,7 +45878,7 @@
 	
 	var _assign = __webpack_require__(/*! object-assign */ 6);
 	
-	var DisabledInputUtils = __webpack_require__(/*! ./DisabledInputUtils */ 33);
+	var DisabledInputUtils = __webpack_require__(/*! ./DisabledInputUtils */ 34);
 	var DOMPropertyOperations = __webpack_require__(/*! ./DOMPropertyOperations */ 43);
 	var LinkedValueUtils = __webpack_require__(/*! ./LinkedValueUtils */ 46);
 	var ReactDOMComponentTree = __webpack_require__(/*! ./ReactDOMComponentTree */ 11);
@@ -46310,7 +46458,7 @@
 	var ReactDOMComponentTree = __webpack_require__(/*! ./ReactDOMComponentTree */ 11);
 	var ReactPerf = __webpack_require__(/*! ./ReactPerf */ 13);
 	
-	var escapeTextContentForBrowser = __webpack_require__(/*! ./escapeTextContentForBrowser */ 40);
+	var escapeTextContentForBrowser = __webpack_require__(/*! ./escapeTextContentForBrowser */ 41);
 	var invariant = __webpack_require__(/*! fbjs/lib/invariant */ 3);
 	var validateDOMNesting = __webpack_require__(/*! ./validateDOMNesting */ 61);
 	
@@ -46483,7 +46631,7 @@
 	
 	var _assign = __webpack_require__(/*! object-assign */ 6);
 	
-	var DisabledInputUtils = __webpack_require__(/*! ./DisabledInputUtils */ 33);
+	var DisabledInputUtils = __webpack_require__(/*! ./DisabledInputUtils */ 34);
 	var DOMPropertyOperations = __webpack_require__(/*! ./DOMPropertyOperations */ 43);
 	var LinkedValueUtils = __webpack_require__(/*! ./LinkedValueUtils */ 46);
 	var ReactDOMComponentTree = __webpack_require__(/*! ./ReactDOMComponentTree */ 11);
@@ -46776,7 +46924,7 @@
 	'use strict';
 	
 	var DOMProperty = __webpack_require__(/*! ./DOMProperty */ 20);
-	var EventPluginRegistry = __webpack_require__(/*! ./EventPluginRegistry */ 34);
+	var EventPluginRegistry = __webpack_require__(/*! ./EventPluginRegistry */ 35);
 	
 	var warning = __webpack_require__(/*! fbjs/lib/warning */ 4);
 	
@@ -47862,7 +48010,7 @@
 	var ReactComponentEnvironment = __webpack_require__(/*! ./ReactComponentEnvironment */ 47);
 	var ReactClass = __webpack_require__(/*! ./ReactClass */ 74);
 	var ReactEmptyComponent = __webpack_require__(/*! ./ReactEmptyComponent */ 80);
-	var ReactBrowserEventEmitter = __webpack_require__(/*! ./ReactBrowserEventEmitter */ 35);
+	var ReactBrowserEventEmitter = __webpack_require__(/*! ./ReactBrowserEventEmitter */ 36);
 	var ReactNativeComponent = __webpack_require__(/*! ./ReactNativeComponent */ 84);
 	var ReactPerf = __webpack_require__(/*! ./ReactPerf */ 13);
 	var ReactUpdates = __webpack_require__(/*! ./ReactUpdates */ 16);
@@ -48521,7 +48669,7 @@
 	
 	var CallbackQueue = __webpack_require__(/*! ./CallbackQueue */ 72);
 	var PooledClass = __webpack_require__(/*! ./PooledClass */ 22);
-	var ReactBrowserEventEmitter = __webpack_require__(/*! ./ReactBrowserEventEmitter */ 35);
+	var ReactBrowserEventEmitter = __webpack_require__(/*! ./ReactBrowserEventEmitter */ 36);
 	var ReactInputSelection = __webpack_require__(/*! ./ReactInputSelection */ 82);
 	var Transaction = __webpack_require__(/*! ./Transaction */ 50);
 	
@@ -49294,7 +49442,7 @@
 	var SyntheticEvent = __webpack_require__(/*! ./SyntheticEvent */ 18);
 	var SyntheticFocusEvent = __webpack_require__(/*! ./SyntheticFocusEvent */ 198);
 	var SyntheticKeyboardEvent = __webpack_require__(/*! ./SyntheticKeyboardEvent */ 200);
-	var SyntheticMouseEvent = __webpack_require__(/*! ./SyntheticMouseEvent */ 39);
+	var SyntheticMouseEvent = __webpack_require__(/*! ./SyntheticMouseEvent */ 40);
 	var SyntheticDragEvent = __webpack_require__(/*! ./SyntheticDragEvent */ 197);
 	var SyntheticTouchEvent = __webpack_require__(/*! ./SyntheticTouchEvent */ 201);
 	var SyntheticTransitionEvent = __webpack_require__(/*! ./SyntheticTransitionEvent */ 202);
@@ -50058,7 +50206,7 @@
 	
 	'use strict';
 	
-	var SyntheticMouseEvent = __webpack_require__(/*! ./SyntheticMouseEvent */ 39);
+	var SyntheticMouseEvent = __webpack_require__(/*! ./SyntheticMouseEvent */ 40);
 	
 	/**
 	 * @interface DragEvent
@@ -50383,7 +50531,7 @@
 	
 	'use strict';
 	
-	var SyntheticMouseEvent = __webpack_require__(/*! ./SyntheticMouseEvent */ 39);
+	var SyntheticMouseEvent = __webpack_require__(/*! ./SyntheticMouseEvent */ 40);
 	
 	/**
 	 * @interface WheelEvent
@@ -51048,7 +51196,7 @@
 	
 	'use strict';
 	
-	var escapeTextContentForBrowser = __webpack_require__(/*! ./escapeTextContentForBrowser */ 40);
+	var escapeTextContentForBrowser = __webpack_require__(/*! ./escapeTextContentForBrowser */ 41);
 	
 	/**
 	 * Escapes attribute value to prevent scripting attacks.

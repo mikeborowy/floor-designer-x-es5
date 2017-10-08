@@ -37,9 +37,10 @@ class Stage extends React.Component {
             }
         };
 
-        this.droppedItems = [];
+        //this.droppedItems = [];
         this.draggedObj = {
             id: -1,
+            iteration: -1,
             x: 0,
             y: 0,
             r: 0,
@@ -70,6 +71,7 @@ class Stage extends React.Component {
                 rooms: []
             },
             stageBoardsList: [],
+            selectedItem: null,
             stageItems: []
         }
 
@@ -100,7 +102,7 @@ class Stage extends React.Component {
 
     stageInit() {
 
-        let { gridCellWidth, gridCellHeight }= this.cfg;
+        let { gridCellWidth, gridCellHeight } = this.cfg;
         let { floorCfg } = this.state;
 
         $('#stage').width(floorCfg.width * gridCellWidth);
@@ -118,7 +120,7 @@ class Stage extends React.Component {
     createGrid() {
 
         let { gridCellWidth, gridCellHeight } = this.cfg;
-        let { stageBoardsList,  floorCfg } = this.state;
+        let { stageBoardsList, floorCfg } = this.state;
 
         let gridColumns = floorCfg.width;
         let gridRows = floorCfg.height;
@@ -140,7 +142,7 @@ class Stage extends React.Component {
                 left: x
             })
 
-            this.setState({stageBoardsList: list});
+            this.setState({ stageBoardsList: list });
         }
     };
 
@@ -322,7 +324,7 @@ class Stage extends React.Component {
         return null;
     };
 
-   
+
     /*ZOOM START*/
     onZoomStage(evt) {
         this.stageScaleNum = evt.detail;
@@ -489,31 +491,6 @@ class Stage extends React.Component {
     }
     /*ON KEY UP/DOWN END*/
 
-    componentDidUpdate() {
-        /*every rerender slows down animation
-         *so it's better to use event listeners
-         */
-        //this.onZoomStage(this.props.zoom);
-    }
-
-    componentWillReceiveProps(nextProps) {
-
-        //if (nextProps.myProp !== this.props.draggedObj) {
-        //}
-
-        console.log("zoom from update comp", this.props.zoom);
-        return false;
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-
-        if (this.state.stageItems.length != nextState.stageItems)
-            return true;
-
-        if (this.state.stageBoardsList.length != nextState.stageBoardsList.length)
-            return true;
-    }
-
     updateDimensions() {
 
         let toolbarHeight = $("#designer-toolbar").height();
@@ -543,6 +520,30 @@ class Stage extends React.Component {
         else {
             TweenMax.to($("#stage"), 0, { x: 0 })
         }
+    }
+
+    componentDidUpdate() {
+        /*every rerender slows down animation
+         *so it's better to use event listeners
+         */
+        //this.onZoomStage(this.props.zoom);
+    }
+
+    componentWillReceiveProps(nextProps) {
+
+        //if (nextProps.myProp !== this.props.draggedObj) {
+        //}
+        //console.log("zoom from update comp", this.props.zoom);
+        //return false;
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+
+        if (this.state.stageItems.length != nextState.stageItems)
+            return true;
+
+        if (this.state.stageBoardsList.length != nextState.stageBoardsList.length)
+            return true;
     }
 
     componentDidMount() {
@@ -575,8 +576,11 @@ class Stage extends React.Component {
 
     render() {
 
-        let { stageBoardsList, stageItems } = this.state;
         let onTest = this.onTest;
+
+        let { stageBoardsList, stageItems } = this.state;
+        let draggedObjId = this.draggedObj.id;
+        let i = 0;
 
         return (
 
@@ -610,6 +614,10 @@ class Stage extends React.Component {
                     <div id="stage-items-container">
                         {
                             stageItems.map(function (stageItem) {
+
+                                stageItem.iterator = i++;
+                                stageItem.isSelected = (draggedObjId === stageItem.id) ? true : false;
+
                                 return <StageItem
                                     key={stageItem.id}
                                     {...stageItem}

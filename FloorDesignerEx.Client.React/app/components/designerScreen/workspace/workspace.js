@@ -21,19 +21,9 @@ class Workspace extends React.Component {
         this.gridCellHeight = RoomsCfg().CELL_HEIGHT;
         this.draggedObj = null;
 
-
         this.getCurrentId = this.getCurrentId.bind(this);
     }
 
-    componentDidMount() {
-        this.updateDimensions();
-        window.addEventListener("resize", this.updateDimensions.bind(this));
-
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener("resize", this.updateDimensions.bind(this));
-    }
 
     updateDimensions() {
 
@@ -64,6 +54,16 @@ class Workspace extends React.Component {
         return _a;
     }
 
+    componentDidMount() {
+        this.updateDimensions();
+        window.addEventListener("resize", this.updateDimensions.bind(this));
+
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("resize", this.updateDimensions.bind(this));
+    }
+
     render() {
         return (
             <div id="designer-workspace">
@@ -76,7 +76,6 @@ class Workspace extends React.Component {
                 />
                 <Stage
                     appCfg={this.props.appCfg}
-                   
                 />
             </div>
         )

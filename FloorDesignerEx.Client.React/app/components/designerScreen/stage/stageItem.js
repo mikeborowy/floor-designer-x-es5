@@ -1,5 +1,6 @@
 ﻿import * as React from 'react';
 import $ from 'jquery';
+import { TweenMax } from 'gsap';
 
 import RoomsCfg from '../common/roomsCfg';
 
@@ -9,21 +10,21 @@ class StageItem extends React.Component {
         super(props)
 
         const roomsCfg = RoomsCfg();
-
         this.cfg = {
             gridCellWidth: roomsCfg.CELL_WIDTH,
             gridCellHeight: roomsCfg.CELL_HEIGHT,
             paddingLeft: roomsCfg.SHAPE_CFG.PADDING_LEFT,
             paddingTop: roomsCfg.SHAPE_CFG.PADDING_TOP,
             itemBorderSize: roomsCfg.SHAPE_CFG.BORDER_SIZE,
-            style: {
-                position: 'absolute',
-                width: props.w,
-                height: props.h,
-                left: props.x,
-                top: props.y
-            }
+            itemColor: roomsCfg.COLOR_WHITE_01,
+            itemSelectedColor: roomsCfg.COLOR_BLUE_01
         }
+
+        let { itemSelectedColor, itemColor } = this.cfg;
+        let dragIsOn = false;
+
+        let { id, x, y, r, tox, toy, w, h, sh, iterator, isSelected } = this.props;
+        this.state = { id, x, y, r, tox, toy, w, h, sh, iterator, isSelected, dragIsOn };
 
         this.createLShapeRoom = this.createLShapeRoom.bind(this);
         this.createRegularShapeRoom = this.createRegularShapeRoom.bind(this);
@@ -31,16 +32,21 @@ class StageItem extends React.Component {
 
     createRegularShapeRoom() {
 
-        let { paddingLeft, paddingTop } = this.cfg;
-        let w = (this.props.w) - (paddingLeft * 2);
-        let h = (this.props.h) - (paddingTop * 2);
+        let { paddingLeft, paddingTop, itemSelectedColor, itemColor} = this.cfg;
+        let { w, h, sh, isSelected } = this.state;
+
+        let width = w - (paddingLeft * 2);
+        let height = h - (paddingTop * 2);
+        let backgroundColor = (isSelected ? itemSelectedColor : itemColor);
+
         let style = {
-            width: w,
-            height: h
+            width,
+            height,
+            backgroundColor
         };
 
         let itemBgnd = (
-            <div className={`item-bgnd ${this.props.sh}`} style={style}></div>
+            <div className={`item-bgnd ${sh}`} style={style}></div>
         )
 
         return itemBgnd;
@@ -48,27 +54,32 @@ class StageItem extends React.Component {
 
     createLShapeRoom() {
 
-        let { paddingLeft, paddingTop, itemBorderSize, gridCellWidth } = this.cfg;
-        let w = (this.props.w) - (paddingLeft * 2);
-        let h = (this.props.h) - (paddingTop * 2);
+        let { paddingLeft, paddingTop, itemBorderSize, gridCellWidth, itemSelectedColor, itemColor } = this.cfg;
+        let { w, h, sh, isSelected } = this.state;
+
+        let width = w - (paddingLeft * 2);
+        let height = h - (paddingTop * 2);
+        let backgroundColor = (isSelected ? itemSelectedColor : itemColor);
 
         let style = {
-            width: w,
-            height: h
+            width,
+            height
         };
 
         let styleTop = {
-            width: w / 3 + (itemBorderSize + 1),
-            height: h / 3
+            width: width / 3 + (itemBorderSize + 1),
+            height: height / 3,
+            backgroundColor
         };
 
         let styleBottom = {
-            width: w - gridCellWidth,
-            height: h
+            width: width - gridCellWidth,
+            height: height,
+            backgroundColor
         };
 
         let itemBgnd = (
-            <div className={`item-bgnd ${this.props.sh}`} style={style}>
+            <div className={`item-bgnd ${sh}`} style={style}>
                 <div className='l-shape-top' style={styleTop}></div>
                 <div className='l-shape-bottom' style={styleBottom}></div>
             </div>
@@ -77,22 +88,117 @@ class StageItem extends React.Component {
         return itemBgnd;
     };
 
-    //shouldComponentUpdate (nextState, nextProps) {
-    //    const differentTitle = this.props.title !== nextProps.title;
-    //    const differentDone = this.props.done !== nextProps.done
-    //    return differentTitle || differentDone;
+    onSelect(evt) {
+
+        if (!this.state.isSelected)
+            this.setState({ isSelected: true });
+        else
+            this.setState({ isSelected: false });
+
+        console.log(this.state.isSelected)
+    }
+
+    onDragBtnDown(evt) {
+
+        if (!this.state.dragIsOn) {
+
+            this.setState({ dragIsOn : true });
+
+            //var btn = $(evt.target);
+            //var invBtn = btn.parent().find('.shape-drag-inv-btn');
+            //var icon = btn.find('.shape-drag-inv-icon')
+
+            //TweenLite.set(invBtn, { scaleX: 5, scaleY: 5 })
+
+            //var draggedItem = btn.parent().parent();
+            //createDraggableStageItem(draggedItem, actionsOfDraggable.drag);
+
+            //deslectItems();
+            //selectItem(draggedItem);
+        }
+    }
+
+    onDragBtnUp(evt) {
+
+        if (this.state.dragIsOn) {
+
+            this.setState({ dragIsOn: false });
+
+            //var btn = $(evt.target);
+            //var invBtn = btn.parent().find('.shape-drag-inv-btn');
+            //var icon = btn.find('.shape-drag-inv-icon')
+
+            //TweenLite.set(invBtn, { scaleX: 1, scaleY: 1 })
+
+            //var draggedItem = btn.parent().parent();
+
+            //if (currentDraggable != null) {
+            //    draggedItem.attr('data-box-x', Math.ceil(currentDraggable[0].x));
+            //    draggedItem.attr('data-box-y', Math.ceil(currentDraggable[0].y));
+
+            //    //currentDraggable[0].kill();
+            //    //currentDraggable[0].disable();
+            //    //keepBounds(draggedItem);
+
+            //    //TweenMax.to(draggedItem, 0.2, {
+            //    //    x: draggedItem.attr('data-box-x'),
+            //    //    y: draggedItem.attr('data-box-y')
+            //    //});
+            //}
+
+            //if (debugMode) {
+            //    console.log('dragIsOn:' + dragIsOn);
+            //    console.log(currentDraggable);
+            //};
+        }
+    }
+    //shouldComponentUpdate(nextState, nextProps) {
+    //    //const differentTitle = this.props.title !== nextProps.title;
+    //    //const differentDone = this.props.done !== nextProps.done
+    //    //return differentTitle || differentDone;
+    //    //const differentIsSelected = this.props.isSelected !== nextProps.isSelected;
+    //    //const differentIsSelected = this.props.x !== nextProps.y;
+
+    //    //return differentIsSelected;
     //}
 
+    shouldComponentUpdate(nextState, nextProps) {
+
+        if (this.state.isSelected !== nextState.isSelected)
+        {
+            this.setState({ isSelected: nextState.isSelected })
+            return true;
+        }
+
+        return false;
+    }
+
     comoponentDidMount() {
+        console.log('taaafaad');
+        //this.setState({ isSelected: this.props.isSelected })
+        //TweenLite.from(this, 0.3, {
+        //    scaleX: 0,
+        //    scaleY: 0
+        //    //onComplete: initItem,
+        //    //onCompleteParams: [item]
+        //});
 
-
+        //TweenLite.to(item, 0, { x: x, y: y });
     }
 
     comoponentWillUnmount() { }
 
     render() {
-        let { id, x, y, r, tox, toy, w, h, sh } = this.props;
-        let { style } = this.cfg;
+        let { id, x, y, r, tox, toy, w, h, sh, isSelected } = this.state;
+
+        let style = {
+            position: 'absolute',
+            width: w,
+            height: h,
+            left: x,
+            top: y
+        }
+
         let shapeBoxDiv;
 
         if (sh === "shape-room-l-3x2") {
@@ -117,6 +223,7 @@ class StageItem extends React.Component {
                 data-box-shape={sh}
                 data-box-selected={false}
                 data-parent='stage'
+                onClick={this.onSelect.bind(this)}
             >
                 {shapeBoxDiv}
                 <div className='shape-rotate-btn shape-button' data-btn-r={r * (-1)}>

@@ -3,6 +3,8 @@
 const config = () => {
 
     let roomsCfg = {}
+    roomsCfg.COLOR_WHITE_01 = "white"
+    roomsCfg.COLOR_BLUE_01 = "blue"
     roomsCfg.CELL_WIDTH = 60;
     roomsCfg.CELL_HEIGHT = 60;
     roomsCfg.SHAPE_CFG = {

@@ -22,7 +22,7 @@ const shapesList = () => {
         },
         {
             id: '3',
-            name: 'shape-room-rect-3x2',
+            name: 'shape-room-rct-3x2',
             image: shapesCfg.rq_3x2,
             width: 3,
             height: 2,
