@@ -95,7 +95,7 @@ class StageItem extends React.Component {
         else
             this.setState({ isSelected: false });
 
-        console.log(this.state.isSelected)
+        console.log('onSelect',this.state.isSelected)
     }
 
     onDragBtnDown(evt) {

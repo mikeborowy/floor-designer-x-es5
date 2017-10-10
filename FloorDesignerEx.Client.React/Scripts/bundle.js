@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "614084314a34c9c17151"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "7e1391a4822bc147f8ed"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -597,7 +597,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "614084314a34c9c17151"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "7e1391a4822bc147f8ed"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -40529,50 +40529,7 @@
 	        }
 	    }, {
 	        key: 'loadItems',
-	        value: function loadItems() {
-	
-	            //    if (loadedItems.length > 0) {
-	            //        $.each(loadedItems, function (i, val) {
-	
-	            //            TweenLite.delayedCall(0.1 * i, function () {
-	
-	            //                let id = loadedItems[i].id;
-	            //                let shape = loadedItems[i].shape;
-	            //                let w = loadedItems[i].width;
-	            //                let h = loadedItems[i].height;
-	            //                let x = loadedItems[i].xpos;
-	            //                let y = loadedItems[i].ypos;
-	            //                let r = loadedItems[i].rotation;
-	
-	            //                let shapeSizeTableObj = findValueByKey(shapeSizes, shape);
-	
-	            //                console.log(shapeSizeTableObj);
-	
-	            //                draggedObj = {};
-	            //                draggedObj.id = id;
-	            //                draggedObj.sh = shape;
-	            //                draggedObj.x = x;
-	            //                draggedObj.y = y;
-	            //                draggedObj.r = r;
-	            //                draggedObj.w = w;
-	            //                draggedObj.h = h;
-	            //                draggedObj.tox = shapeSizeTableObj.t.x;
-	            //                draggedObj.toy = shapeSizeTableObj.t.y;
-	
-	            //                let currentItem = createStageItem(
-	            //                    draggedObj.id,
-	            //                    draggedObj.x,
-	            //                    draggedObj.y,
-	            //                    draggedObj.r,
-	            //                    draggedObj.tox,
-	            //                    draggedObj.toy,
-	            //                    draggedObj.w,
-	            //                    draggedObj.h,
-	            //                    draggedObj.sh);
-	            //            })
-	            //        });
-	            //    }
-	        }
+	        value: function loadItems() {}
 	    }, {
 	        key: 'initStageAsDraggable',
 	        value: function initStageAsDraggable() {
@@ -41315,7 +41272,7 @@
 	
 	            if (!this.state.isSelected) this.setState({ isSelected: true });else this.setState({ isSelected: false });
 	
-	            console.log(this.state.isSelected);
+	            console.log('onSelect', this.state.isSelected);
 	        }
 	    }, {
 	        key: 'onDragBtnDown',
