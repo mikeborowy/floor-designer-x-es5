@@ -21,10 +21,13 @@ class StageItem extends React.Component {
         }
 
         let { itemSelectedColor, itemColor } = this.cfg;
-        let dragIsOn = false;
 
-        let { id, x, y, r, tox, toy, w, h, sh, iterator, isSelected } = this.props;
-        this.state = { id, x, y, r, tox, toy, w, h, sh, iterator, isSelected, dragIsOn };
+        this.state = {
+            id:-1, x:0, y:0, r:0, tox:0, toy:0, w:0, h:0, sh:'', iterator:-1, isSelected: false
+        };
+
+        //let { id, x, y, r, tox, toy, w, h, sh, iterator, isSelected } = this.props;
+        //this.state = { id, x, y, r, tox, toy, w, h, sh, iterator, isSelected }
 
         this.createLShapeRoom = this.createLShapeRoom.bind(this);
         this.createRegularShapeRoom = this.createRegularShapeRoom.bind(this);
@@ -33,7 +36,7 @@ class StageItem extends React.Component {
     createRegularShapeRoom() {
 
         let { paddingLeft, paddingTop, itemSelectedColor, itemColor} = this.cfg;
-        let { w, h, sh, isSelected } = this.state;
+        let { w, h, sh, isSelected } = this.props;
 
         let width = w - (paddingLeft * 2);
         let height = h - (paddingTop * 2);
@@ -55,7 +58,7 @@ class StageItem extends React.Component {
     createLShapeRoom() {
 
         let { paddingLeft, paddingTop, itemBorderSize, gridCellWidth, itemSelectedColor, itemColor } = this.cfg;
-        let { w, h, sh, isSelected } = this.state;
+        let { w, h, sh, isSelected } = this.props;
 
         let width = w - (paddingLeft * 2);
         let height = h - (paddingTop * 2);
@@ -90,12 +93,17 @@ class StageItem extends React.Component {
 
     onSelect(evt) {
 
-        if (!this.state.isSelected)
-            this.setState({ isSelected: true });
-        else
-            this.setState({ isSelected: false });
+        //if (!this.state.isSelected)
+        //    this.setState({ isSelected: true });
+        //else
+        //    this.setState({ isSelected: false });
 
-        console.log('onSelect',this.state.isSelected)
+        //console.log(this.state);
+
+        let { id, x, y, r, tox, toy, w, h, sh } = this.props;
+        this.props.onSelect({ id, x, y, r, tox, toy, w, h, sh, isSelected: this.state.isSelected });
+
+        //console.log('onSelect ' + this.props.sh, this.state.isSelected);
     }
 
     onDragBtnDown(evt) {
@@ -152,44 +160,9 @@ class StageItem extends React.Component {
             //};
         }
     }
-    //shouldComponentUpdate(nextState, nextProps) {
-    //    //const differentTitle = this.props.title !== nextProps.title;
-    //    //const differentDone = this.props.done !== nextProps.done
-    //    //return differentTitle || differentDone;
-    //    //const differentIsSelected = this.props.isSelected !== nextProps.isSelected;
-    //    //const differentIsSelected = this.props.x !== nextProps.y;
-
-    //    //return differentIsSelected;
-    //}
-
-    shouldComponentUpdate(nextState, nextProps) {
-
-        if (this.state.isSelected !== nextState.isSelected)
-        {
-            this.setState({ isSelected: nextState.isSelected })
-            return true;
-        }
-
-        return false;
-    }
-
-    comoponentDidMount() {
-        console.log('taaafaad');
-        //this.setState({ isSelected: this.props.isSelected })
-        //TweenLite.from(this, 0.3, {
-        //    scaleX: 0,
-        //    scaleY: 0
-        //    //onComplete: initItem,
-        //    //onCompleteParams: [item]
-        //});
-
-        //TweenLite.to(item, 0, { x: x, y: y });
-    }
-
-    comoponentWillUnmount() { }
 
     render() {
-        let { id, x, y, r, tox, toy, w, h, sh, isSelected } = this.state;
+        let { id, x, y, r, tox, toy, w, h, sh } = this.props;
 
         let style = {
             position: 'absolute',

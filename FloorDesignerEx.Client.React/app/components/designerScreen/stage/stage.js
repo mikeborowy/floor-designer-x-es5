@@ -72,7 +72,7 @@ class Stage extends React.Component {
             },
             stageBoardsList: [],
             selectedItem: null,
-            stageItems: []
+            itemsAtStage: []
         }
 
         //bind functions to this class
@@ -148,76 +148,24 @@ class Stage extends React.Component {
 
     onDraggedItemStart(evt) {
         //combine x,y to draggedObj
-        let draggedObj = Object.assign(this.draggedObj, evt.detail);
+        this.draggedObj = Object.assign({}, this.draggedObj, evt.detail);
     }
 
     onDraggedItemDrop(evt) {
         //combine id,w,h,sh to draggedObj
-        let draggedObj = Object.assign(this.draggedObj, evt.detail);
-        //extract items
-        let { id, x, y, r, tox, toy, w, h, sh } = draggedObj;
+        this.draggedObj = Object.assign({}, this.draggedObj, evt.detail);
+
         //pass extracted items
-        this.createStageItem(id, x, y, r, tox, toy, w, h, sh);
+        this.createStageItem( this.draggedObj );
     }
 
-    createStageItem(id, x, y, r, tox, toy, w, h, sh) {
+    createStageItem(item) {
 
         //save all items to state 
         this.setState({
-            stageItems: [...this.state.stageItems, { id, x, y, r, tox, toy, w, h, sh }]
+            selectedItem: item,
+            itemsAtStage: [...this.state.itemsAtStage, item]
         })
-
-        //this.droppedItems.push({ id, x, y, r, tox, toy, w, h, sh });
-
-        //let stageItemsContainer = $('#stage-items-container');
-
-        //var item = $(
-        //    "<div>" +
-        //    "<div class='shape-rotate-btn shape-button' data-btn-r='" + (r * (-1)) + "'>" +
-        //    "<div class='shape-rotate-inv-btn'/>" +
-        //    "<i class='material-icons shape-rotate-inv-icon'>rotate_right</i>" +
-        //    "</div>" +
-        //    "<div class='shape-drag-btn shape-button' data-btn-r='" + (r * (-1)) + "'>" +
-        //    "<div class='shape-drag-inv-btn'/>" +
-        //    "<i class='material-icons shape-drag-inv-icon'>drag_handle</i>" +
-        //    "</div>" +
-        //    "<div class='shape-delete-btn shape-button' data-btn-r='" + (r * (-1)) + "'>" +
-        //    "<div class='shape-delete-inv-btn'/>" +
-        //    "<i class='material-icons shape-delete-inv-icon'>delete</i>" +
-        //    "</div>" +
-        //    "<div class='shape-resize-btn shape-button' data-btn-r='" + (r * (-1)) + "'>" +
-        //    "<div class='shape-resize-inv-btn'/>" +
-        //    "<i class='material-icons shape-resize-inv-icon'>photo_size_select_small</i>" +
-        //    "</div>" +
-        //    "</div>"
-        //).
-        //    attr('class', 'item-box').
-        //    attr('data-box-id', id).
-        //    attr('data-box-x', x).
-        //    attr('data-box-y', y).
-        //    attr('data-box-r', r).
-        //    attr('data-box-tox', tox).
-        //    attr('data-box-toy', toy).
-        //    attr('data-box-w', w).
-        //    attr('data-box-h', h).
-        //    attr('data-box-shape', sh).
-        //    attr('data-box-selected', false).
-        //    attr('data-parent', 'stage').
-        //    css({
-        //        position: 'absolute',
-        //        width: w,
-        //        height: h
-        //    }).
-        //    appendTo(stageItemsContainer);
-
-        ////if (item.data('box-shape') === "shape-room-l-3x2") {
-        ////    this.createLShapeRoom()
-        ////        .appendTo(item);
-        ////}
-        ////else {
-        ////    this.createRegularShapeRoom()
-        ////        .appendTo(item);
-        ////}
 
         //var newOriginX = (item.data('box-w')) * 0.5;
         //var newOriginY = (item.data('box-h')) * 0.5;
@@ -246,6 +194,17 @@ class Stage extends React.Component {
 
         //TweenLite.to(item, 0, { x: x, y: y });
 
+    }
+
+    onStageItemSelect(selectedItem) {
+
+        let { id, x, y, r, tox, toy, w, h, sh, isSelected } = selectedItem;
+
+
+        console.log('prev onStageItemSelect', this.prevState);
+        console.log('onStageItemSelect', selectedItem);
+        
+        this.setState({ selectedItem })
     }
 
     loadItems() {
@@ -498,7 +457,7 @@ class Stage extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
 
-        if (this.state.stageItems.length != nextState.stageItems)
+        if (this.state.itemsAtStage.length != nextState.itemsAtStage)
             return true;
 
         if (this.state.stageBoardsList.length != nextState.stageBoardsList.length)
@@ -537,9 +496,21 @@ class Stage extends React.Component {
 
         let onTest = this.onTest;
 
-        let { stageBoardsList, stageItems } = this.state;
-        let draggedObjId = this.draggedObj.id;
-        let i = 0;
+        let { stageBoardsList, itemsAtStage } = this.state;
+        let selectedItem = this.state.selectedItem;
+        let onStageItemSelect = this.onStageItemSelect.bind(this);
+
+        let children = itemsAtStage.map(function (stageItem, i) {
+
+            stageItem.iterator = i;
+            stageItem.isSelected = (selectedItem.id === stageItem.id) ? true : false;
+            stageItem.onSelect = onStageItemSelect;
+
+            return <StageItem
+                key={i}
+                {...stageItem}
+            />
+        })
 
         return (
 
@@ -572,16 +543,7 @@ class Stage extends React.Component {
                     </div>
                     <div id="stage-items-container">
                         {
-                            stageItems.map(function (stageItem) {
-
-                                stageItem.iterator = i++;
-                                stageItem.isSelected = (draggedObjId === stageItem.id) ? true : false;
-
-                                return <StageItem
-                                    key={stageItem.id}
-                                    {...stageItem}
-                                />
-                            })
+                            children
                         }
                     </div>
                 </div>
