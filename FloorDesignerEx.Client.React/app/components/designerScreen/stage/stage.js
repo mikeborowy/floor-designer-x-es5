@@ -40,7 +40,6 @@ class Stage extends React.Component {
         //this.droppedItems = [];
         this.draggedObj = {
             id: -1,
-            iteration: -1,
             x: 0,
             y: 0,
             r: 0,
@@ -48,7 +47,8 @@ class Stage extends React.Component {
             toy: 0,
             w: 0,
             h: 0,
-            sh: ''
+            sh: '',
+            isSelected: false
         };
 
         this.zoomMouse = false;
@@ -153,7 +153,7 @@ class Stage extends React.Component {
 
     onDraggedItemDrop(evt) {
         //combine id,w,h,sh to draggedObj
-        this.draggedObj = Object.assign({}, this.draggedObj, evt.detail);
+        this.draggedObj = Object.assign({}, this.draggedObj, evt.detail, { isSelected: true });
 
         //pass extracted items
         this.createStageItem( this.draggedObj );
@@ -502,7 +502,6 @@ class Stage extends React.Component {
 
         let children = itemsAtStage.map(function (stageItem, i) {
 
-            stageItem.iterator = i;
             stageItem.isSelected = (selectedItem.id === stageItem.id) ? true : false;
             stageItem.onSelect = onStageItemSelect;
 

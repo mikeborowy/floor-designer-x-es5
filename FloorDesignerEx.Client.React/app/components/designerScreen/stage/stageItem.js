@@ -35,8 +35,8 @@ class StageItem extends React.Component {
 
     createRegularShapeRoom() {
 
-        let { paddingLeft, paddingTop, itemSelectedColor, itemColor} = this.cfg;
-        let { w, h, sh, isSelected } = this.props;
+        let { paddingLeft, paddingTop, itemSelectedColor, itemColor } = this.cfg;
+        let { w, h, sh, isSelected } = this.state;
 
         let width = w - (paddingLeft * 2);
         let height = h - (paddingTop * 2);
@@ -58,7 +58,7 @@ class StageItem extends React.Component {
     createLShapeRoom() {
 
         let { paddingLeft, paddingTop, itemBorderSize, gridCellWidth, itemSelectedColor, itemColor } = this.cfg;
-        let { w, h, sh, isSelected } = this.props;
+        let { w, h, sh, isSelected } = this.state;
 
         let width = w - (paddingLeft * 2);
         let height = h - (paddingTop * 2);
@@ -93,76 +93,27 @@ class StageItem extends React.Component {
 
     onSelect(evt) {
 
-        //if (!this.state.isSelected)
-        //    this.setState({ isSelected: true });
-        //else
-        //    this.setState({ isSelected: false });
+        let { isSelected } = this.state;
+        this.setState({ isSelected: isSelected ? false : true });
 
-        //console.log(this.state);
-
-        let { id, x, y, r, tox, toy, w, h, sh } = this.props;
-        this.props.onSelect({ id, x, y, r, tox, toy, w, h, sh, isSelected: this.state.isSelected });
-
-        //console.log('onSelect ' + this.props.sh, this.state.isSelected);
     }
 
-    onDragBtnDown(evt) {
+    componentWillReceiveProps(newProps) {
 
-        if (!this.state.dragIsOn) {
+        let { id, x, y, r, tox, toy, w, h, sh, isSelected } = newProps;
+        this.setState({ id, x, y, r, tox, toy, w, h, sh, isSelected })
 
-            this.setState({ dragIsOn : true });
-
-            //var btn = $(evt.target);
-            //var invBtn = btn.parent().find('.shape-drag-inv-btn');
-            //var icon = btn.find('.shape-drag-inv-icon')
-
-            //TweenLite.set(invBtn, { scaleX: 5, scaleY: 5 })
-
-            //var draggedItem = btn.parent().parent();
-            //createDraggableStageItem(draggedItem, actionsOfDraggable.drag);
-
-            //deslectItems();
-            //selectItem(draggedItem);
-        }
     }
 
-    onDragBtnUp(evt) {
 
-        if (this.state.dragIsOn) {
+    componentDidMount(prevProps, prevState){
 
-            this.setState({ dragIsOn: false });
-
-            //var btn = $(evt.target);
-            //var invBtn = btn.parent().find('.shape-drag-inv-btn');
-            //var icon = btn.find('.shape-drag-inv-icon')
-
-            //TweenLite.set(invBtn, { scaleX: 1, scaleY: 1 })
-
-            //var draggedItem = btn.parent().parent();
-
-            //if (currentDraggable != null) {
-            //    draggedItem.attr('data-box-x', Math.ceil(currentDraggable[0].x));
-            //    draggedItem.attr('data-box-y', Math.ceil(currentDraggable[0].y));
-
-            //    //currentDraggable[0].kill();
-            //    //currentDraggable[0].disable();
-            //    //keepBounds(draggedItem);
-
-            //    //TweenMax.to(draggedItem, 0.2, {
-            //    //    x: draggedItem.attr('data-box-x'),
-            //    //    y: draggedItem.attr('data-box-y')
-            //    //});
-            //}
-
-            //if (debugMode) {
-            //    console.log('dragIsOn:' + dragIsOn);
-            //    console.log(currentDraggable);
-            //};
-        }
+        let { id, x, y, r, tox, toy, w, h, sh, isSelected } = this.props;
+        this.setState({ id, x, y, r, tox, toy, w, h, sh, isSelected })
     }
 
     render() {
-        let { id, x, y, r, tox, toy, w, h, sh } = this.props;
+        let { id, x, y, r, tox, toy, w, h, sh } = this.state;
 
         let style = {
             position: 'absolute',
