@@ -26,6 +26,7 @@ class StageItem extends React.Component {
             id:-1, x:0, y:0, r:0, tox:0, toy:0, w:0, h:0, sh:'', iterator:-1, isSelected: false
         };
 
+        this.isSelected = false;
         //let { id, x, y, r, tox, toy, w, h, sh, iterator, isSelected } = this.props;
         //this.state = { id, x, y, r, tox, toy, w, h, sh, iterator, isSelected }
 
@@ -93,8 +94,13 @@ class StageItem extends React.Component {
 
     onSelect(evt) {
 
-        let { isSelected } = this.state;
-        this.setState({ isSelected: isSelected ? false : true });
+        let { id, x, y, r, tox, toy, w, h, sh, isSelected } = this.state;
+
+        this.isSelected = isSelected ? false : true; 
+        this.setState({ isSelected: this.isSelected });
+
+        let selectedItem = { id, x, y, r, tox, toy, w, h, sh, isSelected: this.isSelected }
+        this.props.onSelect(selectedItem)
 
     }
 
@@ -104,7 +110,6 @@ class StageItem extends React.Component {
         this.setState({ id, x, y, r, tox, toy, w, h, sh, isSelected })
 
     }
-
 
     componentDidMount(prevProps, prevState){
 

@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "4d10cd69168470bb705a"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "92fcf18b0bee4575e06f"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -597,7 +597,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "4d10cd69168470bb705a"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "92fcf18b0bee4575e06f"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -50525,7 +50525,7 @@
 	        };
 	
 	        //this.droppedItems = [];
-	        _this.draggedObj = {
+	        _this.dummyObj = {
 	            id: -1,
 	            x: 0,
 	            y: 0,
@@ -50537,6 +50537,8 @@
 	            sh: '',
 	            isSelected: false
 	        };
+	
+	        _this.draggedObj = _this.dummyObj;
 	
 	        _this.zoomMouse = false;
 	        _this.dragStage = false;
@@ -50558,7 +50560,7 @@
 	                rooms: []
 	            },
 	            stageBoardsList: [],
-	            selectedItem: null,
+	            selectedItem: _this.dummyObj,
 	            itemsAtStage: []
 	
 	            //bind functions to this class
@@ -50578,17 +50580,10 @@
 	        _this.onDraggedItemDrop = _this.onDraggedItemDrop.bind(_this);
 	
 	        _this.createStageItem = _this.createStageItem.bind(_this);
-	
-	        _this.onTest = _this.onTest.bind(_this);
 	        return _this;
 	    }
 	
 	    _createClass(Stage, [{
-	        key: 'onTest',
-	        value: function onTest(param) {
-	            console.log('This is param ' + param);
-	        }
-	    }, {
 	        key: 'stageInit',
 	        value: function stageInit() {
 	            var _cfg = this.cfg,
@@ -50643,21 +50638,6 @@
 	            }
 	        }
 	    }, {
-	        key: 'onDraggedItemStart',
-	        value: function onDraggedItemStart(evt) {
-	            //combine x,y to draggedObj
-	            this.draggedObj = Object.assign({}, this.draggedObj, evt.detail);
-	        }
-	    }, {
-	        key: 'onDraggedItemDrop',
-	        value: function onDraggedItemDrop(evt) {
-	            //combine id,w,h,sh to draggedObj
-	            this.draggedObj = Object.assign({}, this.draggedObj, evt.detail, { isSelected: true });
-	
-	            //pass extracted items
-	            this.createStageItem(this.draggedObj);
-	        }
-	    }, {
 	        key: 'createStageItem',
 	        value: function createStageItem(item) {
 	
@@ -50695,26 +50675,6 @@
 	            //TweenLite.to(item, 0, { x: x, y: y });
 	        }
 	    }, {
-	        key: 'onStageItemSelect',
-	        value: function onStageItemSelect(selectedItem) {
-	            var id = selectedItem.id,
-	                x = selectedItem.x,
-	                y = selectedItem.y,
-	                r = selectedItem.r,
-	                tox = selectedItem.tox,
-	                toy = selectedItem.toy,
-	                w = selectedItem.w,
-	                h = selectedItem.h,
-	                sh = selectedItem.sh,
-	                isSelected = selectedItem.isSelected;
-	
-	
-	            console.log('prev onStageItemSelect', this.prevState);
-	            console.log('onStageItemSelect', selectedItem);
-	
-	            this.setState({ selectedItem: selectedItem });
-	        }
-	    }, {
 	        key: 'loadItems',
 	        value: function loadItems() {}
 	    }, {
@@ -50737,28 +50697,6 @@
 	            (0, _jquery2.default)('#stage-grid-bgnd').html('');
 	            (0, _jquery2.default)('#stage-grid-live').html('');
 	            (0, _jquery2.default)('#stage-items-container').html('');
-	        }
-	    }, {
-	        key: 'findValueByKey',
-	        value: function findValueByKey(array, key) {
-	
-	            for (var i = 0; i < array.length; i++) {
-	
-	                if (array[i][key]) {
-	
-	                    return array[i][key];
-	                }
-	            }
-	            return null;
-	        }
-	    }, {
-	        key: 'onZoomStage',
-	
-	
-	        /*ZOOM START*/
-	        value: function onZoomStage(evt) {
-	            this.stageScaleNum = evt.detail;
-	            this.zoomStage();
 	        }
 	    }, {
 	        key: 'zoomStage',
@@ -50839,6 +50777,70 @@
 	                        });
 	                    }
 	        }
+	
+	        /**
+	         * HELPERS START
+	         */
+	
+	    }, {
+	        key: 'findValueByKey',
+	        value: function findValueByKey(array, key) {
+	
+	            for (var i = 0; i < array.length; i++) {
+	
+	                if (array[i][key]) {
+	
+	                    return array[i][key];
+	                }
+	            }
+	            return null;
+	        }
+	    }, {
+	        key: 'onDraggedItemStart',
+	
+	
+	        /**
+	         * EVENT HANDLERS START
+	         */
+	        value: function onDraggedItemStart(evt) {
+	            //combine x,y to draggedObj
+	            this.draggedObj = Object.assign({}, this.draggedObj, evt.detail);
+	        }
+	    }, {
+	        key: 'onDraggedItemDrop',
+	        value: function onDraggedItemDrop(evt) {
+	            //combine id,w,h,sh to draggedObj
+	            this.draggedObj = Object.assign({}, this.draggedObj, evt.detail, { isSelected: true });
+	
+	            //pass extracted items
+	            this.createStageItem(this.draggedObj);
+	        }
+	    }, {
+	        key: 'onStageItemSelect',
+	        value: function onStageItemSelect(selectedItem) {
+	            var id = selectedItem.id,
+	                x = selectedItem.x,
+	                y = selectedItem.y,
+	                r = selectedItem.r,
+	                tox = selectedItem.tox,
+	                toy = selectedItem.toy,
+	                w = selectedItem.w,
+	                h = selectedItem.h,
+	                sh = selectedItem.sh,
+	                isSelected = selectedItem.isSelected;
+	
+	            //select if other item is selected
+	
+	            if (selectedItem.id !== this.state.selectedItem.id) {
+	                this.setState({ selectedItem: selectedItem });
+	            }
+	        }
+	    }, {
+	        key: 'onStageClick',
+	        value: function onStageClick(evt) {
+	
+	            this.onStageItemSelect(this.dummyObj);
+	        }
 	    }, {
 	        key: 'onMouseWheel',
 	        value: function onMouseWheel(evt) {
@@ -50863,10 +50865,6 @@
 	                //$("#zoom-slider").get(0).MaterialTextfield.change((stageScaleNum - 1) * 10);
 	            }
 	        }
-	        /*ZOOM END*/
-	
-	        /*ON KEY UP/DOWN START*/
-	
 	    }, {
 	        key: 'onKeyDown',
 	        value: function onKeyDown(evt) {
@@ -50918,11 +50916,15 @@
 	                }
 	            }
 	        }
-	        /*ON KEY UP/DOWN END*/
-	
 	    }, {
-	        key: 'updateDimensions',
-	        value: function updateDimensions() {
+	        key: 'onZoomStage',
+	        value: function onZoomStage(evt) {
+	            this.stageScaleNum = evt.detail;
+	            this.zoomStage();
+	        }
+	    }, {
+	        key: 'onUpdateDimensions',
+	        value: function onUpdateDimensions() {
 	
 	            var toolbarHeight = (0, _jquery2.default)("#designer-toolbar").height();
 	            var windowWidth = (0, _jquery2.default)(window).width();
@@ -50948,6 +50950,11 @@
 	                _gsap.TweenMax.to((0, _jquery2.default)("#stage"), 0, { x: 0 });
 	            }
 	        }
+	
+	        /**
+	        * REACT LIFECYCLES START
+	        */
+	
 	    }, {
 	        key: 'componentDidUpdate',
 	        value: function componentDidUpdate() {
@@ -50980,9 +50987,9 @@
 	            this.stageInit();
 	            this.createGrid();
 	            this.initStageAsDraggable();
-	            this.updateDimensions();
+	            this.onUpdateDimensions();
 	
-	            window.addEventListener("resize", this.updateDimensions.bind(this));
+	            window.addEventListener("resize", this.onUpdateDimensions.bind(this));
 	            window.addEventListener('wheel', this.onMouseWheel);
 	            window.addEventListener("keydown", this.onKeyDown);
 	            window.addEventListener("keyup", this.onKeyUp);
@@ -50990,11 +50997,13 @@
 	            window.addEventListener('zoomOccured', this.onZoomStage);
 	            window.addEventListener('onDragObject', this.onDraggedItemStart);
 	            window.addEventListener('onDropObject', this.onDraggedItemDrop);
+	
+	            document.querySelector('#stage-grid-live').addEventListener("click", this.onStageClick.bind(this));
 	        }
 	    }, {
 	        key: 'componentWillUnmount',
 	        value: function componentWillUnmount() {
-	            window.removeEventListener("resize", this.updateDimensions.bind(this));
+	            window.removeEventListener("resize", this.onUpdateDimensions.bind(this));
 	            window.removeEventListener('wheel', this.onMouseWheel);
 	            window.removeEventListener("keydown", this.onKeyDown);
 	            window.removeEventListener("keyup", this.onKeyUp);
@@ -51002,21 +51011,17 @@
 	            window.removeEventListener('zoomOccured', this.onZoomStage);
 	            window.removeEventListener('onDragObject', this.onDraggedItemStart);
 	            window.removeEventListener('onDropObject', this.onDraggedItemDrop);
+	
+	            document.querySelector('#stage-grid-live').removeEventListener("click", this.onStageClick.bind(this));
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
 	
-	            var onTest = this.onTest;
-	
-	            var _state2 = this.state,
-	                stageBoardsList = _state2.stageBoardsList,
-	                itemsAtStage = _state2.itemsAtStage;
-	
 	            var selectedItem = this.state.selectedItem;
 	            var onStageItemSelect = this.onStageItemSelect.bind(this);
 	
-	            var children = itemsAtStage.map(function (stageItem, i) {
+	            var itemsAtStage = this.state.itemsAtStage.map(function (stageItem, i) {
 	
 	                stageItem.isSelected = selectedItem.id === stageItem.id ? true : false;
 	                stageItem.onSelect = onStageItemSelect;
@@ -51037,7 +51042,7 @@
 	                    React.createElement(
 	                        'div',
 	                        { id: 'stage-grid-bgnd' },
-	                        stageBoardsList.map(function (boardItem) {
+	                        this.state.stageBoardsList.map(function (boardItem) {
 	
 	                            return React.createElement(_stageBoard2.default, _extends({
 	                                key: boardItem.id
@@ -51047,19 +51052,17 @@
 	                    React.createElement(
 	                        'div',
 	                        { id: 'stage-grid-live' },
-	                        stageBoardsList.map(function (boardItem) {
+	                        this.state.stageBoardsList.map(function (boardItem) {
 	
 	                            return React.createElement(_stageBoardHighlight2.default, _extends({
 	                                key: boardItem.id
-	                            }, boardItem, {
-	                                onMouseOver: onTest
-	                            }));
+	                            }, boardItem));
 	                        })
 	                    ),
 	                    React.createElement(
 	                        'div',
 	                        { id: 'stage-items-container' },
-	                        children
+	                        itemsAtStage
 	                    )
 	                ),
 	                React.createElement('div', { id: 'stage-bottom' })
@@ -51362,6 +51365,7 @@
 	            id: -1, x: 0, y: 0, r: 0, tox: 0, toy: 0, w: 0, h: 0, sh: '', iterator: -1, isSelected: false
 	        };
 	
+	        _this.isSelected = false;
 	        //let { id, x, y, r, tox, toy, w, h, sh, iterator, isSelected } = this.props;
 	        //this.state = { id, x, y, r, tox, toy, w, h, sh, iterator, isSelected }
 	
@@ -51449,9 +51453,24 @@
 	    }, {
 	        key: 'onSelect',
 	        value: function onSelect(evt) {
-	            var isSelected = this.state.isSelected;
+	            var _state3 = this.state,
+	                id = _state3.id,
+	                x = _state3.x,
+	                y = _state3.y,
+	                r = _state3.r,
+	                tox = _state3.tox,
+	                toy = _state3.toy,
+	                w = _state3.w,
+	                h = _state3.h,
+	                sh = _state3.sh,
+	                isSelected = _state3.isSelected;
 	
-	            this.setState({ isSelected: isSelected ? false : true });
+	
+	            this.isSelected = isSelected ? false : true;
+	            this.setState({ isSelected: this.isSelected });
+	
+	            var selectedItem = { id: id, x: x, y: y, r: r, tox: tox, toy: toy, w: w, h: h, sh: sh, isSelected: this.isSelected };
+	            this.props.onSelect(selectedItem);
 	        }
 	    }, {
 	        key: 'componentWillReceiveProps',
@@ -51489,16 +51508,16 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _state3 = this.state,
-	                id = _state3.id,
-	                x = _state3.x,
-	                y = _state3.y,
-	                r = _state3.r,
-	                tox = _state3.tox,
-	                toy = _state3.toy,
-	                w = _state3.w,
-	                h = _state3.h,
-	                sh = _state3.sh;
+	            var _state4 = this.state,
+	                id = _state4.id,
+	                x = _state4.x,
+	                y = _state4.y,
+	                r = _state4.r,
+	                tox = _state4.tox,
+	                toy = _state4.toy,
+	                w = _state4.w,
+	                h = _state4.h,
+	                sh = _state4.sh;
 	
 	
 	            var style = {
