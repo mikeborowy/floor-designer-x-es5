@@ -9,6 +9,8 @@ import ScrollToPlugin from "gsap/ScrollToPlugin";
 //cfg files
 import RoomsCfg from '../common/roomsCfg';
 import BlueprintImg from '../../../assets/blueprints/bgnd_12x10.jpg';
+import { itemActions, actionsOfDraggable } from '../common/stageItemActions';
+
 //components
 import StageBoard from './stageBoard';
 import StageBoardHighlight from './stageBoardHighlight';
@@ -28,6 +30,7 @@ class Stage extends React.Component {
             paddingLeft: roomsCfg.SHAPE_CFG.PADDING_LEFT,
             paddingTop: roomsCfg.SHAPE_CFG.PADDING_TOP,
             itemBorderSize: roomsCfg.SHAPE_CFG.BORDER_SIZE,
+            itemActions: itemActions,
             style: {
                 position: 'absolute',
                 width: props.w,
@@ -48,10 +51,12 @@ class Stage extends React.Component {
             w: 0,
             h: 0,
             sh: '',
-            isSelected: false
+            isSelected: false,
+            bounds:null
         };
 
         this.draggedObj = this.dummyObj;
+        this.currentDraggable = null;
 
         this.zoomMouse = false;
         this.dragStage = false;
@@ -90,8 +95,8 @@ class Stage extends React.Component {
         this.onKeyDown = this.onKeyDown.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
 
-        this.onDraggedItemStart = this.onDraggedItemStart.bind(this);
-        this.onDraggedItemDrop = this.onDraggedItemDrop.bind(this);
+        this.onListItemStart = this.onListItemStart.bind(this);
+        this.onListItemDrop = this.onListItemDrop.bind(this);
 
         this.createStageItem = this.createStageItem.bind(this);
     }
@@ -296,23 +301,23 @@ class Stage extends React.Component {
         }
         return null;
     };
-
     /**
      * EVENT HANDLERS START
      */
-    onDraggedItemStart(evt) {
+    onListItemStart(evt) {
         //combine x,y to draggedObj
         this.draggedObj = Object.assign({}, this.draggedObj, evt.detail);
     }
 
-    onDraggedItemDrop(evt) {
+    onListItemDrop(evt) {
         //combine id,w,h,sh to draggedObj
         this.draggedObj = Object.assign({}, this.draggedObj, evt.detail, { isSelected: true });
 
         //pass extracted items
-        this.createStageItem( this.draggedObj );
+        this.createStageItem(this.draggedObj);
     }
 
+    //stage item handlers START
     onStageItemSelect(selectedItem) {
 
         let { id, x, y, r, tox, toy, w, h, sh, isSelected } = selectedItem;
@@ -326,9 +331,23 @@ class Stage extends React.Component {
 
     onStageClick(evt) {
 
-        this.onStageItemSelect( this.dummyObj )
+        this.onStageItemSelect(this.dummyObj)
     }
 
+    //onStageItemMouseDown(draggedItem){
+    //    console.log('onStageItemMouseDown');
+    //    //if(draggedItem.isSelected)
+    //}
+
+    // onStageItemMouseUp(draggedItem){
+    //     console.log('onStageItemMouseUp');
+    //    //if(draggedItem.isSelected)
+    //        //this.createDraggableStageItem(document.getElementById(draggedItem.id), itemActions.NONE)
+    //}
+
+ 
+    //stage item handlers END
+    
     onMouseWheel(evt) {
 
         if (this.zoomMouse) {
@@ -442,9 +461,9 @@ class Stage extends React.Component {
         }
     }
 
-     /**
-     * REACT LIFECYCLES START
-     */
+    /**
+    * REACT LIFECYCLES START
+    */
 
     componentDidUpdate() {
         /*every rerender slows down animation
@@ -483,8 +502,8 @@ class Stage extends React.Component {
         window.addEventListener("keyup", this.onKeyUp);
         //custom events
         window.addEventListener('zoomOccured', this.onZoomStage);
-        window.addEventListener('onDragObject', this.onDraggedItemStart);
-        window.addEventListener('onDropObject', this.onDraggedItemDrop);
+        window.addEventListener('onDragObject', this.onListItemStart);
+        window.addEventListener('onDropObject', this.onListItemDrop);
 
         document.querySelector('#stage-grid-live').addEventListener("click", this.onStageClick.bind(this));
     }
@@ -496,8 +515,8 @@ class Stage extends React.Component {
         window.removeEventListener("keyup", this.onKeyUp);
         //custom events
         window.removeEventListener('zoomOccured', this.onZoomStage);
-        window.removeEventListener('onDragObject', this.onDraggedItemStart);
-        window.removeEventListener('onDropObject', this.onDraggedItemDrop);
+        window.removeEventListener('onDragObject', this.onListItemStart);
+        window.removeEventListener('onDropObject', this.onListItemDrop);
 
         document.querySelector('#stage-grid-live').removeEventListener("click", this.onStageClick.bind(this));
     }
@@ -505,12 +524,18 @@ class Stage extends React.Component {
     render() {
 
         let selectedItem = this.state.selectedItem;
+        let currentDraggable = this.currentDraggable;
         let onStageItemSelect = this.onStageItemSelect.bind(this);
+        //let onStageItemMouseDown = this.onStageItemMouseDown.bind(this);
+        //let onStageItemMouseUp = this.onStageItemMouseUp.bind(this);
 
         let itemsAtStage = this.state.itemsAtStage.map(function (stageItem, i) {
 
             stageItem.isSelected = (selectedItem.id === stageItem.id) ? true : false;
             stageItem.onSelect = onStageItemSelect;
+            stageItem.bounds = document.querySelector('#stage')
+            //stageItem.onMouseDown = onStageItemMouseDown;
+            //stageItem.onMouseUp = onStageItemMouseUp;
 
             return <StageItem
                 key={i}

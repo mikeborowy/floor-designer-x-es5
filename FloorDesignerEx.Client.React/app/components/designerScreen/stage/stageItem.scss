@@ -9,9 +9,7 @@ $selectedBorderColor: $colorBlue;
 
 #stage-items-container {
     .item-box {
-
         /*background-color:blue !important;*/
-
         &.item-selected {
             .item-bgnd {
                 &.shape-room-sqr-2x2,
@@ -44,6 +42,7 @@ $selectedBorderColor: $colorBlue;
                 &.shape-rotate-btn {
 
                     .shape-rotate-inv-btn {
+                        background-color: aqua;
                     }
 
                     .shape-rotate-inv-icon {
@@ -54,6 +53,7 @@ $selectedBorderColor: $colorBlue;
                 &.shape-drag-btn {
 
                     .shape-drag-inv-btn {
+                        background-color: aqua;
                     }
 
                     .shape-drag-inv-icon {
@@ -63,6 +63,7 @@ $selectedBorderColor: $colorBlue;
 
                 &.shape-delete-btn {
                     .shape-delete-inv-btn {
+                        background-color: aqua;
                     }
 
                     .shape-delete-inv-icon {
@@ -73,6 +74,7 @@ $selectedBorderColor: $colorBlue;
                 &.shape-resize-btn {
 
                     .shape-resize-inv-btn {
+                        background-color: aqua;
                     }
 
                     .shape-resize-inv-icon {
