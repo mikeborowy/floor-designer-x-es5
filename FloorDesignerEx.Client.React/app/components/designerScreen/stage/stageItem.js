@@ -1,6 +1,9 @@
 ﻿import * as React from 'react';
 import $ from 'jquery';
-import { TweenMax, Draggable } from 'gsap';
+import TweenMax from 'gsap';
+import TweenLite from 'gsap';
+import Draggable from 'gsap/Draggable';
+import ThrowPropsPlugin from 'gsap/src/uncompressed/plugins/ThrowPropsPlugin';
 
 import RoomsCfg from '../common/roomsCfg';
 import { itemActions, actionsOfDraggable } from '../common/stageItemActions';
@@ -26,10 +29,8 @@ class StageItem extends React.Component {
 
         let { itemSelectedColor, itemColor } = this.cfg;
 
-        console.log(this.props)
-
         this.state = {
-            id: -1, x: 0, y: 0, r: 0, tox: 0, toy: 0, w: 0, h: 0, sh: '', iterator: -1, isSelected: false, bounds: null
+            id: -1, x: 0, y: 0, r: 0, tox: 0, toy: 0, w: 0, h: 0, sh: '', iterator: -1, isSelected: false, dragBounds: null
         };
 
         this.currentDraggable = null;
@@ -38,10 +39,12 @@ class StageItem extends React.Component {
         this.createLShapeRoom = this.createLShapeRoom.bind(this);
         this.createRegularShapeRoom = this.createRegularShapeRoom.bind(this);
 
+        this.onUpdate = this.onUpdate.bind(this);
+
         this.createDraggableStageItem = this.createDraggableStageItem.bind(this);
         this.killDraggable = this.killDraggable.bind(this);
 
-        this.setNumberRotation = this.setNumberRotation.bind(this);
+        this.updateButtonsAngle = this.updateButtonsAngle.bind(this);
     }
 
     createRegularShapeRoom() {
@@ -102,17 +105,6 @@ class StageItem extends React.Component {
         return itemBgnd;
     };
 
-    onSelect(evt) {
-
-        let { id, x, y, r, tox, toy, w, h, sh, isSelected } = this.state;
-        this.isSelected = isSelected ? false : true;
-        //let isSelectedTemp = isSelected ? false : true;
-        this.setState({ isSelected: this.isSelected });
-        //let selectedItem = { id, x, y, r, tox, toy, w, h, sh, isSelected: this.isSelected }
-        this.props.onSelect(this.state)
-    }
-
-
     /**
     * CREATE DRAGGABLE STAGE ITEM START
     */
@@ -121,15 +113,17 @@ class StageItem extends React.Component {
 
         const snap = true;
         const liveSnap = false;
-        const throwProp = true;
+        const throwProps = true;
         const rotationSnap = 90;
 
         let { gridCellWidth, gridCellHeight, itemActions } = this.cfg;
-        let bounds = this.state.bounds;
+        let { dragBounds } = this.state;
+        let x, y, r, w, h, resizeW, resizeH;
+        let currentDraggable = this.currentDraggable;
 
-        let resizeW,resizeH;
-
-        let currentDraggable;
+        let onUpdate = this.onUpdate;
+        let updateButtonsAngle = this.updateButtonsAngle;
+        let killDraggable = this.killDraggable;
 
         switch (actionType) {
             //Resize Me
@@ -137,7 +131,7 @@ class StageItem extends React.Component {
 
                 currentDraggable = Draggable.create(dragQueen, {
                     type: "x,y",
-                    throwProps: throwProp,
+                    throwProps: throwProps,
                     onPress: function (e) {
                         e.stopPropagation(); // cancel drag
                     },
@@ -166,9 +160,8 @@ class StageItem extends React.Component {
                         var item = dragQueen.parent();
                         item.attr('data-box-w', resizeW);
                         item.attr('data-box-h', resizeH);
-                        //this.disable();
-                        if (Draggable[0] != null)
-                            Draggable[0].kill();
+
+                        killDraggable();
                     }
                 });
 
@@ -178,20 +171,19 @@ class StageItem extends React.Component {
 
                 currentDraggable = Draggable.create(dragQueen, {
                     type: actionType,
-                    bounds: bounds,
+                    bounds: dragBounds,
                     autoScroll: 1,
                     edgeResistance: 0.65,
-                    throwProps: throwProp,
+                    throwProps: throwProps,
                     //throwResistance: 0,
                     maxDuration: 0.3,
                     liveSnap: liveSnap,
                     snap: {
-
                         x: function (endValue) {
-                            return (snap || liveSnap) ? Math.round(endValue / gridCellWidth) * gridCellWidth : endValue;
+                            return (snap || liveSnap) ? (Math.round(endValue / gridCellWidth) * gridCellWidth) : endValue;
                         },
                         y: function (endValue) {
-                            return (snap || liveSnap) ? Math.round(endValue / gridCellHeight) * gridCellHeight : endValue;
+                            return (snap || liveSnap) ? (Math.round(endValue / gridCellHeight) * gridCellHeight) : endValue;
                         }
                     },
                     //onPress: function (evt) {
@@ -200,23 +192,18 @@ class StageItem extends React.Component {
                     onDrag: function () {
 
                     },
-                    onDragEnd: function () {
+                    //onDragEnd: function () {
+                    //    x = Math.ceil(this.x) / gridCellWidth;
+                    //    y = Math.ceil(this.y) / gridCellHeight;
+                    //},
+                    onThrowComplete: function (data) {
 
-                        console.log('this',this)
-                        console.log('Math.ceil(this.x)', Math.ceil(this.x))
-                        console.log('Math.ceil(this.y)', Math.ceil(this.y))
-
-                        //this.setState({ x: Math.ceil(this.x), y: Math.ceil(this.y) })
-
+                        x = Math.ceil(this.x);
+                        y = Math.ceil(this.y);
+                        
+                        killDraggable();
+                        onUpdate({ x, y });
                     }
-                    //onThrowComplete: function (data) {
-                    //    let item = $(dragQueen);
-                    //    item.attr('data-box-x', Math.ceil(this.x));
-                    //    item.attr('data-box-y', Math.ceil(this.y));
-                    //    this.disable();
-                    //    if (Draggable[0] != null)
-                    //        Draggable[0].kill();
-                    //}
                 });
 
                 break;
@@ -225,22 +212,25 @@ class StageItem extends React.Component {
 
                 currentDraggable = Draggable.create(dragQueen, {
                     type: "rotation",
-                    throwProps: throwProp,
+                    throwProps: throwProps,
                     snap: function (endValue) {
                         return Math.round(endValue / rotationSnap) * rotationSnap;
                     },
                     //onPress: function (evt) {
                     //    evt.stopPropagation(); // cancel drag
                     //},
-                    onDrag: this.setNumberRotation,
-                    onThrowUpdate: this.setNumberRotation,
+                    onDrag: function (evt) {
+                        updateButtonsAngle(this.rotation);
+                    },
+                    onThrowUpdate: function (evt) {
+                        updateButtonsAngle(this.rotation);
+                    },
                     onThrowComplete: function (evt) {
 
-                        this.stageItem.setAttribute('data-box-r', (this.rotation % 360));
-                        //this.disable();
+                        r = this.rotation % 360;
 
-                        if (Draggable[0] != null)
-                            Draggable[0].kill();
+                        killDraggable(); 
+                        onUpdate({ r });
                     }
                 });
                 break;
@@ -249,124 +239,147 @@ class StageItem extends React.Component {
         return currentDraggable;
     }
 
-    setNumberRotation(evt) {
+    killDraggable() {
 
-        var item = $(this.target);
-        $(item).attr('data-box-r', (this.rotation % 360));
+        console.log(this.currentDraggable)
 
-        var _angle = this.rotation;
-        TweenLite.set(item.find('.shape-button'), { rotation: -(_angle % 360) });
+        if (this.currentDraggable !== null)
+        {
+            //this.currentDraggable[0].disable();
+            this.currentDraggable[0].kill();
+        }
+
+        // TweenLite.set(invBtn, { scaleX: 1, scaleY: 1 })
+    }
+
+    updateButtonsAngle(rotation) {
+
+        let r = rotation % 360;
+        TweenLite.set(this.stageItem.querySelectorAll('.shape-button'), { rotation: - r });
+
+        //var item = $(this.target);
+        //$(item).attr('data-box-r', (this.rotation % 360));
     }
 
     /**
     * CREATE DRAGGABLE STAGE ITEM END
     */
+    onSelect(evt) {
+
+        let { isSelected } = this.state;
+        //this.isSelected = isSelected ? false : true;
+        //this.setState({ isSelected: this.isSelected });
+        let tempIsSelected = isSelected ? false : true;
+        this.setState({ isSelected: tempIsSelected });
+        //let selectedItem = { id, x, y, r, tox, toy, w, h, sh, isSelected: this.isSelected };
+        this.props.onStageItemSelect(this.state);
+    }
+
+    onUpdate(newProps) {
+
+        let tempNewProps = {};
+
+        if (newProps.hasOwnProperty('x')) tempNewProps.x = newProps.x;
+        if (newProps.hasOwnProperty('y')) tempNewProps.y = newProps.y;
+        if (newProps.hasOwnProperty('r')) tempNewProps.r = this.state.r + newProps.r;
+
+        let updatedItem = Object.assign({}, this.state, tempNewProps);
+
+        this.props.onStageItemUpdate(updatedItem);
+    }
+
+    onDelete(item) {
+        this.props.onStageItemDelete(item);
+    }
 
     onDragBtnDown(evt) {
 
         if (this.currentAction == itemActions.NONE && this.state.isSelected) {
 
-            var invBtn = this.dragBtn.childNodes[0];
+            let invBtn = evt.currentTarget.childNodes[0];
             TweenLite.set(invBtn, { scaleX: 5, scaleY: 5 });
 
             this.currentAction = itemActions.DRAG;
             this.currentDraggable = this.createDraggableStageItem(this.stageItem, this.currentAction);
-
-            //deslectItems();
-            //selectItem(draggedItem);
+            //this.createDraggableStageItem(this.stageItem, this.currentAction);
         }
-    }
-
-    onDragBtnUp(evt) {
-
-        this.currentAction = itemActions.NONE;
-        this.killDraggable(this.dragBtn.childNodes[0]);
     }
 
     onRotateBtnDown(evt) {
 
         if (this.currentAction == itemActions.NONE && this.state.isSelected) {
 
-            let invBtn = this.rotateBtn.childNodes[0];
-            TweenLite.set(invBtn, { scaleX: 5, scaleY: 5 })
+            let invBtn = evt.currentTarget.childNodes[0];
+            TweenLite.set(invBtn, { scaleX: 5, scaleY: 5 });
 
-            let newOriginX;
-            let newOriginY;
+            if (this.state.w > this.state.h) {
 
-            if (this.stageItem.getAttribute('data-box-w') > this.stageItem.getAttribute('data-box-h')) {
-
-                newOriginX = (this.stageItem.getAttribute('data-box-w')) - (0.5);
-                newOriginY = (this.stageItem.getAttribute('data-box-h')) - (0.5);
+                let newOriginX = this.state.w - 0.5;
+                let newOriginY = this.state.h - 0.5;
 
                 TweenLite.set(this.stageItem, { transformOrigin: "" + newOriginX + "px " + newOriginY + "px" });
-
-                this.stageItem.setAttribute('data-box-tox', newOriginX);
-                this.stageItem.setAttribute('data-box-toy', newOriginY);
             }
 
             this.currentAction = itemActions.ROTATE;
             this.currentDraggable = this.createDraggableStageItem(this.stageItem, this.currentAction);
-
-            //deslectItems();
-            //selectItem(draggedItem);
+            //this.createDraggableStageItem(this.stageItem, this.currentAction);
         }
     }
 
-    onRotateBtnUp(evt) {
+    onActionBtnUp(evt) {
 
-        this.currentAction = itemActions.NONE;
-        this.killDraggable(this.rotateBtn.childNodes[0]);
-    }
+        if (this.currentAction != itemActions.NONE && this.state.isSelected) {
 
-    killDraggable(invBtn) {
+            let invBtn = evt.currentTarget.childNodes[0];
+            TweenLite.set(invBtn, { scaleX: 1, scaleY: 1 });
 
-        if (this.currentDraggable !== null)
-            this.currentDraggable[0].kill();
-
-        TweenLite.set(invBtn, { scaleX: 1, scaleY: 1 })
+            this.currentAction = itemActions.NONE;
+            //this.killDraggable();
+        }
     }
 
     componentWillReceiveProps(newProps) {
-
-        let { id, x, y, r, tox, toy, w, h, sh, isSelected, dragIsOn } = newProps;
-        this.setState({ id, x, y, r, tox, toy, w, h, sh, isSelected, dragIsOn })
-
-        console.log('componentWillReceiveProps', this.state);
+        this.setState(newProps)
+        //console.log('componentWillReceiveProps state', this.state);
     }
 
     componentDidMount(prevProps, prevState) {
 
-        let { id, x, y, r, tox, toy, w, h, sh, isSelected, dragIsOn } = this.props;
-        this.setState({ id, x, y, r, tox, toy, w, h, sh, isSelected, dragIsOn });
+        this.setState(this.props);
+
+        TweenLite.set(this.stageItem, { x: this.props.x, y:this.props.y });
+        TweenLite.from(this.stageItem, 0.5, { scale: 0});
 
         this.dragBtn.addEventListener('mousedown', this.onDragBtnDown.bind(this));
-        this.dragBtn.addEventListener('mouseup', this.onDragBtnUp.bind(this));
-        this.dragBtn.addEventListener('mouseleave', this.onDragBtnUp.bind(this));
+        this.dragBtn.addEventListener('mouseup', this.onActionBtnUp.bind(this));
+        this.dragBtn.addEventListener('mouseleave', this.onActionBtnUp.bind(this));
 
         this.rotateBtn.addEventListener('mousedown', this.onRotateBtnDown.bind(this));
-        this.rotateBtn.addEventListener('mouseup', this.onRotateBtnUp.bind(this));
-        this.rotateBtn.addEventListener('mouseleave', this.onRotateBtnUp.bind(this));
+        this.rotateBtn.addEventListener('mouseup', this.onActionBtnUp.bind(this));
+        this.rotateBtn.addEventListener('mouseleave', this.onActionBtnUp.bind(this));
+
+        this.deleteBtn.addEventListener('click', this.onDeleteBtnDown.bind(this));
     }
 
     componentWillUnmount() {
         this.dragBtn.removeEventListener('mousedown', this.onDragBtnDown.bind(this));
-        this.dragBtn.removeEventListener('mouseup', this.onDragBtnUp.bind(this));
-        this.dragBtn.removeEventListener('mouseleave', this.onDragBtnUp.bind(this));
+        this.dragBtn.removeEventListener('mouseup', this.onActionBtnUp.bind(this));
+        this.dragBtn.removeEventListener('mouseleave', this.onActionBtnUp.bind(this));
 
         this.rotateBtn.removeEventListener('mousedown', this.onRotateBtnDown.bind(this));
-        this.rotateBtn.removeEventListener('mouseup', this.onRotateBtnUp.bind(this));
-        this.rotateBtn.removeEventListener('mouseleave', this.onRotateBtnUp.bind(this));
+        this.rotateBtn.removeEventListener('mouseup', this.onActionBtnUp.bind(this));
+        this.rotateBtn.removeEventListener('mouseleave', this.onActionBtnUp.bind(this));
+
+        this.deleteBtn.removeEventListener('click', this.onDeleteBtnDown.bind(this));
     }
 
     render() {
-        let { id, x, y, r, tox, toy, w, h, sh, isSelected } = this.state;
+        let { w, h, sh } = this.state;
 
         let style = {
             position: 'absolute',
             width: w,
-            height: h,
-            left: x,
-            top: y
+            height: h
         }
 
         let shapeBoxDiv;

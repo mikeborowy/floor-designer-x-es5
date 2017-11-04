@@ -42,7 +42,6 @@ $selectedBorderColor: $colorBlue;
                 &.shape-rotate-btn {
 
                     .shape-rotate-inv-btn {
-                        background-color: aqua;
                     }
 
                     .shape-rotate-inv-icon {
@@ -53,7 +52,6 @@ $selectedBorderColor: $colorBlue;
                 &.shape-drag-btn {
 
                     .shape-drag-inv-btn {
-                        background-color: aqua;
                     }
 
                     .shape-drag-inv-icon {
@@ -63,7 +61,6 @@ $selectedBorderColor: $colorBlue;
 
                 &.shape-delete-btn {
                     .shape-delete-inv-btn {
-                        background-color: aqua;
                     }
 
                     .shape-delete-inv-icon {
@@ -74,7 +71,6 @@ $selectedBorderColor: $colorBlue;
                 &.shape-resize-btn {
 
                     .shape-resize-inv-btn {
-                        background-color: aqua;
                     }
 
                     .shape-resize-inv-icon {
@@ -156,7 +152,6 @@ $selectedBorderColor: $colorBlue;
                     /* position: relative; */
                     width: 26px;
                     height: 26px;
-                    /*background-color: red;*/
                     @include border-radius(50% 50%);
                     /* display: inline-block; */
                 }

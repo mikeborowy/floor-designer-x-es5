@@ -201,6 +201,32 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\gsap\easing\EasePack.js" />
+    <Content Include="Scripts\gsap\jquery.gsap.js" />
+    <Content Include="Scripts\gsap\plugins\AttrPlugin.js" />
+    <Content Include="Scripts\gsap\plugins\BezierPlugin.js" />
+    <Content Include="Scripts\gsap\plugins\ColorPropsPlugin.js" />
+    <Content Include="Scripts\gsap\plugins\CSSPlugin.js" />
+    <Content Include="Scripts\gsap\plugins\CSSRulePlugin.js" />
+    <Content Include="Scripts\gsap\plugins\DirectionalRotationPlugin.js" />
+    <Content Include="Scripts\gsap\plugins\EaselPlugin.js" />
+    <Content Include="Scripts\gsap\plugins\EndArrayPlugin.js" />
+    <Content Include="Scripts\gsap\plugins\KineticPlugin.js" />
+    <Content Include="Scripts\gsap\plugins\Physics2DPlugin.js" />
+    <Content Include="Scripts\gsap\plugins\PhysicsPropsPlugin.js" />
+    <Content Include="Scripts\gsap\plugins\RaphaelPlugin.js" />
+    <Content Include="Scripts\gsap\plugins\RoundPropsPlugin.js" />
+    <Content Include="Scripts\gsap\plugins\ScrambleTextPlugin.js" />
+    <Content Include="Scripts\gsap\plugins\ScrollToPlugin.js" />
+    <Content Include="Scripts\gsap\plugins\TEMPLATE_Plugin.js" />
+    <Content Include="Scripts\gsap\plugins\TextPlugin.js" />
+    <Content Include="Scripts\gsap\plugins\ThrowPropsPlugin.js" />
+    <Content Include="Scripts\gsap\TimelineLite.js" />
+    <Content Include="Scripts\gsap\TimelineMax.js" />
+    <Content Include="Scripts\gsap\TweenLite.js" />
+    <Content Include="Scripts\gsap\TweenMax.js" />
+    <Content Include="Scripts\gsap\utils\Draggable.js" />
+    <Content Include="Scripts\gsap\utils\SplitText.js" />
     <Content Include="Scripts\material.js" />
     <Content Include="stage\stage.js" />
     <Content Include="stage\stageBoard.js" />

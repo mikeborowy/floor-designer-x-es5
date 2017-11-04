@@ -3,9 +3,9 @@ import * as React from 'react';
 //import { assign } from 'babel-polyfill';
 //3rd party libs
 import $ from 'jquery';
-import { TweenMax } from 'gsap';
+import TweenMax from 'gsap';
 import Draggable from 'gsap/Draggable';
-import ScrollToPlugin from "gsap/ScrollToPlugin";
+import ScrollToPlugin from "gsap/src/uncompressed/plugins/ScrollToPlugin";
 //cfg files
 import RoomsCfg from '../common/roomsCfg';
 import BlueprintImg from '../../../assets/blueprints/bgnd_12x10.jpg';
@@ -52,7 +52,7 @@ class Stage extends React.Component {
             h: 0,
             sh: '',
             isSelected: false,
-            bounds:null
+            dragBounds:null
         };
 
         this.draggedObj = this.dummyObj;
@@ -70,7 +70,7 @@ class Stage extends React.Component {
                 id: 4,
                 officeId: 1,
                 name: "Floor 1",
-                width: 15,
+                width: 12,
                 height: 10,
                 xpos: 0,
                 ypos: 0,
@@ -99,6 +99,10 @@ class Stage extends React.Component {
         this.onListItemDrop = this.onListItemDrop.bind(this);
 
         this.createStageItem = this.createStageItem.bind(this);
+
+        this.onStageItemSelect = this.onStageItemSelect.bind(this);
+        this.onStageItemUpdate = this.onStageItemUpdate.bind(this); 
+        this.onStageItemDelete = this.onStageItemDelete.bind(this); 
     }
 
     stageInit() {
@@ -194,7 +198,7 @@ class Stage extends React.Component {
             type: "scroll",
             edgeResistance: 1,
             throwProps: true,
-            lockAxis: true
+            lockAxis: false
         });
 
         Draggable.get("#stage-container").disable();
@@ -317,21 +321,41 @@ class Stage extends React.Component {
         this.createStageItem(this.draggedObj);
     }
 
-    //stage item handlers START
-    onStageItemSelect(selectedItem) {
-
-        let { id, x, y, r, tox, toy, w, h, sh, isSelected } = selectedItem;
-
+    /* Item Handlers START */
+    onStageItemUpdate(updatedItem) {
+        // let { id, x, y, r, tox, toy, w, h, sh, isSelected } = selectedItem;
         //select if other item is selected
-        if (selectedItem.id !== this.state.selectedItem.id) {
-            this.setState({ selectedItem })
-        }
+        //if (this.state.selectedItem.id !== item.id) {
+        //    this.setState({ selectedItem: item })
+        //}
 
+        let tempItemsAtStage = this.state.itemsAtStage;
+        let findId = tempItemsAtStage.map(item => (item.id)).indexOf(updatedItem.id)
+
+        let itemAtStage = Object.assign(tempItemsAtStage[findId], updatedItem);
+
+        this.setState({ itemAtStage });
     }
 
-    onStageClick(evt) {
+    onStageItemDelete(item) {
 
-        this.onStageItemSelect(this.dummyObj)
+        let tempItemsAtStage = this.state.itemsAtStage;
+        let findId = tempItemsAtStage.map(item => (item.id)).indexOf(item.id)
+
+        tempItemsAtStage.splice(findId, 1);
+
+        this.setState({
+            itemAtStage: tempItemsAtStage,
+            selectedItem: this.dummyObj
+        });
+    }
+
+    onStageItemSelect(selectedItem) {
+       // let { id, x, y, r, tox, toy, w, h, sh, isSelected } = selectedItem;
+        //select if other item is selected
+        if (this.state.selectedItem.id !== selectedItem.id) {
+            this.setState({ selectedItem })
+        }
     }
 
     //onStageItemMouseDown(draggedItem){
@@ -345,9 +369,13 @@ class Stage extends React.Component {
     //        //this.createDraggableStageItem(document.getElementById(draggedItem.id), itemActions.NONE)
     //}
 
- 
-    //stage item handlers END
-    
+    /* Item Handlers END */
+
+    onStageClick(evt) {
+
+        this.onStageItemSelect(this.dummyObj)
+    }
+
     onMouseWheel(evt) {
 
         if (this.zoomMouse) {
@@ -462,6 +490,10 @@ class Stage extends React.Component {
     }
 
     /**
+     * EVENT HANDLERS END
+     */
+
+    /**
     * REACT LIFECYCLES START
     */
 
@@ -525,15 +557,20 @@ class Stage extends React.Component {
 
         let selectedItem = this.state.selectedItem;
         let currentDraggable = this.currentDraggable;
-        let onStageItemSelect = this.onStageItemSelect.bind(this);
+        let onStageItemSelect = this.onStageItemSelect;
+        let onStageItemUpdate = this.onStageItemUpdate;
+        let onStageItemDelete = this.onStageItemDelete;
         //let onStageItemMouseDown = this.onStageItemMouseDown.bind(this);
         //let onStageItemMouseUp = this.onStageItemMouseUp.bind(this);
 
         let itemsAtStage = this.state.itemsAtStage.map(function (stageItem, i) {
 
             stageItem.isSelected = (selectedItem.id === stageItem.id) ? true : false;
-            stageItem.onSelect = onStageItemSelect;
-            stageItem.bounds = document.querySelector('#stage')
+            stageItem.dragBounds = document.querySelector('#stage');
+            stageItem.onStageItemSelect = onStageItemSelect;
+            stageItem.onStageItemUpdate = onStageItemUpdate;
+            stageItem.onStageItemDelete = onStageItemDelete;
+
             //stageItem.onMouseDown = onStageItemMouseDown;
             //stageItem.onMouseUp = onStageItemMouseUp;
 
