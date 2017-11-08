@@ -30,27 +30,140 @@ class StageItem extends React.Component {
         let { itemSelectedColor, itemColor } = this.cfg;
 
         this.state = {
-            id: -1, x: 0, y: 0, r: 0, tox: 0, toy: 0, w: 0, h: 0, sh: '', iterator: -1, isSelected: false, dragBounds: null
+            id: -1,
+            x: 0,
+            y: 0,
+            r: 0,
+            tox: 0,
+            toy: 0,
+            w: 0,
+            h: 0,
+            sh: '',
+            iterator: -1,
+            isSelected: false,
+            dragBounds: null
         };
 
         this.currentDraggable = null;
         this.currentAction = itemActions.NONE;
 
+        //BTNS HANDLERS
+        this.onSelect = this.onSelect.bind(this);
+        this.onUpdate = this.onUpdate.bind(this);
+        this.onDelete = this.onDelete.bind(this);
+
+        //ITEM HELPERS
         this.createLShapeRoom = this.createLShapeRoom.bind(this);
         this.createRegularShapeRoom = this.createRegularShapeRoom.bind(this);
 
-        this.onUpdate = this.onUpdate.bind(this);
-
+        //ANIMATIONS HANDLERS & HELPERS
         this.createDraggableStageItem = this.createDraggableStageItem.bind(this);
         this.killDraggable = this.killDraggable.bind(this);
 
         this.updateButtonsAngle = this.updateButtonsAngle.bind(this);
+        this.setupTransforamtionPoint = this.setupTransforamtionPoint.bind(this);
     }
+
+    onSelect(evt) {
+
+        let { isSelected } = this.props;
+        let tempIsSelected = isSelected ? false : true;
+
+        let selectedItem = Object.assign({}, this.props, { isSelected: tempIsSelected })
+
+        this.props.onStageItemSelect(selectedItem);
+
+    }
+
+    onUpdate(newProps) {
+
+        let tempNewProps = {};
+
+        if (newProps.hasOwnProperty('x')) tempNewProps.x = newProps.x;
+        if (newProps.hasOwnProperty('y')) tempNewProps.y = newProps.y;
+        if (newProps.hasOwnProperty('r')) tempNewProps.r = newProps.r;
+        //if (newProps.hasOwnProperty('tox')) tempNewProps.tox = newProps.tox;
+        //if (newProps.hasOwnProperty('toy')) tempNewProps.toy = newProps.toy;
+        let updatedItem = Object.assign({}, this.props, tempNewProps);
+
+        this.props.onStageItemUpdate(updatedItem);
+    }
+
+    onDelete(item) {
+        this.props.onStageItemDelete(item);
+    }
+
+    /**
+    * BTNS HANDLERS START
+    */
+
+    onDragBtnDown(evt) {
+
+        if (this.currentAction == itemActions.NONE && this.props.isSelected) {
+
+            let invBtn = evt.currentTarget.childNodes[0];
+            TweenLite.set(invBtn, { scaleX: 5, scaleY: 5 });
+
+            this.currentAction = itemActions.DRAG;
+            this.currentDraggable = this.createDraggableStageItem(this.stageItem, this.currentAction);
+            //this.createDraggableStageItem(this.stageItem, this.currentAction);
+        }
+    }
+
+    onRotateBtnDown(evt) {
+
+        if (this.currentAction == itemActions.NONE && this.props.isSelected) {
+
+            let invBtn = evt.currentTarget.childNodes[0];
+            TweenLite.set(invBtn, { scaleX: 5, scaleY: 5 });
+
+            this.setupTransforamtionPoint(this.props);
+
+            this.currentAction = itemActions.ROTATE;
+            this.currentDraggable = this.createDraggableStageItem(this.stageItem, this.currentAction);
+            //this.createDraggableStageItem(this.stageItem, this.currentAction);
+        }
+    }
+
+    onDeleteBtnDown(evt) {
+
+        if (this.props.isSelected) {
+
+            this.props.onStageItemDelete(this.props);
+
+            //TweenMax.to(this.stageItem, 0.3, {
+            //    scale: 0, onComplete: function () {
+            //        //onDelete(this.props)
+            //    }
+            //})
+            //this.createDraggableStageItem(this.stageItem, this.currentAction);
+        }
+    }
+
+    onActionBtnUp(evt) {
+
+        if (this.currentAction != itemActions.NONE && this.props.isSelected) {
+
+            let invBtn = evt.currentTarget.childNodes[0];
+            TweenLite.set(invBtn, { scaleX: 1, scaleY: 1 });
+
+            this.currentAction = itemActions.NONE;
+            //this.killDraggable();
+        }
+    }
+
+    /**
+    * BTNS HANDLERS END
+    */
+
+    /**
+    * HELPERS START
+    */
 
     createRegularShapeRoom() {
 
         let { paddingLeft, paddingTop, itemSelectedColor, itemColor } = this.cfg;
-        let { w, h, sh, isSelected } = this.state;
+        let { w, h, sh, isSelected } = this.props;
 
         let width = w - (paddingLeft * 2);
         let height = h - (paddingTop * 2);
@@ -72,7 +185,7 @@ class StageItem extends React.Component {
     createLShapeRoom() {
 
         let { paddingLeft, paddingTop, itemBorderSize, gridCellWidth, itemSelectedColor, itemColor } = this.cfg;
-        let { w, h, sh, isSelected } = this.state;
+        let { w, h, sh, isSelected } = this.props;
 
         let width = w - (paddingLeft * 2);
         let height = h - (paddingTop * 2);
@@ -106,7 +219,11 @@ class StageItem extends React.Component {
     };
 
     /**
-    * CREATE DRAGGABLE STAGE ITEM START
+    * HELPERS END
+    */
+
+    /**
+    * ANIMATIONS HANDLERS & HELPERS START
     */
 
     createDraggableStageItem(dragQueen, actionType) {
@@ -117,7 +234,7 @@ class StageItem extends React.Component {
         const rotationSnap = 90;
 
         let { gridCellWidth, gridCellHeight, itemActions } = this.cfg;
-        let { dragBounds } = this.state;
+        let { dragBounds } = this.props;
         let x, y, r, w, h, resizeW, resizeH;
         let currentDraggable = this.currentDraggable;
 
@@ -200,7 +317,7 @@ class StageItem extends React.Component {
 
                         x = Math.ceil(this.x);
                         y = Math.ceil(this.y);
-                        
+
                         killDraggable();
                         onUpdate({ x, y });
                     }
@@ -209,6 +326,7 @@ class StageItem extends React.Component {
                 break;
             //Rotate me
             case itemActions.ROTATE:
+
 
                 currentDraggable = Draggable.create(dragQueen, {
                     type: "rotation",
@@ -229,7 +347,7 @@ class StageItem extends React.Component {
 
                         r = this.rotation % 360;
 
-                        killDraggable(); 
+                        killDraggable();
                         onUpdate({ r });
                     }
                 });
@@ -243,8 +361,7 @@ class StageItem extends React.Component {
 
         console.log(this.currentDraggable)
 
-        if (this.currentDraggable !== null)
-        {
+        if (this.currentDraggable !== null) {
             //this.currentDraggable[0].disable();
             this.currentDraggable[0].kill();
         }
@@ -256,99 +373,51 @@ class StageItem extends React.Component {
 
         let r = rotation % 360;
         TweenLite.set(this.stageItem.querySelectorAll('.shape-button'), { rotation: - r });
+    }
 
-        //var item = $(this.target);
-        //$(item).attr('data-box-r', (this.rotation % 360));
+    setupTransforamtionPoint(props) {
+
+        let tox;
+        let toy;
+
+        if (props.r > 0) {
+        }
+
+            if (props.w > props.h) {
+
+                tox = (props.w * 1) - 0.5;
+                toy = (props.h * 1) - 0.5;
+            }
+            else {
+
+                tox = props.w * 0.5;
+                toy = props.h * 0.5;
+            }
+
+        TweenLite.set(this.stageItem, {
+            x: props.x,
+            y: props.y,
+            rotation: props.r,
+            transformOrigin: "" + tox + "px " + toy + "px"
+        });
     }
 
     /**
-    * CREATE DRAGGABLE STAGE ITEM END
+    * ANIMATIONS HANDLERS & HELPERS END
     */
-    onSelect(evt) {
-
-        let { isSelected } = this.state;
-        //this.isSelected = isSelected ? false : true;
-        //this.setState({ isSelected: this.isSelected });
-        let tempIsSelected = isSelected ? false : true;
-        this.setState({ isSelected: tempIsSelected });
-        //let selectedItem = { id, x, y, r, tox, toy, w, h, sh, isSelected: this.isSelected };
-        this.props.onStageItemSelect(this.state);
-    }
-
-    onUpdate(newProps) {
-
-        let tempNewProps = {};
-
-        if (newProps.hasOwnProperty('x')) tempNewProps.x = newProps.x;
-        if (newProps.hasOwnProperty('y')) tempNewProps.y = newProps.y;
-        if (newProps.hasOwnProperty('r')) tempNewProps.r = this.state.r + newProps.r;
-
-        let updatedItem = Object.assign({}, this.state, tempNewProps);
-
-        this.props.onStageItemUpdate(updatedItem);
-    }
-
-    onDelete(item) {
-        this.props.onStageItemDelete(item);
-    }
-
-    onDragBtnDown(evt) {
-
-        if (this.currentAction == itemActions.NONE && this.state.isSelected) {
-
-            let invBtn = evt.currentTarget.childNodes[0];
-            TweenLite.set(invBtn, { scaleX: 5, scaleY: 5 });
-
-            this.currentAction = itemActions.DRAG;
-            this.currentDraggable = this.createDraggableStageItem(this.stageItem, this.currentAction);
-            //this.createDraggableStageItem(this.stageItem, this.currentAction);
-        }
-    }
-
-    onRotateBtnDown(evt) {
-
-        if (this.currentAction == itemActions.NONE && this.state.isSelected) {
-
-            let invBtn = evt.currentTarget.childNodes[0];
-            TweenLite.set(invBtn, { scaleX: 5, scaleY: 5 });
-
-            if (this.state.w > this.state.h) {
-
-                let newOriginX = this.state.w - 0.5;
-                let newOriginY = this.state.h - 0.5;
-
-                TweenLite.set(this.stageItem, { transformOrigin: "" + newOriginX + "px " + newOriginY + "px" });
-            }
-
-            this.currentAction = itemActions.ROTATE;
-            this.currentDraggable = this.createDraggableStageItem(this.stageItem, this.currentAction);
-            //this.createDraggableStageItem(this.stageItem, this.currentAction);
-        }
-    }
-
-    onActionBtnUp(evt) {
-
-        if (this.currentAction != itemActions.NONE && this.state.isSelected) {
-
-            let invBtn = evt.currentTarget.childNodes[0];
-            TweenLite.set(invBtn, { scaleX: 1, scaleY: 1 });
-
-            this.currentAction = itemActions.NONE;
-            //this.killDraggable();
-        }
-    }
-
+    
     componentWillReceiveProps(newProps) {
-        this.setState(newProps)
-        //console.log('componentWillReceiveProps state', this.state);
+        //this.setState(newProps)
+        console.log('componentWillReceiveProps', newProps)
+
+        this.setupTransforamtionPoint(newProps);
+        this.updateButtonsAngle(newProps.r);
     }
 
     componentDidMount(prevProps, prevState) {
-
-        this.setState(this.props);
-
-        TweenLite.set(this.stageItem, { x: this.props.x, y:this.props.y });
-        TweenLite.from(this.stageItem, 0.5, { scale: 0});
+        //this.setState(this.props);
+        TweenLite.set(this.stageItem, { x: this.props.x, y: this.props.y });
+        TweenLite.from(this.stageItem, 0.5, { scale: 0 });
 
         this.dragBtn.addEventListener('mousedown', this.onDragBtnDown.bind(this));
         this.dragBtn.addEventListener('mouseup', this.onActionBtnUp.bind(this));
@@ -374,7 +443,7 @@ class StageItem extends React.Component {
     }
 
     render() {
-        let { w, h, sh } = this.state;
+        let { w, h, sh } = this.props;
 
         let style = {
             position: 'absolute',
@@ -398,7 +467,7 @@ class StageItem extends React.Component {
                 style={style}>
                 <div
                     className="shape-bgnd-container"
-                    onClick={this.onSelect.bind(this)}>
+                    onClick={evt => { this.onSelect(evt) }}>
                     {shapeBoxDiv}
                 </div>
                 <div
@@ -414,7 +483,7 @@ class StageItem extends React.Component {
                     <i className='material-icons shape-drag-inv-icon'> drag_handle </i>
                 </div>
                 <div
-                    ref={(thisDiv) => { this.delBtn = thisDiv; }}
+                    ref={(thisDiv) => { this.deleteBtn = thisDiv; }}
                     className='shape-delete-btn shape-button'>
                     <div className='shape-delete-inv-btn' />
                     <i className='material-icons shape-delete-inv-icon'>delete</i>

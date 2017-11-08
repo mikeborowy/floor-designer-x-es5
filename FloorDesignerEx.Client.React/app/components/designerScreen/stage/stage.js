@@ -52,7 +52,7 @@ class Stage extends React.Component {
             h: 0,
             sh: '',
             isSelected: false,
-            dragBounds:null
+            dragBounds: null
         };
 
         this.draggedObj = this.dummyObj;
@@ -101,8 +101,8 @@ class Stage extends React.Component {
         this.createStageItem = this.createStageItem.bind(this);
 
         this.onStageItemSelect = this.onStageItemSelect.bind(this);
-        this.onStageItemUpdate = this.onStageItemUpdate.bind(this); 
-        this.onStageItemDelete = this.onStageItemDelete.bind(this); 
+        this.onStageItemUpdate = this.onStageItemUpdate.bind(this);
+        this.onStageItemDelete = this.onStageItemDelete.bind(this);
     }
 
     stageInit() {
@@ -315,7 +315,16 @@ class Stage extends React.Component {
 
     onListItemDrop(evt) {
         //combine id,w,h,sh to draggedObj
-        this.draggedObj = Object.assign({}, this.draggedObj, evt.detail, { isSelected: true });
+
+        let newObj = {}
+        newObj.isSelected = true;
+
+        //if (evt.detail.w > evt.detail.h) {
+        //    newObj.tox = evt.detail.w - 0.5;
+        //    newObj.toy = evt.detail.h - 0.5;
+        //}
+
+        this.draggedObj = Object.assign({}, this.draggedObj, evt.detail, newObj);
 
         //pass extracted items
         this.createStageItem(this.draggedObj);
@@ -323,51 +332,50 @@ class Stage extends React.Component {
 
     /* Item Handlers START */
     onStageItemUpdate(updatedItem) {
-        // let { id, x, y, r, tox, toy, w, h, sh, isSelected } = selectedItem;
-        //select if other item is selected
-        //if (this.state.selectedItem.id !== item.id) {
-        //    this.setState({ selectedItem: item })
-        //}
 
-        let tempItemsAtStage = this.state.itemsAtStage;
-        let findId = tempItemsAtStage.map(item => (item.id)).indexOf(updatedItem.id)
+        console.log('onStageItemUpdate', updatedItem);
 
-        let itemAtStage = Object.assign(tempItemsAtStage[findId], updatedItem);
+        this.setState((prevState, props) => {
 
-        this.setState({ itemAtStage });
+            let tempItemsAtStage = prevState.itemsAtStage;
+            let findId = tempItemsAtStage.map(item => (item.id)).indexOf(updatedItem.id);
+
+            let itemAtStage = Object.assign(tempItemsAtStage[findId], updatedItem);
+
+            return { itemAtStage }
+        });
     }
 
-    onStageItemDelete(item) {
+    onStageItemDelete(deletedItem) {
 
-        let tempItemsAtStage = this.state.itemsAtStage;
-        let findId = tempItemsAtStage.map(item => (item.id)).indexOf(item.id)
+        console.log('onStageItemDelete', deletedItem)
 
-        tempItemsAtStage.splice(findId, 1);
 
-        this.setState({
-            itemAtStage: tempItemsAtStage,
-            selectedItem: this.dummyObj
+        this.setState((prevState, props) => {
+
+            let tempItemsAtStage = prevState.itemsAtStage;
+            let findId = tempItemsAtStage.map(item => (item.id)).indexOf(deletedItem.id);
+
+            tempItemsAtStage.splice(findId, 1);
+            return {
+                itemAtStage: tempItemsAtStage,
+                selectedItem: this.dummyObj
+            }
         });
     }
 
     onStageItemSelect(selectedItem) {
-       // let { id, x, y, r, tox, toy, w, h, sh, isSelected } = selectedItem;
+
+        console.log('onStageItemSelect', selectedItem)
+
+        // let { id, x, y, r, tox, toy, w, h, sh, isSelected } = selectedItem;
         //select if other item is selected
-        if (this.state.selectedItem.id !== selectedItem.id) {
-            this.setState({ selectedItem })
-        }
+        this.setState((prevState, props) => {
+            if (prevState.selectedItem.id !== selectedItem.id) {
+                return { selectedItem }
+            }
+        })
     }
-
-    //onStageItemMouseDown(draggedItem){
-    //    console.log('onStageItemMouseDown');
-    //    //if(draggedItem.isSelected)
-    //}
-
-    // onStageItemMouseUp(draggedItem){
-    //     console.log('onStageItemMouseUp');
-    //    //if(draggedItem.isSelected)
-    //        //this.createDraggableStageItem(document.getElementById(draggedItem.id), itemActions.NONE)
-    //}
 
     /* Item Handlers END */
 
@@ -497,30 +505,15 @@ class Stage extends React.Component {
     * REACT LIFECYCLES START
     */
 
-    componentDidUpdate() {
-        /*every rerender slows down animation
-         *so it's better to use event listeners
-         */
-        //this.onZoomStage(this.props.zoom);
-    }
-
-    componentWillReceiveProps(nextProps) {
-
-        //if (nextProps.myProp !== this.props.draggedObj) {
-        //}
-        //console.log("zoom from update comp", this.props.zoom);
-        //return false;
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-
-        if (this.state.itemsAtStage.length != nextState.itemsAtStage)
-            return true;
-
-        if (this.state.stageBoardsList.length != nextState.stageBoardsList.length)
-            return true;
-    }
-
+    //shouldComponentUpdate(nextProps, nextState) {
+    //    //if (nextState.selectedItem.id === -1)
+    //    //    return false;
+    //    if (this.state.itemsAtStage.length != nextState.itemsAtStage)
+    //        return true;
+    //    if (this.state.stageBoardsList.length != nextState.stageBoardsList.length)
+    //        return true;
+    //}
+    
     componentDidMount() {
 
         this.stageInit();
