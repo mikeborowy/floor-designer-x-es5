@@ -500,14 +500,14 @@ class Stage extends React.Component {
     * REACT LIFECYCLES START
     */
 
-    shouldComponentUpdate(nextProps, nextState) {
-    //    //if (nextState.selectedItem.id === -1)
-    //    //    return false;
-    //    if (this.state.itemsAtStage.length != nextState.itemsAtStage)
-    //        return true;
-    //    if (this.state.stageBoardsList.length != nextState.stageBoardsList.length)
-    //        return true;
-    }
+    //shouldComponentUpdate(nextProps, nextState) {
+    ////    //if (nextState.selectedItem.id === -1)
+    ////    //    return false;
+    ////    if (this.state.itemsAtStage.length != nextState.itemsAtStage)
+    ////        return true;
+    ////    if (this.state.stageBoardsList.length != nextState.stageBoardsList.length)
+    ////        return true;
+    //}
     
     componentDidMount() {
 

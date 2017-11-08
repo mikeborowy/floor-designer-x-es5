@@ -1,5 +1,4 @@
 ﻿import * as React from 'react';
-import $ from 'jquery';
 import TweenMax from 'gsap';
 import TweenLite from 'gsap';
 import Draggable from 'gsap/Draggable';
@@ -92,7 +91,15 @@ class StageItem extends React.Component {
     }
 
     onDelete(item) {
-        this.props.onStageItemDelete(item);
+
+        let onStageItemDelete = this.props.onStageItemDelete;
+
+        TweenMax.to(this.stageItem, 0.3, {
+            scale: 0,
+            onComplete() {
+                onStageItemDelete(item);
+            }
+        })
     }
 
     /**
@@ -131,14 +138,8 @@ class StageItem extends React.Component {
 
         if (this.props.isSelected) {
 
+            //this.onDelete(this.props);
             this.props.onStageItemDelete(this.props);
-
-            //TweenMax.to(this.stageItem, 0.3, {
-            //    scale: 0, onComplete: function () {
-            //        //onDelete(this.props)
-            //    }
-            //})
-            //this.createDraggableStageItem(this.stageItem, this.currentAction);
         }
     }
 
