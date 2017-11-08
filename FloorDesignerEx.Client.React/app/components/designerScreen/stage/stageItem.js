@@ -29,7 +29,7 @@ class StageItem extends React.Component {
 
         let { itemSelectedColor, itemColor } = this.cfg;
 
-        this.state = {
+        this.dummyObj = {
             id: -1,
             x: 0,
             y: 0,
@@ -39,7 +39,6 @@ class StageItem extends React.Component {
             w: 0,
             h: 0,
             sh: '',
-            iterator: -1,
             isSelected: false,
             dragBounds: null
         };
@@ -67,11 +66,14 @@ class StageItem extends React.Component {
     onSelect(evt) {
 
         let { isSelected } = this.props;
-        let tempIsSelected = isSelected ? false : true;
 
+        let tempIsSelected = isSelected ? false : true;
         let selectedItem = Object.assign({}, this.props, { isSelected: tempIsSelected })
 
-        this.props.onStageItemSelect(selectedItem);
+        if (tempIsSelected)
+            this.props.onStageItemSelect(selectedItem);
+        else
+            this.props.onStageItemSelect(this.dummyObj);
 
     }
 
@@ -327,7 +329,6 @@ class StageItem extends React.Component {
             //Rotate me
             case itemActions.ROTATE:
 
-
                 currentDraggable = Draggable.create(dragQueen, {
                     type: "rotation",
                     throwProps: throwProps,
@@ -383,16 +384,16 @@ class StageItem extends React.Component {
         if (props.r > 0) {
         }
 
-            if (props.w > props.h) {
+        if (props.w > props.h) {
 
-                tox = (props.w * 1) - 0.5;
-                toy = (props.h * 1) - 0.5;
-            }
-            else {
+            tox = (props.w * 1) - 0.5;
+            toy = (props.h * 1) - 0.5;
+        }
+        else {
 
-                tox = props.w * 0.5;
-                toy = props.h * 0.5;
-            }
+            tox = props.w * 0.5;
+            toy = props.h * 0.5;
+        }
 
         TweenLite.set(this.stageItem, {
             x: props.x,
@@ -405,11 +406,9 @@ class StageItem extends React.Component {
     /**
     * ANIMATIONS HANDLERS & HELPERS END
     */
-    
+
     componentWillReceiveProps(newProps) {
         //this.setState(newProps)
-        console.log('componentWillReceiveProps', newProps)
-
         this.setupTransforamtionPoint(newProps);
         this.updateButtonsAngle(newProps.r);
     }
@@ -490,7 +489,7 @@ class StageItem extends React.Component {
                 </div>
                 <div
                     ref={(thisDiv) => { this.resizeBtn = thisDiv; }}
-                    className='shape-resize-btn shape-button'>
+                    className='shape-resize-btn shape-button hidden'>
                     <div className='shape-resize-inv-btn' />
                     <i className='material-icons shape-resize-inv-icon'>photo_size_select_small</i>
                 </div>

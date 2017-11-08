@@ -333,8 +333,6 @@ class Stage extends React.Component {
     /* Item Handlers START */
     onStageItemUpdate(updatedItem) {
 
-        console.log('onStageItemUpdate', updatedItem);
-
         this.setState((prevState, props) => {
 
             let tempItemsAtStage = prevState.itemsAtStage;
@@ -347,9 +345,6 @@ class Stage extends React.Component {
     }
 
     onStageItemDelete(deletedItem) {
-
-        console.log('onStageItemDelete', deletedItem)
-
 
         this.setState((prevState, props) => {
 
@@ -505,14 +500,14 @@ class Stage extends React.Component {
     * REACT LIFECYCLES START
     */
 
-    //shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps, nextState) {
     //    //if (nextState.selectedItem.id === -1)
     //    //    return false;
     //    if (this.state.itemsAtStage.length != nextState.itemsAtStage)
     //        return true;
     //    if (this.state.stageBoardsList.length != nextState.stageBoardsList.length)
     //        return true;
-    //}
+    }
     
     componentDidMount() {
 
