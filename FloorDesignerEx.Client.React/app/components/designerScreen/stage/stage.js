@@ -1,5 +1,6 @@
 ﻿//react libs
 import * as React from 'react';
+import ReactTransitionGroup from 'react-addons-transition-group'
 //import { assign } from 'babel-polyfill';
 //3rd party libs
 import $ from 'jquery';
@@ -346,6 +347,8 @@ class Stage extends React.Component {
 
     onStageItemDelete(deletedItem) {
 
+        console.log('onStageItemDelete', deletedItem)
+
         this.setState((prevState, props) => {
 
             let tempItemsAtStage = prevState.itemsAtStage;
@@ -353,8 +356,7 @@ class Stage extends React.Component {
 
             tempItemsAtStage.splice(findId, 1);
             return {
-                itemAtStage: tempItemsAtStage,
-                selectedItem: this.dummyObj
+                itemAtStage: tempItemsAtStage
             }
         });
     }
@@ -500,15 +502,15 @@ class Stage extends React.Component {
     * REACT LIFECYCLES START
     */
 
-    //shouldComponentUpdate(nextProps, nextState) {
-    ////    //if (nextState.selectedItem.id === -1)
-    ////    //    return false;
-    ////    if (this.state.itemsAtStage.length != nextState.itemsAtStage)
-    ////        return true;
-    ////    if (this.state.stageBoardsList.length != nextState.stageBoardsList.length)
-    ////        return true;
-    //}
-    
+    shouldComponentUpdate(nextProps, nextState) {
+        //if (nextState.selectedItem.id === -1)
+        //    return false;
+        if (this.state.itemsAtStage.length != nextState.itemsAtStage)
+            return true;
+        if (this.state.stageBoardsList.length != nextState.stageBoardsList.length)
+            return true;
+    }
+
     componentDidMount() {
 
         this.stageInit();
@@ -568,6 +570,8 @@ class Stage extends React.Component {
             />
         })
 
+        console.log(itemsAtStage)
+
         return (
 
             <div id="stage-container">
@@ -596,11 +600,11 @@ class Stage extends React.Component {
                             })
                         }
                     </div>
-                    <div id="stage-items-container">
-                        {
-                            itemsAtStage
-                        }
-                    </div>
+                    <ReactTransitionGroup component="div" id="stage-items-container">
+                    {
+                        itemsAtStage
+                    }
+                    </ReactTransitionGroup>
                 </div>
                 <div id="stage-bottom"></div>
             </div>

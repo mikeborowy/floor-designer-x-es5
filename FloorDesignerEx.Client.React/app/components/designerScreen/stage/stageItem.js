@@ -92,14 +92,8 @@ class StageItem extends React.Component {
 
     onDelete(item) {
 
-        let onStageItemDelete = this.props.onStageItemDelete;
+        this.props.onStageItemDelete(item);
 
-        TweenMax.to(this.stageItem, 0.3, {
-            scale: 0,
-            onComplete() {
-                onStageItemDelete(item);
-            }
-        })
     }
 
     /**
@@ -137,9 +131,7 @@ class StageItem extends React.Component {
     onDeleteBtnDown(evt) {
 
         if (this.props.isSelected) {
-
-            //this.onDelete(this.props);
-            this.props.onStageItemDelete(this.props);
+            this.onDelete(this.props);
         }
     }
 
@@ -408,6 +400,20 @@ class StageItem extends React.Component {
     * ANIMATIONS HANDLERS & HELPERS END
     */
 
+    componentWillEnter(callback) {
+
+        TweenLite.set(this.stageItem, { x: this.props.x, y: this.props.y });
+        TweenLite.from(this.stageItem, 0.5, { scale: 0, onComplete: callback });
+    }
+
+    componentWillLeave(callback) {
+
+        console.log(this.props.x, this.props.y)
+
+        TweenLite.set(this.stageItem, { x: this.props.x, y: this.props.y });
+        TweenLite.to(this.stageItem, 0.5, { scale: 0, onComplete: callback });
+    }
+
     componentWillReceiveProps(newProps) {
         //this.setState(newProps)
         this.setupTransforamtionPoint(newProps);
@@ -415,9 +421,6 @@ class StageItem extends React.Component {
     }
 
     componentDidMount(prevProps, prevState) {
-        //this.setState(this.props);
-        TweenLite.set(this.stageItem, { x: this.props.x, y: this.props.y });
-        TweenLite.from(this.stageItem, 0.5, { scale: 0 });
 
         this.dragBtn.addEventListener('mousedown', this.onDragBtnDown.bind(this));
         this.dragBtn.addEventListener('mouseup', this.onActionBtnUp.bind(this));
