@@ -57,6 +57,7 @@ class Stage extends React.Component {
         };
 
         this.draggedObj = this.dummyObj;
+
         this.currentDraggable = null;
 
         this.zoomMouse = false;
@@ -96,11 +97,10 @@ class Stage extends React.Component {
         this.onKeyDown = this.onKeyDown.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
 
-        this.onListItemStart = this.onListItemStart.bind(this);
+        this.onListItemDrag = this.onListItemDrag.bind(this);
         this.onListItemDrop = this.onListItemDrop.bind(this);
 
-        this.createStageItem = this.createStageItem.bind(this);
-
+        this.onStageItemAdd = this.onStageItemAdd.bind(this);
         this.onStageItemSelect = this.onStageItemSelect.bind(this);
         this.onStageItemUpdate = this.onStageItemUpdate.bind(this);
         this.onStageItemDelete = this.onStageItemDelete.bind(this);
@@ -151,44 +151,7 @@ class Stage extends React.Component {
             this.setState({ stageBoardsList: list });
         }
     };
-
-    createStageItem(item) {
-
-        //save all items to state 
-        this.setState({
-            selectedItem: item,
-            itemsAtStage: [...this.state.itemsAtStage, item]
-        })
-
-        //var newOriginX = (item.data('box-w')) * 0.5;
-        //var newOriginY = (item.data('box-h')) * 0.5;
-
-        //if (item.width() > item.height()) {
-        //    newOriginX = (item.data('box-w')) - (0.5);
-        //    newOriginY = (item.data('box-h')) - (0.5);
-        //}
-
-        //TweenLite.set(item, { transformOrigin: "" + newOriginX + "px " + newOriginY + "px" });
-        //TweenLite.set(item, { rotation: r });
-        //TweenLite.set(item.find('.shape-button'), { rotation: (360 - r) });
-
-        //item.attr('data-box-tox', newOriginX);
-        //item.attr('data-box-toy', newOriginY);
-
-        ////removeDuplicate('.item-box');
-
-        ////setup item container on stage
-        //TweenLite.from(item, 0.3, {
-        //    scaleX: 0,
-        //    scaleY: 0
-        //    //onComplete: initItem,
-        //    //onCompleteParams: [item]
-        //});
-
-        //TweenLite.to(item, 0, { x: x, y: y });
-
-    }
-
+   
     loadItems() {
 
     }
@@ -309,7 +272,7 @@ class Stage extends React.Component {
     /**
      * EVENT HANDLERS START
      */
-    onListItemStart(evt) {
+    onListItemDrag(evt) {
         //combine x,y to draggedObj
         this.draggedObj = Object.assign({}, this.draggedObj, evt.detail);
     }
@@ -325,13 +288,38 @@ class Stage extends React.Component {
         //    newObj.toy = evt.detail.h - 0.5;
         //}
 
-        this.draggedObj = Object.assign({}, this.draggedObj, evt.detail, newObj);
+        let item = Object.assign({}, this.draggedObj, evt.detail, newObj);
 
         //pass extracted items
-        this.createStageItem(this.draggedObj);
+        this.onStageItemAdd(item);
     }
 
     /* Item Handlers START */
+
+    onStageItemAdd(item) {
+
+        console.log('onStageItemAdd', item)
+
+        //save all items to state 
+        this.setState({
+            selectedItem: item,
+            itemsAtStage: [...this.state.itemsAtStage, item]
+        })
+
+        //var newOriginX = (item.data('box-w')) * 0.5;
+        //var newOriginY = (item.data('box-h')) * 0.5;
+
+        //if (item.width() > item.height()) {
+        //    newOriginX = (item.data('box-w')) - (0.5);
+        //    newOriginY = (item.data('box-h')) - (0.5);
+        //}
+
+        //TweenLite.set(item, { transformOrigin: "" + newOriginX + "px " + newOriginY + "px" });
+        //TweenLite.set(item, { rotation: r });
+        //TweenLite.set(item.find('.shape-button'), { rotation: (360 - r) });
+    }
+
+
     onStageItemUpdate(updatedItem) {
 
         this.setState((prevState, props) => {
@@ -502,14 +490,14 @@ class Stage extends React.Component {
     * REACT LIFECYCLES START
     */
 
-    shouldComponentUpdate(nextProps, nextState) {
-        //if (nextState.selectedItem.id === -1)
-        //    return false;
-        if (this.state.itemsAtStage.length != nextState.itemsAtStage)
-            return true;
-        if (this.state.stageBoardsList.length != nextState.stageBoardsList.length)
-            return true;
-    }
+    //shouldComponentUpdate(nextProps, nextState) {
+    //    //if (nextState.selectedItem.id === -1)
+    //    //    return false;
+    //    if (this.state.itemsAtStage.length != nextState.itemsAtStage)
+    //        return true;
+    //    if (this.state.stageBoardsList.length != nextState.stageBoardsList.length)
+    //        return true;
+    //}
 
     componentDidMount() {
 
@@ -524,7 +512,7 @@ class Stage extends React.Component {
         window.addEventListener("keyup", this.onKeyUp);
         //custom events
         window.addEventListener('zoomOccured', this.onZoomStage);
-        window.addEventListener('onDragObject', this.onListItemStart);
+        window.addEventListener('onDragObject', this.onListItemDrag);
         window.addEventListener('onDropObject', this.onListItemDrop);
 
         document.querySelector('#stage-grid-live').addEventListener("click", this.onStageClick.bind(this));
@@ -537,7 +525,7 @@ class Stage extends React.Component {
         window.removeEventListener("keyup", this.onKeyUp);
         //custom events
         window.removeEventListener('zoomOccured', this.onZoomStage);
-        window.removeEventListener('onDragObject', this.onListItemStart);
+        window.removeEventListener('onDragObject', this.onListItemDrag);
         window.removeEventListener('onDropObject', this.onListItemDrop);
 
         document.querySelector('#stage-grid-live').removeEventListener("click", this.onStageClick.bind(this));
@@ -561,6 +549,8 @@ class Stage extends React.Component {
             stageItem.onStageItemUpdate = onStageItemUpdate;
             stageItem.onStageItemDelete = onStageItemDelete;
 
+            console.log('render',stageItem)
+
             //stageItem.onMouseDown = onStageItemMouseDown;
             //stageItem.onMouseUp = onStageItemMouseUp;
 
@@ -570,7 +560,6 @@ class Stage extends React.Component {
             />
         })
 
-        console.log(itemsAtStage)
 
         return (
 

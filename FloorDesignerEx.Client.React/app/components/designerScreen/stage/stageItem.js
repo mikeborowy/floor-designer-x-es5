@@ -414,11 +414,11 @@ class StageItem extends React.Component {
         TweenLite.to(this.stageItem, 0.5, { scale: 0, onComplete: callback });
     }
 
-    componentWillReceiveProps(newProps) {
-        //this.setState(newProps)
-        this.setupTransforamtionPoint(newProps);
-        this.updateButtonsAngle(newProps.r);
-    }
+    //componentWillReceiveProps(newProps) {
+    //    //this.setState(newProps)
+    //    this.setupTransforamtionPoint(newProps);
+    //    this.updateButtonsAngle(newProps.r);
+    //}
 
     componentDidMount(prevProps, prevState) {
 
