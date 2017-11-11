@@ -1,5 +1,4 @@
 ﻿import * as React from 'react';
-import $ from 'jquery';
 
 import Toolbar from '../toolbar/toolbar';
 import ShapesPanel from '../shapesPanel/shapesPanel';
@@ -20,38 +19,21 @@ class Workspace extends React.Component {
         this.gridCellWidth = RoomsCfg().CELL_WIDTH;
         this.gridCellHeight = RoomsCfg().CELL_HEIGHT;
         this.draggedObj = null;
-
-        this.getCurrentId = this.getCurrentId.bind(this);
     }
 
 
     updateDimensions() {
 
-        let toolbarHeight = $("#designer-toolbar").height();
-        let windowWidth = $(window).width();
-        let windowHeight = $(window).height();
+        let toolbarHeight = document.querySelector("#designer-toolbar").offsetHeight;
+        let windowWidth = window.innerWidth;
+        let windowHeight = window.innerHeight;
 
-        $("#shapes-panel").height(
-            windowHeight - toolbarHeight
-        )
+        document.querySelector("#shapes-panel").setAttribute('style', 'height:' + (windowHeight - toolbarHeight) + 'px')
     }
 
     /*we get zoom value from toolbar and set in current comp state*/
     updateZoom(zoom) {
 
-    }
-
-
-    getCurrentId() {
-
-        var _a = 0;
-
-        $.each($('.item-box'), function (i, val) {
-
-            _a = $($('.item-box')[i]).data('box-id');
-        });
-
-        return _a;
     }
 
     componentDidMount() {
