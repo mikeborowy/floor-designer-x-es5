@@ -3,7 +3,6 @@ import * as React from 'react';
 import ReactTransitionGroup from 'react-addons-transition-group'
 //import { assign } from 'babel-polyfill';
 //3rd party libs
-import $ from 'jquery';
 import TweenMax from 'gsap';
 import Draggable from 'gsap/Draggable';
 import ScrollToPlugin from "gsap/src/uncompressed/plugins/ScrollToPlugin";
@@ -149,7 +148,7 @@ class Stage extends React.Component {
 
     initStageAsDraggable() {
 
-        let draggableObj = Draggable.create($("#stage-container"), {
+        let draggableObj = Draggable.create(this.stageContainer, {
             type: "scroll",
             edgeResistance: 1,
             throwProps: true,
@@ -161,13 +160,15 @@ class Stage extends React.Component {
 
     clearStage() {
 
-        $('#stage-grid-bgnd').html('');
-        $('#stage-grid-live').html('');
-        $('#stage-items-container').html('');
+        //$('#stage-grid-bgnd').html('');
+        //$('#stage-grid-live').html('');
+        //$('#stage-items-container').html('');
     };
 
     zoomStage() {
 
+        let stage = this.stage;
+        let stageContainer = this.stageContainer;
         //TweenMax.killTweensOf(room);
         //TweenMax.killTweensOf(roomContainer);
         //let stageScaleNum = this.stageScaleNum;
@@ -185,17 +186,17 @@ class Stage extends React.Component {
             scaleY: this.stageScaleNum,
         });
 
-        var posX = this.stageContainer.offsetWidth / 2 - this.stage.offsetWidth / 2;
-        var stageWidthAfterScale = this.stage.offsetWidth * this.stageScaleNum;
+        var posX = stageContainer.offsetWidth / 2 - stage.offsetWidth / 2;
+        var stageWidthAfterScale = stage.offsetWidth * this.stageScaleNum;
 
-        var posY = (this.stageContainer.offsetHeight / 2 - this.stage.offsetHeight / 2)
-        var stageHeightAfterScale = this.stage.offsetHeight * this.stageScaleNum;
+        var posY = (stageContainer.offsetHeight / 2 - stage.offsetHeight / 2)
+        var stageHeightAfterScale = stage.offsetHeight * this.stageScaleNum;
 
         //First for horizontal scale scroll issue
         //check if scaled room width is bigger than room conatiner
         //if true align to left
-        if (stageWidthAfterScale >= this.stageContainer.offsetWidth) {
-            TweenMax.set(this.stage, {
+        if (stageWidthAfterScale >= stageContainer.offsetWidth) {
+            TweenMax.set(stage, {
                 transformOrigin: "0 50%",
                 x: 0,
                 y: posY
@@ -203,8 +204,8 @@ class Stage extends React.Component {
 
             //then check if scaled room height is bigger than room conatiner 
             //and align to top
-            if (stageHeightAfterScale >= this.stageContainer.offsetHeight) {
-                TweenMax.set(this.stage, {
+            if (stageHeightAfterScale >= stageContainer.offsetHeight) {
+                TweenMax.set(stage, {
                     transformOrigin: "0% 0%",
                     x: 0,
                     y: 0
@@ -215,8 +216,8 @@ class Stage extends React.Component {
         //for vertical scale scroll issue
         //check if scaled room height is bigger than room conatiner 
         //if true align to top
-        else if (stageHeightAfterScale >= this.stageContainer.offsetHeight) {
-            TweenMax.set(this.stage, {
+        else if (stageHeightAfterScale >= stageContainer.offsetHeight) {
+            TweenMax.set(stage, {
                 transformOrigin: "50% 0%",
                 x: posX,
                 y: 0
@@ -224,8 +225,8 @@ class Stage extends React.Component {
 
             //then check if scaled room width is bigger than room conatiner 
             //and align to left
-            if (stageWidthAfterScale >= this.stageContainer.offsetWidth) {
-                TweenMax.set(this.stage, {
+            if (stageWidthAfterScale >= stageContainer.offsetWidth) {
+                TweenMax.set(stage, {
                     transformOrigin: "0 0",
                     x: 0,
                     y: 0
@@ -235,7 +236,7 @@ class Stage extends React.Component {
         }
         //otherwise appply regular scale with centerd point
         else {
-            TweenMax.set(this.stage, {
+            TweenMax.set(stage, {
                 transformOrigin: "50% 50%",
                 x: posX,
                 y: posY
@@ -365,9 +366,9 @@ class Stage extends React.Component {
             if (this.zoomMouse === false) {
 
                 this.zoomMouse = true;
-                let stageContainer = $("#stage-container")
-                stageContainer.css({ "overflow-x": "hidden" });
-                stageContainer.css({ "overflow-y": "hidden" });
+                let stageContainer = document.querySelector("#stage-container");
+                stageContainer.style.overflowX = 'hidden';
+                stageContainer.style.overflowY = 'hidden';
             }
         }
 
@@ -389,9 +390,9 @@ class Stage extends React.Component {
             if (this.zoomMouse === true) {
 
                 this.zoomMouse = false;
-                let stageContainer = $("#stage-container")
-                $("#stage-container").css({ "overflow-x": "auto" });
-                $("#stage-container").css({ "overflow-y": "auto" });
+                let stageContainer = document.querySelector("#stage-container");
+                stageContainer.style.overflowX = 'auto';
+                stageContainer.style.overflowY = 'auto';
             }
         }
 
@@ -400,8 +401,8 @@ class Stage extends React.Component {
 
             if (this.dragStage === true) {
                 this.dragStage = false;
-                if ($('#stage-blocker').length > 0)
-                    $('#stage-blocker').remove();
+                //if ($('#stage-blocker').length > 0)
+                //    $('#stage-blocker').remove();
                 Draggable.get("#stage-container").disable();
             }
         }
@@ -414,32 +415,31 @@ class Stage extends React.Component {
 
     onUpdateDimensions() {
 
-        let toolbarHeight = $("#designer-toolbar").height();
-        let windowWidth = $(window).width();
-        let windowHeight = $(window).height();
+        console.log('onUpdateDimensions')
 
-        $("#stage-container").height(
-            windowHeight - toolbarHeight
-        )
+        let toolbarHeight = document.querySelector("#designer-toolbar").offsetHeight;
+        let windowWidth = window.innerWidth;
+        let windowHeight = window.innerHeight;
 
-        let parentHeight = $("#stage-container").height();
-        let parentWidth = $("#stage-container").width();
+        this.stageContainer.setAttribute('style', 'height:' + (windowHeight - toolbarHeight) + 'px');
 
-        if ($("#stage").height() <= $("#stage-container").height()) {
+        let parentWidth = this.stageContainer.offsetWidth;
+        let parentHeight = this.stageContainer.offsetHeight;
 
-            let posY = (parentHeight / 2 - $("#stage").height() / 2);
-            TweenMax.to($("#stage"), 0, { y: posY })
+        if (this.stage.offsetHeight <= parentHeight) {
+            let posY = (parentHeight / 2 - this.stage.offsetHeight / 2);
+            TweenMax.to(this.stage, 0, { y: posY });
         }
         else {
-            TweenMax.to($("#stage"), 0, { y: 0 })
+            TweenMax.to(this.stage, 0, { y: 0 });
         }
 
-        if ($("#stage").width() <= $("#stage-container").width()) {
-            let posX = (parentWidth / 2 - $("#stage").width() / 2)
-            TweenMax.to($("#stage"), 0, { x: posX })
+        if (this.stage.offsetWidth <= parentWidth) {
+            let posX = (parentWidth / 2 - this.stage.offsetWidth / 2)
+            TweenMax.to(this.stage, 0, { x: posX })
         }
         else {
-            TweenMax.to($("#stage"), 0, { x: 0 })
+            TweenMax.to(this.stage, 0, { x: 0 })
         }
     }
 
@@ -527,13 +527,11 @@ class Stage extends React.Component {
             <div
                 id="stage-container"
                 ref={div => { this.stageContainer = div }}>
-            >
                 <div id="stage-top"></div>
                 <div
                     id="stage"
                     ref={div => { this.stage = div }}
                     style={this.stageStyle}>
-                >
                     <img id="stage-bgnd" src={this.state.imgPath} />
                     <div id="stage-grid-bgnd">
                         {
@@ -561,8 +559,7 @@ class Stage extends React.Component {
                         component="div"
                         id="stage-items-container"
                         ref={div => { this.stageItemsContainer = div }}
-                        style={this.stageStyle}
-                    >
+                        style={this.stageStyle} >
                     {
                         itemsAtStage
                     }
