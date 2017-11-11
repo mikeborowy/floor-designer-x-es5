@@ -84,8 +84,16 @@ class Stage extends React.Component {
             itemsAtStage: []
         }
 
+        //set style
+        let { gridCellWidth, gridCellHeight } = this.cfg;
+        let { floorCfg } = this.state;
+
+        this.stageStyle = {
+            width: floorCfg.width * gridCellWidth,
+            height: floorCfg.height * gridCellHeight
+        }
+
         //bind functions to this class
-        this.stageInit = this.stageInit.bind(this);
         this.initStageAsDraggable = this.initStageAsDraggable.bind(this);
         this.createGrid = this.createGrid.bind(this);
         this.clearStage = this.clearStage.bind(this);
@@ -104,23 +112,6 @@ class Stage extends React.Component {
         this.onStageItemSelect = this.onStageItemSelect.bind(this);
         this.onStageItemUpdate = this.onStageItemUpdate.bind(this);
         this.onStageItemDelete = this.onStageItemDelete.bind(this);
-    }
-
-    stageInit() {
-
-        let { gridCellWidth, gridCellHeight } = this.cfg;
-        let { floorCfg } = this.state;
-
-        $('#stage').width(floorCfg.width * gridCellWidth);
-        $('#stage').height(floorCfg.height * gridCellHeight);
-
-        $('#stage-items-container').width(floorCfg.width * gridCellWidth);
-        $('#stage-items-container').height(floorCfg.height * gridCellHeight);
-
-        //const img = $('#stage').find('img');
-        //img.attr('src', floorCfg.image);
-        //img.width(floorCfg.width * roomCfg.gridCellWidth);
-        //img.height(floorCfg.height * roomCfg.gridCellHeight);
     }
 
     createGrid() {
@@ -177,9 +168,6 @@ class Stage extends React.Component {
 
     zoomStage() {
 
-        var stage = $('#stage');
-        var stageContainer = $('#stage-container');
-
         //TweenMax.killTweensOf(room);
         //TweenMax.killTweensOf(roomContainer);
         //let stageScaleNum = this.stageScaleNum;
@@ -197,17 +185,17 @@ class Stage extends React.Component {
             scaleY: this.stageScaleNum,
         });
 
-        var posX = (stageContainer.width() / 2 - stage.width() / 2)
-        var stageWidthAfterScale = stage.width() * this.stageScaleNum;
+        var posX = this.stageContainer.offsetWidth / 2 - this.stage.offsetWidth / 2;
+        var stageWidthAfterScale = this.stage.offsetWidth * this.stageScaleNum;
 
-        var posY = (stageContainer.height() / 2 - stage.height() / 2)
-        var stageHeightAfterScale = stage.height() * this.stageScaleNum;
+        var posY = (this.stageContainer.offsetHeight / 2 - this.stage.offsetHeight / 2)
+        var stageHeightAfterScale = this.stage.offsetHeight * this.stageScaleNum;
 
         //First for horizontal scale scroll issue
         //check if scaled room width is bigger than room conatiner
         //if true align to left
-        if (stageWidthAfterScale >= stageContainer.width()) {
-            TweenMax.set(stage, {
+        if (stageWidthAfterScale >= this.stageContainer.offsetWidth) {
+            TweenMax.set(this.stage, {
                 transformOrigin: "0 50%",
                 x: 0,
                 y: posY
@@ -215,8 +203,8 @@ class Stage extends React.Component {
 
             //then check if scaled room height is bigger than room conatiner 
             //and align to top
-            if (stageHeightAfterScale >= stageContainer.height()) {
-                TweenMax.set(stage, {
+            if (stageHeightAfterScale >= this.stageContainer.offsetHeight) {
+                TweenMax.set(this.stage, {
                     transformOrigin: "0% 0%",
                     x: 0,
                     y: 0
@@ -227,8 +215,8 @@ class Stage extends React.Component {
         //for vertical scale scroll issue
         //check if scaled room height is bigger than room conatiner 
         //if true align to top
-        else if (stageHeightAfterScale >= stageContainer.height()) {
-            TweenMax.set(stage, {
+        else if (stageHeightAfterScale >= this.stageContainer.offsetHeight) {
+            TweenMax.set(this.stage, {
                 transformOrigin: "50% 0%",
                 x: posX,
                 y: 0
@@ -236,8 +224,8 @@ class Stage extends React.Component {
 
             //then check if scaled room width is bigger than room conatiner 
             //and align to left
-            if (stageWidthAfterScale >= stageContainer.width()) {
-                TweenMax.set(stage, {
+            if (stageWidthAfterScale >= this.stageContainer.offsetWidth) {
+                TweenMax.set(this.stage, {
                     transformOrigin: "0 0",
                     x: 0,
                     y: 0
@@ -247,7 +235,7 @@ class Stage extends React.Component {
         }
         //otherwise appply regular scale with centerd point
         else {
-            TweenMax.set(stage, {
+            TweenMax.set(this.stage, {
                 transformOrigin: "50% 50%",
                 x: posX,
                 y: posY
@@ -476,7 +464,6 @@ class Stage extends React.Component {
 
     componentDidMount() {
 
-        this.stageInit();
         this.createGrid();
         this.initStageAsDraggable();
         this.onUpdateDimensions();
@@ -537,9 +524,16 @@ class Stage extends React.Component {
 
         return (
 
-            <div id="stage-container">
+            <div
+                id="stage-container"
+                ref={div => { this.stageContainer = div }}>
+            >
                 <div id="stage-top"></div>
-                <div id="stage">
+                <div
+                    id="stage"
+                    ref={div => { this.stage = div }}
+                    style={this.stageStyle}>
+                >
                     <img id="stage-bgnd" src={this.state.imgPath} />
                     <div id="stage-grid-bgnd">
                         {
@@ -563,7 +557,12 @@ class Stage extends React.Component {
                             })
                         }
                     </div>
-                    <ReactTransitionGroup component="div" id="stage-items-container">
+                    <ReactTransitionGroup
+                        component="div"
+                        id="stage-items-container"
+                        ref={div => { this.stageItemsContainer = div }}
+                        style={this.stageStyle}
+                    >
                     {
                         itemsAtStage
                     }
