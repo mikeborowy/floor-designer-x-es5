@@ -279,17 +279,7 @@ class Stage extends React.Component {
 
     onListItemDrop(evt) {
         //combine id,w,h,sh to draggedObj
-
-        let newObj = {}
-        newObj.isSelected = true;
-
-        //if (evt.detail.w > evt.detail.h) {
-        //    newObj.tox = evt.detail.w - 0.5;
-        //    newObj.toy = evt.detail.h - 0.5;
-        //}
-
-        let item = Object.assign({}, this.draggedObj, evt.detail, newObj);
-
+        let item = Object.assign({}, this.draggedObj, evt.detail, { isSelected: true });
         //pass extracted items
         this.onStageItemAdd(item);
     }
@@ -297,28 +287,12 @@ class Stage extends React.Component {
     /* Item Handlers START */
 
     onStageItemAdd(item) {
-
-        console.log('onStageItemAdd', item)
-
         //save all items to state 
         this.setState({
             selectedItem: item,
             itemsAtStage: [...this.state.itemsAtStage, item]
         })
-
-        //var newOriginX = (item.data('box-w')) * 0.5;
-        //var newOriginY = (item.data('box-h')) * 0.5;
-
-        //if (item.width() > item.height()) {
-        //    newOriginX = (item.data('box-w')) - (0.5);
-        //    newOriginY = (item.data('box-h')) - (0.5);
-        //}
-
-        //TweenLite.set(item, { transformOrigin: "" + newOriginX + "px " + newOriginY + "px" });
-        //TweenLite.set(item, { rotation: r });
-        //TweenLite.set(item.find('.shape-button'), { rotation: (360 - r) });
     }
-
 
     onStageItemUpdate(updatedItem) {
 
@@ -334,26 +308,25 @@ class Stage extends React.Component {
     }
 
     onStageItemDelete(deletedItem) {
-
-        console.log('onStageItemDelete', deletedItem)
-
+        let findId; 
         this.setState((prevState, props) => {
 
-            let tempItemsAtStage = prevState.itemsAtStage;
-            let findId = tempItemsAtStage.map(item => (item.id)).indexOf(deletedItem.id);
+            findId = prevState.itemsAtStage.map(item => (item.id)).indexOf(deletedItem.id);
+            prevState.itemsAtStage.splice(findId, 1);
 
-            tempItemsAtStage.splice(findId, 1);
+            let tempItemsAtStage = Object.assign({}, prevState);
+
+            console.log('onStageItemDelete', prevState.itemsAtStage.id, prevState.itemsAtStage.sh, findId)
+
             return {
                 itemAtStage: tempItemsAtStage
             }
         });
+
     }
 
     onStageItemSelect(selectedItem) {
 
-        console.log('onStageItemSelect', selectedItem)
-
-        // let { id, x, y, r, tox, toy, w, h, sh, isSelected } = selectedItem;
         //select if other item is selected
         this.setState((prevState, props) => {
             if (prevState.selectedItem.id !== selectedItem.id) {
@@ -493,10 +466,12 @@ class Stage extends React.Component {
     //shouldComponentUpdate(nextProps, nextState) {
     //    //if (nextState.selectedItem.id === -1)
     //    //    return false;
-    //    if (this.state.itemsAtStage.length != nextState.itemsAtStage)
+    //    if (this.state.itemsAtStage.length != nextState.itemsAtStage.length)
     //        return true;
     //    if (this.state.stageBoardsList.length != nextState.stageBoardsList.length)
     //        return true;
+
+    //    return true;
     //}
 
     componentDidMount() {
@@ -549,17 +524,16 @@ class Stage extends React.Component {
             stageItem.onStageItemUpdate = onStageItemUpdate;
             stageItem.onStageItemDelete = onStageItemDelete;
 
-            console.log('render',stageItem)
+            console.log('render', i, stageItem.id, stageItem.sh);
 
             //stageItem.onMouseDown = onStageItemMouseDown;
             //stageItem.onMouseUp = onStageItemMouseUp;
 
             return <StageItem
-                key={i}
+                key={stageItem.id}
                 {...stageItem}
             />
         })
-
 
         return (
 

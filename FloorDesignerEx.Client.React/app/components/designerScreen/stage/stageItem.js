@@ -67,13 +67,12 @@ class StageItem extends React.Component {
         let { isSelected } = this.props;
 
         let tempIsSelected = isSelected ? false : true;
-        let selectedItem = Object.assign({}, this.props, { isSelected: tempIsSelected })
+        let selectedItem = Object.assign({}, this.props, { isSelected: tempIsSelected });
 
         if (tempIsSelected)
             this.props.onStageItemSelect(selectedItem);
         else
             this.props.onStageItemSelect(this.dummyObj);
-
     }
 
     onUpdate(newProps) {
@@ -91,9 +90,8 @@ class StageItem extends React.Component {
     }
 
     onDelete(item) {
-
+        console.log('onDelete', item.id, item.sh, this.props.key, );
         this.props.onStageItemDelete(item);
-
     }
 
     /**
@@ -401,24 +399,14 @@ class StageItem extends React.Component {
     */
 
     componentWillEnter(callback) {
-
         TweenLite.set(this.stageItem, { x: this.props.x, y: this.props.y });
         TweenLite.from(this.stageItem, 0.5, { scale: 0, onComplete: callback });
     }
 
     componentWillLeave(callback) {
-
-        console.log(this.props.x, this.props.y)
-
-        TweenLite.set(this.stageItem, { x: this.props.x, y: this.props.y });
-        TweenLite.to(this.stageItem, 0.5, { scale: 0, onComplete: callback });
+        //TweenLite.set(this.stageItem, { x: this.props.x, y: this.props.y });
+        TweenLite.to(this.stageItem, 0.2, { scale: 0, onComplete: callback });
     }
-
-    //componentWillReceiveProps(newProps) {
-    //    //this.setState(newProps)
-    //    this.setupTransforamtionPoint(newProps);
-    //    this.updateButtonsAngle(newProps.r);
-    //}
 
     componentDidMount(prevProps, prevState) {
 
