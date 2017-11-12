@@ -178,7 +178,6 @@
     <Content Include="app\components\designerScreen\workspace\workspace.js" />
     <None Include="app\components\designerScreen\workspace\workspace.bak" />
     <Content Include="app\components\designerScreen\index.js" />
-    <Content Include="app\components\helloWorld\HelloWorld.js" />
     <Content Include="app\constants\appCfg.js" />
     <Content Include="app\index.js" />
     <Content Include="Content\bootstrap.css" />
@@ -229,7 +228,6 @@
     <Content Include="webpack.config.js" />
     <Content Include=".babelrc" />
     <Content Include="package.json" />
-    <Content Include="app\components\helloWorld\.helloworld.scss" />
     <Content Include="Content\Site.scss" />
     <Content Include="app\components\designerScreen\index.scss" />
     <Content Include="app\components\designerScreen\shapesPanel\shapesPanel.scss" />

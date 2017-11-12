@@ -183,13 +183,6 @@ class Toolbar extends React.Component {
     }
 
     componentDidMount() {
-        //window.addEventListener("resize", this.updateDimensions);
-        //$('#zoom-slider').on('input', function () {
-
-        //    this.stageScaleNum = (this.value * 0.1) + 1;
-        //    //this.onZoomStage.bind(this);
-        //});
-
         window.addEventListener('zoomOccured', this.onZoomStage);
     }
 
