@@ -434,12 +434,13 @@ class StageItem extends React.Component {
     }
 
     render() {
-        let { w, h, sh } = this.props;
+        let { w, h, sh} = this.props;
 
         let style = {
             position: 'absolute',
             width: w,
-            height: h
+            height: h,
+            zIndex: (this.props.isSelected ? 11 : 1)
         }
 
         let shapeBoxDiv;

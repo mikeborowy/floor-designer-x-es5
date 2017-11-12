@@ -1,4 +1,4 @@
-﻿import { shapesCfg } from '../../../assets/shapes/shapesCfg';
+﻿import { shapesGFX } from '../../../assets/shapes/shapesGFX';
 
 const config = () => {
 
@@ -22,7 +22,7 @@ const config = () => {
                     x: roomsCfg.CELL_WIDTH,
                     y: roomsCfg.CELL_HEIGHT
                 },
-                thumb: shapesCfg.sq_2x2
+                thumb: shapesGFX.sq_2x2
             }
         },
         {
@@ -34,7 +34,7 @@ const config = () => {
                     x: (2 * roomsCfg.CELL_WIDTH) - (roomsCfg.CELL_WIDTH * 0.5),
                     y: (2 * roomsCfg.CELL_HEIGHT) - (roomsCfg.CELL_HEIGHT * 0.5)
                 },
-                thumb: shapesCfg.sq_3x3
+                thumb: shapesGFX.sq_3x3
             }
         },
         {
@@ -46,7 +46,7 @@ const config = () => {
                     x: (3 * roomsCfg.CELL_WIDTH) - (roomsCfg.CELL_WIDTH * 0.5),
                     y: (2 * roomsCfg.CELL_HEIGHT) - (roomsCfg.CELL_HEIGHT * 0.5)
                 },
-                thumb: shapesCfg.rq_3x2
+                thumb: shapesGFX.rq_3x2
             }
         },
         {
@@ -58,7 +58,7 @@ const config = () => {
                     x: (3 * roomsCfg.CELL_WIDTH) - (roomsCfg.CELL_WIDTH * 0.5),
                     y: (2 * roomsCfg.CELL_HEIGHT) - (roomsCfg.CELL_HEIGHT * 0.5)
                 },
-                thumb: shapesCfg.ls_3x3
+                thumb: shapesGFX.ls_3x3
             }
         }
     ];

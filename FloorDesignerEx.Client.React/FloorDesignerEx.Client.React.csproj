@@ -156,7 +156,7 @@
     <Content Include="app\assets\shapes\room_rect_3x2.png" />
     <Content Include="app\assets\shapes\room_squa_2x2.png" />
     <Content Include="app\assets\shapes\room_squa_3x3.png" />
-    <Content Include="app\assets\shapes\shapesCfg.js" />
+    <Content Include="app\assets\shapes\shapesGFX.js" />
     <Content Include="app\assets\world.jpg" />
     <Content Include="app\components\App.js" />
     <Content Include="app\components\designerScreen\common\stageItemActions.js" />
@@ -166,7 +166,7 @@
     <Content Include="app\components\designerScreen\searchPanel\searchPanelForm.js" />
     <Content Include="app\components\designerScreen\searchPanel\searchPanelFloorList.js" />
     <Content Include="app\components\designerScreen\searchPanel\searchPanelFormResult.js" />
-    <Content Include="app\components\designerScreen\shapesPanel\shapesCfg.js" />
+    <Content Include="app\components\designerScreen\common\shapesCfg.js" />
     <Content Include="app\components\designerScreen\shapesPanel\shapesPanel.js" />
     <Content Include="app\components\designerScreen\shapesPanel\shapesPanelListItem.js" />
     <Content Include="app\components\designerScreen\common\roomsCfg.js" />

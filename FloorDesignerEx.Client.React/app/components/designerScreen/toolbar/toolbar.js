@@ -1,5 +1,4 @@
 ﻿import * as React from 'react';
-import $ from 'jquery';
 import { TweenMax } from 'gsap';
 
 import LogoImg from '../../../assets/logo/logo.png';
@@ -170,7 +169,7 @@ class Toolbar extends React.Component {
     onFloorFinderClick(evt) {
 
         if (this.debugMode) console.log("onFloorFinderClick", evt);
-        let url = $(this).data('url');
+        //let url = $(this).data('url');
 
         //window.location.href = url;
     }

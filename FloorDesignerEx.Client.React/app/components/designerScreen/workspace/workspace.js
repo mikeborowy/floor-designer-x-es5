@@ -47,6 +47,9 @@ class Workspace extends React.Component {
     }
 
     render() {
+
+        console.log(this.props)
+
         return (
             <div id="designer-workspace">
                 <Toolbar

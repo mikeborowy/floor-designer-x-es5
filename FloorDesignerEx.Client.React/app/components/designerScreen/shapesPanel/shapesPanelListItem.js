@@ -1,5 +1,4 @@
 ﻿import * as React from 'react';
-import $ from 'jquery';
 import { TweenLite } from 'gsap';
 
 import RoomsCfg from '../common/roomsCfg';
@@ -15,6 +14,10 @@ class ShapesPanelListItem extends React.Component {
         this.currentAction = '';
         this.gridCellWidth = RoomsCfg().CELL_WIDTH;
         this.gridCellHeight = RoomsCfg().CELL_HEIGHT;
+
+        //name = { this.shape.name }
+        //data - shape - w={ this.shape.width }
+        //data - shape - h={ this.shape.height }
 
         this.draggedObj = {};
 
@@ -39,15 +42,15 @@ class ShapesPanelListItem extends React.Component {
     onMouseOver(evt) {
 
         let cfg = this.shapeListBtnConfig.over;
-        let btn = $(evt.currentTarget);
-        let bar = btn.find('.shape-list-sml-bar');
+        let btn = this.item;
+        let bar = btn.childNodes[0];
 
         TweenLite.to(bar, cfg.animationTime, {
             width: cfg.smlBarWidth,
             backgroundColor: cfg.color
         });
 
-        let primaryContent = btn.find('.mdl-list__item-primary-content');
+        let primaryContent = btn.childNodes[1];
         TweenLite.to(primaryContent, cfg.animationTime + cfg.primaryContentAnimationDelay, {
             x: cfg.primaryContentX
         });
@@ -56,49 +59,41 @@ class ShapesPanelListItem extends React.Component {
     onMouseOut(evt) {
 
         let cfg = this.shapeListBtnConfig.normal;
-        let btn = $(evt.currentTarget);
-        let bar = btn.find('.shape-list-sml-bar');
+        let btn = this.item;
+        let bar = btn.childNodes[0];
 
         TweenLite.to(bar, cfg.animationTime, {
             width: cfg.smlBarWidth,
             backgroundColor: cfg.color
         });
 
-        let primaryContent = btn.find('.mdl-list__item-primary-content')
+        let primaryContent = btn.childNodes[1];
         TweenLite.to(primaryContent, cfg.animationTime, {
             x: cfg.primaryContentX
         });
     };
 
     onMouseDown(evt) {
+    
+        let { shape } = this.props;
+        let stageBoardHighlight = document.querySelectorAll('.stage-board-field-highlight');
 
-        var target = $(evt.currentTarget);
-        target.bind('dragstart', this.onDragStart.bind(this));
+        TweenLite.set(stageBoardHighlight, {
+            width: this.gridCellWidth * shape.width,
+            height: this.gridCellHeight * shape.height
+        })
     }
 
     onDragStart(evt) {
 
-        if (this.debugMode) console.log('onDragStart', evt);
-
         this.currentAction = 'addItem';
 
-        let target = $(evt.currentTarget);
-        let w = target.data('shape-w');
-        let h = target.data('shape-h');
-        let sh = target.attr('name');
-        let parent = target.attr('data-parent');
-
-        $('#stage-grid-live')
-            .find('.stage-board-field-highlight')
-            .css({
-                width: (this.gridCellWidth * w),
-                height: (this.gridCellHeight * h)
-            });
+        let { shape } = this.props;
 
         this.draggedObj.id = new Date().valueOf();
-        this.draggedObj.w = (this.gridCellWidth * w);
-        this.draggedObj.h = (this.gridCellHeight * h);
-        this.draggedObj.sh = sh
+        this.draggedObj.w = this.gridCellWidth * shape.width;
+        this.draggedObj.h = this.gridCellHeight * shape.height;
+        this.draggedObj.sh = shape.name;
 
         var evt = new CustomEvent('onDragObject', { detail: this.draggedObj });
         window.dispatchEvent(evt);
@@ -106,11 +101,10 @@ class ShapesPanelListItem extends React.Component {
 
     render() {
         return (
-            <li className="mdl-list__item mdl-list__item--two-line shape-list-btn drag-element"
+            <li ref={div => { this.item = div}}
+                className="mdl-list__item mdl-list__item--two-line shape-list-btn drag-element"
                 draggable="true"
-                name={this.shape.name}
-                data-shape-w={this.shape.width}
-                data-shape-h={this.shape.height}
+                onDrag={this.onDragStart.bind(this)}
                 onMouseOver={this.onMouseOver.bind(this)}
                 onMouseOut={this.onMouseOut.bind(this)}
                 onMouseDown={this.onMouseDown.bind(this)}
