@@ -671,7 +671,7 @@
                 "<div class='shape-delete-inv-btn'/>" +
                 "<i class='material-icons shape-delete-inv-icon'>delete</i>" +
                 "</div>" +
-                "<div class='shape-resize-btn shape-button' data-btn-r='" + (r * (-1)) + "'>" +
+                "<div class='shape-resize-btn shape-button hidden' data-btn-r='" + (r * (-1)) + "'>" +
                 "<div class='shape-resize-inv-btn'/>" +
                 "<i class='material-icons shape-resize-inv-icon'>photo_size_select_small</i>" +
                 "</div>" +

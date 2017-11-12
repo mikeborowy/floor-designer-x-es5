@@ -3,13 +3,13 @@ import SearchPanelFloorListItem from './searchPanelFloorListItem';
 
 const SearchPanelFloorList = (props) => {
 
-    const { floorList } = props; 
+    const { floorList, floorItemActions } = props; 
 
     return (
         <ul id="floors-list" className="demo-list-action mdl-list">
             {
                 floorList.map((floorItem) => {
-                    return <SearchPanelFloorListItem key={floorItem.id} floor={floorItem}/>
+                    return <SearchPanelFloorListItem key={floorItem.id} id={floorItem.id} floor={floorItem} floorItemActions={floorItemActions}/>
                 })
             }
         </ul>

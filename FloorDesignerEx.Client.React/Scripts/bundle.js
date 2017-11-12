@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "28f6906939fd0e442c00"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "242b02631a93ddefbbb0"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -597,7 +597,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "28f6906939fd0e442c00"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "242b02631a93ddefbbb0"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -26699,13 +26699,6 @@
 	    }, {
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
-	            //window.addEventListener("resize", this.updateDimensions);
-	            //$('#zoom-slider').on('input', function () {
-	
-	            //    this.stageScaleNum = (this.value * 0.1) + 1;
-	            //    //this.onZoomStage.bind(this);
-	            //});
-	
 	            window.addEventListener('zoomOccured', this.onZoomStage);
 	        }
 	    }, {
@@ -50889,17 +50882,103 @@
 	        var _this = _possibleConstructorReturn(this, (SearchPanel.__proto__ || Object.getPrototypeOf(SearchPanel)).call(this, props));
 	
 	        _this.state = {
-	            floorList: [{
-	                id: 1,
-	                name: "Floor-1",
-	                width: 12,
-	                height: 12
-	            }]
+	            floorList: []
+	        };
+	
+	        _this.onEditFloor = _this.onEditFloor.bind(_this);
+	        _this.onDeleteFloor = _this.onDeleteFloor.bind(_this);
+	
+	        _this.floorItemActions = {
+	            onEditFloor: _this.onEditFloor,
+	            onDeleteFloor: _this.onDeleteFloor
 	        };
 	        return _this;
 	    }
 	
 	    _createClass(SearchPanel, [{
+	        key: 'onAddFloor',
+	        value: function onAddFloor(evt) {}
+	    }, {
+	        key: 'onEditFloor',
+	        value: function onEditFloor(evt) {
+	
+	            //let selectedFloor = evt.currentTarget;
+	            //let action = "http://localhost:52191/api/floors";
+	            //let data = { id: evt.currentTarget.id };
+	
+	            //$.ajax({
+	            //    type: "GET",
+	            //    url: action,
+	            //    data: data,
+	            //    cache: false,
+	            //    success: function (response) {
+	            //        console.log('response', response)
+	            //    },
+	            //    error: function (xhr, ajaxOptions, thrownError) {
+	            //        if (debugMode) {
+	            //            console.log(xhr, ajaxOptions, thrownError);
+	            //        }
+	            //    }
+	            //});
+	        }
+	    }, {
+	        key: 'onDeleteFloor',
+	        value: function onDeleteFloor(evt) {}
+	    }, {
+	        key: 'getFloorList',
+	        value: function getFloorList() {
+	
+	            var customId = new Date().valueOf();
+	
+	            var floorList = [{
+	                "id": 1,
+	                "officeId": 1,
+	                "name": "Floor 1",
+	                "width": 12,
+	                "height": 10,
+	                "xpos": 0,
+	                "ypos": 0,
+	                "image": "../Images/blueprints/bgnd_12x10.jpg",
+	                "rooms": []
+	            }, {
+	                "id": 3,
+	                "officeId": 1,
+	                "name": "Floor-2",
+	                "width": 8,
+	                "height": 8,
+	                "xpos": 0,
+	                "ypos": 0,
+	                "image": "../Images/blueprints/bgnd_12x10.jpg",
+	                "rooms": [{
+	                    "id": 27, "shape": "shape-room-sqr-3x3", "width": 180, "height": 180, "xpos": 0, "ypos": 0, "rotation": 0, "floorId": 3
+	                }, {
+	                    "id": 28, "shape": "shape-room-l-3x2", "width": 300, "height": 180, "xpos": 0, "ypos": 180, "rotation": 0, "floorId": 3
+	                }]
+	            }];
+	
+	            this.setState({ floorList: floorList });
+	
+	            //let action = "http://localhost:52191/api/floors";
+	            //$.ajax({
+	            //    type: "GET",
+	            //    url: action,
+	            //    cache: false,
+	            //    success: function (response) {
+	            //        console.log('getFloorList', response)
+	            //    },
+	            //    error: function (xhr, ajaxOptions, thrownError) {
+	            //        if (debugMode) {
+	            //            console.log(xhr, ajaxOptions, thrownError);
+	            //        }
+	            //    }
+	            //});
+	        }
+	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            this.getFloorList();
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
 	            return React.createElement(
@@ -50924,7 +51003,7 @@
 	                    { className: 'designer-toolbar-group' },
 	                    React.createElement(_searchPanelFormResult2.default, null),
 	                    React.createElement(_searchPanelCreateFloor2.default, null),
-	                    React.createElement(_searchPanelFloorList2.default, { floorList: this.state.floorList })
+	                    React.createElement(_searchPanelFloorList2.default, { floorList: this.state.floorList, floorItemActions: this.floorItemActions })
 	                )
 	            );
 	        }
@@ -51067,14 +51146,15 @@
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	var SearchPanelFloorList = function SearchPanelFloorList(props) {
-	    var floorList = props.floorList;
+	    var floorList = props.floorList,
+	        floorItemActions = props.floorItemActions;
 	
 	
 	    return React.createElement(
 	        'ul',
 	        { id: 'floors-list', className: 'demo-list-action mdl-list' },
 	        floorList.map(function (floorItem) {
-	            return React.createElement(_searchPanelFloorListItem2.default, { key: floorItem.id, floor: floorItem });
+	            return React.createElement(_searchPanelFloorListItem2.default, { key: floorItem.id, id: floorItem.id, floor: floorItem, floorItemActions: floorItemActions });
 	        })
 	    );
 	};
@@ -51093,7 +51173,7 @@
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(/*! ./~/react-hot-api/modules/index.js */ 8), RootInstanceProvider = __webpack_require__(/*! ./~/react-hot-loader/RootInstanceProvider.js */ 9), ReactMount = __webpack_require__(/*! react-dom/lib/ReactMount */ 6), React = __webpack_require__(/*! react */ 2); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
 	
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -51103,31 +51183,48 @@
 	
 	var React = _interopRequireWildcard(_react);
 	
+	var _jquery = __webpack_require__(/*! jquery */ 121);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	var SearchPanelFloorListItem = function SearchPanelFloorListItem(props) {
 	    var floor = props.floor;
+	    var _props$floorItemActio = props.floorItemActions,
+	        onEditFloor = _props$floorItemActio.onEditFloor,
+	        onDeleteFloor = _props$floorItemActio.onDeleteFloor;
 	
 	
 	    return React.createElement(
-	        "li",
-	        { id: floor.id, className: "mdl-list__item mdl-list-item-fixed floor-list-item", "data-width": floor.width, "data-height": floor.height },
+	        'li',
+	        {
+	            id: floor.id,
+	            className: 'mdl-list__item mdl-list-item-fixed floor-list-item' },
 	        React.createElement(
-	            "div",
-	            { className: "mdl-list__item-primary-content" },
+	            'div',
+	            { className: 'mdl-list__item-primary-content' },
 	            React.createElement(
-	                "div",
-	                { "data-floor-id": floor.id, className: "floor-edit-btn" },
+	                'div',
+	                {
+	                    'data-floor-id': floor.id,
+	                    onClick: onEditFloor,
+	                    className: 'floor-edit-btn' },
 	                floor.name
 	            )
 	        ),
 	        React.createElement(
-	            "button",
-	            { "data-floor-id": floor.id, className: "mdl-button mdl-js-button mdl-button--icon mdl-button-color-blue floor-delete-btn" },
+	            'button',
+	            {
+	                'data-floor-id': floor.id,
+	                onClick: onDeleteFloor,
+	                className: 'mdl-button mdl-js-button mdl-button--icon mdl-button-color-blue floor-delete-btn' },
 	            React.createElement(
-	                "i",
-	                { className: "material-icons" },
-	                "delete"
+	                'i',
+	                { className: 'material-icons' },
+	                'delete'
 	            )
 	        )
 	    );
