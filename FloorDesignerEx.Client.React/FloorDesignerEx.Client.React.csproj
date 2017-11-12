@@ -226,10 +226,6 @@
     <Content Include="Scripts\gsap\utils\Draggable.js" />
     <Content Include="Scripts\gsap\utils\SplitText.js" />
     <Content Include="Scripts\material.js" />
-    <Content Include="stage\stage.js" />
-    <Content Include="stage\stageBoard.js" />
-    <Content Include="stage\stageBoardHighlight.js" />
-    <Content Include="toolbar\toolbar.js" />
     <Content Include="webpack.config.js" />
     <Content Include=".babelrc" />
     <Content Include="package.json" />
@@ -245,7 +241,6 @@
     <Content Include="app\assets\sass\colors.scss" />
     <Content Include="app\components\designerScreen\searchPanel\searchPanel.scss" />
     <Content Include="app\components\designerScreen\workspace\workspace.scss" />
-    <Content Include="workspace\workspace.js" />
     <None Include="compilerconfig.json" />
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
@@ -275,10 +270,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_ReactLayout.cshtml" />
-    <Content Include="stage\stage.scss" />
-    <Content Include="stage\stageItem.scss" />
-    <Content Include="toolbar\toolbar.scss" />
-    <Content Include="workspace\workspace.scss" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
