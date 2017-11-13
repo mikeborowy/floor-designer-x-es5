@@ -10,6 +10,11 @@ class Toolbar extends React.Component {
         super(props)
 
         this.debugMode = false;//this.props.appCfg.debugMode;
+        this.floorNameStyle = {
+            paddingLeft: 20,
+            fontSize: 15,
+            display: "inline-block"
+        }
         this.stageScaleNum = 1;
         this.stageScaleNumMin = 0.2;
         this.stageScaleNumMax = 2;
@@ -18,6 +23,7 @@ class Toolbar extends React.Component {
             floorData: {}
         }
 
+        this.onSelectFloor = this.onSelectFloor.bind(this);
         this.onZoomStage = this.onZoomStage.bind(this);
         this.onZoomSliderChange = this.onZoomSliderChange.bind(this);
         this.onZoomInClick = this.onZoomInClick.bind(this);
@@ -36,6 +42,12 @@ class Toolbar extends React.Component {
 
     }
     /*ZOOM END*/
+
+
+    onSelectFloor(evt) {
+        let floorData = evt.detail;
+        this.setState({ floorData })
+    }
 
     /**
     * Btns Actions START
@@ -109,60 +121,6 @@ class Toolbar extends React.Component {
     onSaveFloorClick(evt) {
 
         if (this.debugMode) console.log("onSaveFloorClick", evt)
-
-        //let rooms = [];
-        //$('.item-box').each(function (i, val) {
-
-        //    let itemBox = $(val)
-
-        //    let room = {
-        //        shape: itemBox.attr('data-box-shape'),
-        //        width: itemBox.attr('data-box-w'),
-        //        height: itemBox.attr('data-box-h'),
-        //        xpos: itemBox.attr('data-box-x'),
-        //        ypos: itemBox.attr('data-box-y'),
-        //        rotation: itemBox.attr('data-box-r'),
-        //        floorId: floorCfg.id
-        //    };
-
-        //    rooms.push(room);
-        //});
-
-        //let floor = {
-        //    id: floorCfg.id,
-        //    officeId: floorCfg.officeId,
-        //    name: floorCfg.name,
-        //    width: floorCfg.width,
-        //    height: floorCfg.height,
-        //    xpos: floorCfg.xpos,
-        //    ypos: floorCfg.ypos,
-        //    image: imgPath,
-        //    rooms: rooms
-        //}
-
-        //let action = "/api/floors/" + floorCfg.id;
-        //let data = JSON.stringify(floor);
-
-        //$.ajax({
-        //    contentType: "application/json",
-        //    dataType: 'json',
-        //    type: "PUT",
-        //    url: action,
-        //    data: data,
-        //    cache: false,
-        //    success: function (response) {
-
-        //        if (debugMode) {
-        //            console.log(response);
-        //        }
-
-        //    },
-        //    error: function (xhr, ajaxOptions, thrownError) {
-        //        if (debugMode) {
-        //            console.log(xhr, ajaxOptions, thrownError);
-        //        }
-        //    }
-        //});
     }
     /*SAVE END*/
 
@@ -184,10 +142,13 @@ class Toolbar extends React.Component {
 
     componentDidMount() {
         window.addEventListener('zoomOccured', this.onZoomStage);
+        window.addEventListener('onSelectFloor', this.onSelectFloor);
+
     }
 
     componentWillUnmount() {
-        //window.removeEventListener("resize", this.updateDimensions);
+        window.removeEventListener('zoomOccured', this.onZoomStage);
+        window.removeEventListener('onSelectFloor', this.onSelectFloor);
     }
 
     render() {
@@ -198,6 +159,7 @@ class Toolbar extends React.Component {
                         <div className="mdl-layout__header-row">
                             <div className="mdl-layout-title logo">
                                 <img src={LogoImg} width="100" />
+                                <div style={this.floorNameStyle}>{this.state.floorData.name}</div>
                             </div>
                             <div className="mdl-layout-spacer"></div>
                             <nav className="mdl-navigation mdl-layout--large-screen-only">

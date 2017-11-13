@@ -66,8 +66,7 @@ class Stage extends React.Component {
         this.stageScaleNumMax = 2;
 
         this.state = {
-            imgPath: BlueprintImg,
-            floorCfg: {
+            floorData: {
                 id: 4,
                 officeId: 1,
                 name: "Floor 1",
@@ -75,7 +74,7 @@ class Stage extends React.Component {
                 height: 10,
                 xpos: 0,
                 ypos: 0,
-                image: null,
+                image: BlueprintImg,
                 rooms: []
             },
             stageBoardsList: [],
@@ -85,19 +84,20 @@ class Stage extends React.Component {
 
         //set style
         let { gridCellWidth, gridCellHeight } = this.cfg;
-        let { floorCfg } = this.state;
+        let { floorData } = this.state;
 
         this.stageStyle = {
-            width: floorCfg.width * gridCellWidth,
-            height: floorCfg.height * gridCellHeight
+            width: floorData.width * gridCellWidth,
+            height: floorData.height * gridCellHeight
         }
 
         //bind functions to this class
         this.initStageAsDraggable = this.initStageAsDraggable.bind(this);
         this.createGrid = this.createGrid.bind(this);
         this.clearStage = this.clearStage.bind(this);
-        this.onZoomStage = this.onZoomStage.bind(this);
         this.zoomStage = this.zoomStage.bind(this);
+        this.onZoomStage = this.onZoomStage.bind(this);
+        this.onSelectFloor = this.onSelectFloor.bind(this);
 
         this.onMouseWheel = this.onMouseWheel.bind(this);
 
@@ -113,13 +113,14 @@ class Stage extends React.Component {
         this.onStageItemDelete = this.onStageItemDelete.bind(this);
     }
 
+
     createGrid() {
 
         let { gridCellWidth, gridCellHeight } = this.cfg;
-        let { stageBoardsList, floorCfg } = this.state;
+        let { stageBoardsList, floorData } = this.state;
 
-        let gridColumns = floorCfg.width;
-        let gridRows = floorCfg.height;
+        let gridColumns = floorData.width;
+        let gridRows = floorData.height;
         let list = [];
 
         const w = 1;
@@ -142,10 +143,6 @@ class Stage extends React.Component {
         }
     };
    
-    loadItems() {
-
-    }
-
     initStageAsDraggable() {
 
         let draggableObj = Draggable.create(this.stageContainer, {
@@ -443,6 +440,10 @@ class Stage extends React.Component {
         }
     }
 
+    onSelectFloor(evt) {
+        let floorData = evt.detail;
+        this.setState({ floorData });
+    }
     /**
      * EVENT HANDLERS END
      */
@@ -476,6 +477,7 @@ class Stage extends React.Component {
         window.addEventListener('zoomOccured', this.onZoomStage);
         window.addEventListener('onDragObject', this.onListItemDrag);
         window.addEventListener('onDropObject', this.onListItemDrop);
+        window.addEventListener('onSelectFloor', this.onSelectFloor);
 
         document.querySelector('#stage-grid-live').addEventListener("click", this.onStageClick.bind(this));
     }
@@ -489,6 +491,7 @@ class Stage extends React.Component {
         window.removeEventListener('zoomOccured', this.onZoomStage);
         window.removeEventListener('onDragObject', this.onListItemDrag);
         window.removeEventListener('onDropObject', this.onListItemDrop);
+        window.removeEventListener('onSelectFloor', this.onSelectFloor);
 
         document.querySelector('#stage-grid-live').removeEventListener("click", this.onStageClick.bind(this));
     }
@@ -532,7 +535,7 @@ class Stage extends React.Component {
                     id="stage"
                     ref={div => { this.stage = div }}
                     style={this.stageStyle}>
-                    <img id="stage-bgnd" src={this.state.imgPath} />
+                    <img id="stage-bgnd" src={this.state.floorData.image} />
                     <div id="stage-grid-bgnd">
                         {
                             this.state.stageBoardsList.map(function (boardItem) {

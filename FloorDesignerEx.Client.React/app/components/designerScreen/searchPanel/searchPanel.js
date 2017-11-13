@@ -28,6 +28,12 @@ class SearchPanel extends React.Component {
 
     onEditFloor(evt) {
 
+        let floorId = evt.currentTarget.id * 1;
+        let findId = this.state.floorList.map(floor => (floor.id)).indexOf(floorId);
+        let selectedFloor = this.state.floorList[findId];
+        let event = new CustomEvent('onSelectFloor', { detail: selectedFloor });
+        window.dispatchEvent(event);
+
         //let selectedFloor = evt.currentTarget;
         //let action = "http://localhost:52191/api/floors";
         //let data = { id: evt.currentTarget.id };
@@ -48,8 +54,8 @@ class SearchPanel extends React.Component {
         //});
     }
 
-     onDeleteFloor(evt) {
-     }
+    onDeleteFloor(evt) {
+    }
 
     getFloorList() {
 
@@ -64,7 +70,7 @@ class SearchPanel extends React.Component {
                 "height": 10,
                 "xpos": 0,
                 "ypos": 0,
-                "image": "../Images/blueprints/bgnd_12x10.jpg",
+                "image": "../Images/bgnd_12x10.jpg",
                 "rooms": []
             },
             {
@@ -75,7 +81,7 @@ class SearchPanel extends React.Component {
                 "height": 8,
                 "xpos": 0,
                 "ypos": 0,
-                "image": "../Images/blueprints/bgnd_12x10.jpg",
+                "image": "../Images/bgnd_12x10.jpg",
                 "rooms": [
                     {
                         "id": 27, "shape": "shape-room-sqr-3x3", "width": 180, "height": 180, "xpos": 0, "ypos": 0, "rotation": 0, "floorId": 3
@@ -119,9 +125,9 @@ class SearchPanel extends React.Component {
                     <SearchPanelForm />
                 </group>
                 <group className="designer-toolbar-group">
-                    <SearchPanelFormResult/>
-                    <SearchPanelCreateFloor/>
-                    <SearchPanelFloorList floorList={this.state.floorList} floorItemActions={this.floorItemActions}/>
+                    <SearchPanelFormResult />
+                    <SearchPanelCreateFloor />
+                    <SearchPanelFloorList floorList={this.state.floorList} floorItemActions={this.floorItemActions} />
                 </group>
             </div>
         )
