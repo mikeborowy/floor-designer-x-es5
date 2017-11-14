@@ -3,15 +3,23 @@ import SearchPanelFloorListItem from './searchPanelFloorListItem';
 
 const SearchPanelFloorList = (props) => {
 
-    const { floorList, floorItemActions } = props; 
+    const { floorList } = props; 
+
+    function renderFloors() {
+
+        if (floorList.length > 0)
+        {
+            return floorList.map((floorItem) => {
+                return <SearchPanelFloorListItem key={floorItem.id} id={floorItem.id} floor={floorItem} />
+            })
+        }
+    }
 
     return (
         <ul id="floors-list" className="demo-list-action mdl-list">
-            {
-                floorList.map((floorItem) => {
-                    return <SearchPanelFloorListItem key={floorItem.id} id={floorItem.id} floor={floorItem} floorItemActions={floorItemActions}/>
-                })
-            }
+        {
+            renderFloors()
+        }
         </ul>
     )
 }

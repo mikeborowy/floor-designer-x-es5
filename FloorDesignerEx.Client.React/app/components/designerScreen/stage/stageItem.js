@@ -119,7 +119,6 @@ class StageItem extends React.Component {
             TweenLite.set(invBtn, { scaleX: 5, scaleY: 5 });
 
             this.setupTransforamtionPoint(this.props);
-
             this.currentAction = itemActions.ROTATE;
             this.currentDraggable = this.createDraggableStageItem(this.stageItem, this.currentAction);
             //this.createDraggableStageItem(this.stageItem, this.currentAction);
@@ -127,19 +126,15 @@ class StageItem extends React.Component {
     }
 
     onDeleteBtnDown(evt) {
-
         if (this.props.isSelected) {
             this.onDelete(this.props);
         }
     }
 
     onActionBtnUp(evt) {
-
         if (this.currentAction != itemActions.NONE && this.props.isSelected) {
-
             let invBtn = evt.currentTarget.childNodes[0];
             TweenLite.set(invBtn, { scaleX: 1, scaleY: 1 });
-
             this.currentAction = itemActions.NONE;
             //this.killDraggable();
         }

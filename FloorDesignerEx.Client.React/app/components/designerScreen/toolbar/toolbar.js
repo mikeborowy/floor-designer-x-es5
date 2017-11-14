@@ -20,7 +20,7 @@ class Toolbar extends React.Component {
         this.stageScaleNumMax = 2;
 
         this.state = {
-            floorData: {}
+            floorData: []
         }
 
         this.onSelectFloor = this.onSelectFloor.bind(this);
@@ -36,10 +36,8 @@ class Toolbar extends React.Component {
 
     /*ZOOM START*/
     onZoomStage(evt) {
-
         this.stageScaleNum = evt.detail;
         document.querySelector('#zoom-slider').MaterialSlider.change((this.stageScaleNum - 1) * 10);
-
     }
     /*ZOOM END*/
 
@@ -136,22 +134,16 @@ class Toolbar extends React.Component {
      * Btns Actions END
      */
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return true;
-    }
-
     componentDidMount() {
         window.addEventListener('zoomOccured', this.onZoomStage);
-        window.addEventListener('onSelectFloor', this.onSelectFloor);
-
     }
 
     componentWillUnmount() {
         window.removeEventListener('zoomOccured', this.onZoomStage);
-        window.removeEventListener('onSelectFloor', this.onSelectFloor);
     }
 
     render() {
+
         return (
             <div id="designer-toolbar">
                 <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -224,7 +216,9 @@ class Toolbar extends React.Component {
                             </nav>
                         </div>
                     </header>
-                    <SearchPanel />
+                    <SearchPanel
+                        floorList={this.props.floorList}
+                    />
                 </div>
             </div>
         )

@@ -4,7 +4,16 @@ import $ from 'jquery';
 const SearchPanelFloorListItem = (props) => {
 
     const { floor } = props;
-    const { onEditFloor, onDeleteFloor } = props.floorItemActions;
+
+    function onEditFloor(evt) {
+        let event = new CustomEvent('onEditFloor', { detail: { floorId: evt.currentTarget.id * 1} });
+        window.dispatchEvent(event);
+    }
+
+    function onDeleteFloor(evt) {
+        let event = new CustomEvent('onDeleteFloor', { detail: { floorId: evt.currentTarget.id * 1 } });
+        window.dispatchEvent(event);
+    }
 
     return (
         <li
