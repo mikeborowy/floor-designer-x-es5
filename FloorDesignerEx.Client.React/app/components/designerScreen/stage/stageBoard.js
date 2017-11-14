@@ -8,7 +8,7 @@ const StageBoard = ({ id, width, height, top, left }) => {
         top: top,
         left: left,
         width: width,
-        height: height 
+        height: height
     };
 
     return (

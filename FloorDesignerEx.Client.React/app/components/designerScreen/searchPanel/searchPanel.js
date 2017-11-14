@@ -8,8 +8,6 @@ const SearchPanel = (props) => {
 
     const { floorList } = props;
 
-    console.log('SearchPanel', floorList)
-
     return (
         <div className="mdl-layout__drawer">
             <group className="designer-toolbar-group">

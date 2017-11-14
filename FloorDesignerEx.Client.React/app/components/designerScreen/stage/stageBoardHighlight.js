@@ -14,7 +14,8 @@ class StageBoardHighlight extends React.Component {
             top: props.top,
             left: props.left,
             width: props.width,
-            height: props.height
+            height: props.height,
+            backgroundColor: 'rgba(123,123,123,0.5)'
         };
 
         this.currentAction = '';

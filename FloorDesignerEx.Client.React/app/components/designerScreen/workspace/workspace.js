@@ -1,4 +1,5 @@
 ﻿import * as React from 'react';
+import ReactTransitionGroup from 'react-addons-transition-group'
 
 import Toolbar from '../toolbar/toolbar';
 import ShapesPanel from '../shapesPanel/shapesPanel';
@@ -11,10 +12,22 @@ class Workspace extends React.Component {
     constructor(props) {
         super(props)
 
+        this.floorDummy = {
+            id: -1,
+            officeId: -1,
+            name: "",
+            width: 0,
+            height: 0,
+            xpos: 0,
+            ypos: 0,
+            image: '',
+            rooms: []
+        }
+
         this.state = {
             zoom: 1,
             floorList: [],
-            selectedFloor: {}
+            selectedFloor: this.floorDummy
         }
 
         this.currentAction = '';
@@ -35,7 +48,7 @@ class Workspace extends React.Component {
         let windowWidth = window.innerWidth;
         let windowHeight = window.innerHeight;
 
-        document.querySelector("#shapes-panel").setAttribute('style', 'height:' + (windowHeight - toolbarHeight) + 'px')
+        document.querySelector("#shapes-panel").setAttribute('style', 'height:' + (windowHeight - toolbarHeight) + 'px');
     }
     /* HELPERS END */
 
@@ -88,7 +101,7 @@ class Workspace extends React.Component {
                 "height": 8,
                 "xpos": 0,
                 "ypos": 0,
-                "image": "../Images/bgnd_12x10.jpg",
+                "image": "",
                 "rooms": [
                     {
                         "id": 27, "shape": "shape-room-sqr-3x3", "width": 180, "height": 180, "xpos": 0, "ypos": 0, "rotation": 0, "floorId": 3

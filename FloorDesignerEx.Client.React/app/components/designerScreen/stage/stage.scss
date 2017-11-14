@@ -11,13 +11,6 @@
     margin-left: 375px;
 
     #stage {
-        /*width: 620px;*/
-        /*height: 600px;*/
-        /*margin: auto;*/
-        /*top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;*/
         background-color: white;
         @include box-shadow( 6px, 6px, 2px, 0px, rgba(50, 50, 50, 0.29));
         /*z-index:2;*/
@@ -25,10 +18,10 @@
             display: inline-block;
         }
 
-        img{
-            position:absolute;
-            top:0;
-            left:0;
+        img {
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
         #stage-grid-bgnd {

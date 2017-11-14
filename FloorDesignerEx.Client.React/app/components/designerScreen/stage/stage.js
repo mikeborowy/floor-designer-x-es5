@@ -3,6 +3,7 @@ import * as React from 'react';
 import ReactTransitionGroup from 'react-addons-transition-group'
 //import { assign } from 'babel-polyfill';
 //3rd party libs
+import TweenLite from 'gsap';
 import TweenMax from 'gsap';
 import Draggable from 'gsap/Draggable';
 import ScrollToPlugin from "gsap/src/uncompressed/plugins/ScrollToPlugin";
@@ -40,7 +41,18 @@ class Stage extends React.Component {
             }
         };
 
-        //this.droppedItems = [];
+        this.floorDummy = {
+            id: -1,
+            officeId: -1,
+            name: "",
+            width: 0,
+            height: 0,
+            xpos: 0,
+            ypos: 0,
+            image: '',
+            rooms: []
+        }
+
         this.dummyObj = {
             id: -1,
             x: 0,
@@ -55,20 +67,7 @@ class Stage extends React.Component {
             dragBounds: null
         };
 
-        this.floorDummy = {
-            id: 4,
-            officeId: 1,
-            name: "Floor 1",
-            width: 12,
-            height: 10,
-            xpos: 0,
-            ypos: 0,
-            image: BlueprintImg,
-            rooms: []
-        }
-
         this.draggedObj = this.dummyObj;
-
         this.currentDraggable = null;
 
         this.zoomMouse = false;
@@ -76,27 +75,22 @@ class Stage extends React.Component {
         this.stageScaleNum = 1;
         this.stageScaleNumMin = 0.2;
         this.stageScaleNumMax = 2;
+        this.stageBoardsList = [];
 
         this.state = {
             floor: {},
-            stageBoardsList: [],
             selectedItem: this.dummyObj,
             itemsAtStage: []
         }
 
-        //set style
-        let { gridCellWidth, gridCellHeight } = this.cfg;
-        let { floor } = this.state;
-
-       
         //bind functions to this class
         this.initStageAsDraggable = this.initStageAsDraggable.bind(this);
+        this.createStage = this.createStage.bind(this);
         this.createGrid = this.createGrid.bind(this);
         this.clearStage = this.clearStage.bind(this);
         this.zoomStage = this.zoomStage.bind(this);
-        this.onZoomStage = this.onZoomStage.bind(this);
-        this.onSelectFloor = this.onSelectFloor.bind(this);
 
+        this.onZoomStage = this.onZoomStage.bind(this);
         this.onMouseWheel = this.onMouseWheel.bind(this);
 
         this.onKeyDown = this.onKeyDown.bind(this);
@@ -109,17 +103,40 @@ class Stage extends React.Component {
         this.onStageItemSelect = this.onStageItemSelect.bind(this);
         this.onStageItemUpdate = this.onStageItemUpdate.bind(this);
         this.onStageItemDelete = this.onStageItemDelete.bind(this);
+
+        this.onUpdateDimensions = this.onUpdateDimensions.bind(this);
     }
 
 
-    createGrid() {
+    createStage(floor) {
+
+        TweenLite.set(this.stage, {
+            width: floor.width * this.cfg.gridCellWidth,
+            height: floor.height * this.cfg.gridCellHeight
+        })
+
+
+        //TweenLite.set(this.stageItemsContainer, {
+        //    width: floor.width * this.cfg.gridCellWidth,
+        //    height: floor.height * this.cfg.gridCellHeight
+        //})
+
+        //this.stage.style.width = floor.width * this.cfg.gridCellWidth;
+        //this.stage.style.height = floor.height * this.cfg.gridCellHeight;
+    }
+
+    createGrid(floor) {
 
         let { gridCellWidth, gridCellHeight } = this.cfg;
-        let { stageBoardsList, floor } = this.state;
 
+        
         let gridColumns = floor.width;
         let gridRows = floor.height;
-        let list = [];
+
+        console.log('gridColumns', gridColumns)
+        console.log('gridRows', gridColumns)
+
+        this.stageBoardsList = [];
 
         const w = 1;
         const h = 1;
@@ -129,16 +146,18 @@ class Stage extends React.Component {
             let x = (i * gridCellWidth) % (gridColumns * gridCellWidth);
             let y = Math.floor(i / gridColumns) * gridCellHeight;
 
-            list.push({
+            console.log(x,y)
+
+            this.stageBoardsList.push({
                 id: i,
                 width: (gridCellWidth * w),
                 height: (gridCellHeight * h),
                 top: y,
                 left: x
             })
-
-            this.setState({ stageBoardsList: list });
         }
+
+        console.log('createGrid', this.stageBoardsList)
     };
 
     initStageAsDraggable() {
@@ -410,7 +429,7 @@ class Stage extends React.Component {
 
     onUpdateDimensions() {
 
-        console.log('onUpdateDimensions')
+        console.log('onUpdateDimensions');
 
         let toolbarHeight = document.querySelector("#designer-toolbar").offsetHeight;
         let windowWidth = window.innerWidth;
@@ -423,25 +442,21 @@ class Stage extends React.Component {
 
         if (this.stage.offsetHeight <= parentHeight) {
             let posY = (parentHeight / 2 - this.stage.offsetHeight / 2);
-            TweenMax.to(this.stage, 0, { y: posY });
+            TweenLite.set(this.stage, { y: posY });
         }
         else {
-            TweenMax.to(this.stage, 0, { y: 0 });
+            TweenLite.set(this.stage, { y: 0 });
         }
 
         if (this.stage.offsetWidth <= parentWidth) {
             let posX = (parentWidth / 2 - this.stage.offsetWidth / 2)
-            TweenMax.to(this.stage, 0, { x: posX })
+            TweenLite.set(this.stage, { x: posX })
         }
         else {
-            TweenMax.to(this.stage, 0, { x: 0 })
+            TweenLite.set(this.stage, { x: 0 })
         }
     }
 
-    onSelectFloor(evt) {
-        let floor = evt.detail;
-        this.setState({ floor });
-    }
     /**
      * EVENT HANDLERS END
      */
@@ -453,21 +468,33 @@ class Stage extends React.Component {
     //shouldComponentUpdate(nextProps, nextState) {
     //    //if (nextState.selectedItem.id === -1)
     //    //    return false;
-    //    if (this.state.itemsAtStage.length != nextState.itemsAtStage.length)
-    //        return true;
-    //    if (this.state.stageBoardsList.length != nextState.stageBoardsList.length)
-    //        return true;
+    //    //if (this.state.itemsAtStage.length != nextState.itemsAtStage.length)
+    //    //    return true;
+    //    //if (this.state.stageBoardsList.length != nextState.stageBoardsList.length)
+    //    //    return true;
 
     //    return true;
     //}
 
+
+
+    componentWillReceiveProps(newProps) {
+
+        this.setState({ floor: newProps.floor })
+
+        this.createStage(newProps.floor);
+        this.createGrid(newProps.floor);
+        this.onUpdateDimensions();
+    }
+
     componentDidMount() {
 
-        this.createGrid();
-        this.initStageAsDraggable();
+        this.createStage(this.props.floor);
+        this.createGrid(this.props.floor);
         this.onUpdateDimensions();
+        this.initStageAsDraggable();
 
-        window.addEventListener("resize", this.onUpdateDimensions.bind(this));
+        window.addEventListener("resize", this.onUpdateDimensions);
         window.addEventListener('wheel', this.onMouseWheel);
         window.addEventListener("keydown", this.onKeyDown);
         window.addEventListener("keyup", this.onKeyUp);
@@ -480,7 +507,7 @@ class Stage extends React.Component {
     }
 
     componentWillUnmount() {
-        window.removeEventListener("resize", this.onUpdateDimensions.bind(this));
+        window.removeEventListener("resize", this.onUpdateDimensions);
         window.removeEventListener('wheel', this.onMouseWheel);
         window.removeEventListener("keydown", this.onKeyDown);
         window.removeEventListener("keyup", this.onKeyUp);
@@ -493,11 +520,6 @@ class Stage extends React.Component {
     }
 
     render() {
-
-        let stageStyle = {
-            width: this.props.floor.width * this.cfg.gridCellWidth,
-            height: this.props.floor.height * this.cfg.gridCellHeight
-        }
 
         let selectedItem = this.state.selectedItem;
         let currentDraggable = this.currentDraggable;
@@ -514,9 +536,6 @@ class Stage extends React.Component {
             stageItem.onStageItemSelect = onStageItemSelect;
             stageItem.onStageItemUpdate = onStageItemUpdate;
             stageItem.onStageItemDelete = onStageItemDelete;
-
-            console.log('render', i, stageItem.id, stageItem.sh);
-
             //stageItem.onMouseDown = onStageItemMouseDown;
             //stageItem.onMouseUp = onStageItemMouseUp;
 
@@ -525,7 +544,23 @@ class Stage extends React.Component {
                 {...stageItem}
             />
         })
-            console.log('stage', this.props)
+
+
+        let stageBoardList = this.stageBoardsList.map(function (boardItem) {
+
+            return <StageBoard
+                key={boardItem.id}
+                {...boardItem}
+            />
+        })
+
+        let stageBoardHighlight = this.stageBoardsList.map(function (boardItem) {
+
+            return <StageBoardHighlight
+                key={boardItem.id}
+                {...boardItem}
+            />
+        })
 
         return (
             <div
@@ -534,36 +569,22 @@ class Stage extends React.Component {
                 <div id="stage-top"></div>
                 <div
                     id="stage"
-                    ref={div => { this.stage = div }}
-                    style={this.stageStyle}>
-                    <img id="stage-bgnd" src={this.props.floor.image} />
+                    ref={div => { this.stage = div }} >
+                    <img id="stage-bgnd" />
                     <div id="stage-grid-bgnd">
-                        {
-                            this.state.stageBoardsList.map(function (boardItem) {
-
-                                return <StageBoard
-                                    key={boardItem.id}
-                                    {...boardItem}
-                                />
-                            })
-                        }
+                    {
+                        stageBoardList
+                    }
                     </div>
                     <div id="stage-grid-live">
-                        {
-                            this.state.stageBoardsList.map(function (boardItem) {
-
-                                return <StageBoardHighlight
-                                    key={boardItem.id}
-                                    {...boardItem}
-                                />
-                            })
-                        }
+                    {
+                        stageBoardHighlight
+                    }
                     </div>
                     <ReactTransitionGroup
                         component="div"
                         id="stage-items-container"
-                        ref={div => { this.stageItemsContainer = div }}
-                        style={this.stageStyle} >
+                        ref={div => { this.stageItemsContainer = div }}>
                         {
                             itemsAtStage
                         }
