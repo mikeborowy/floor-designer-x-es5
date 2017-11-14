@@ -99,25 +99,12 @@ class ShapesPanelListItem extends React.Component {
         window.dispatchEvent(evt);
     }
 
-    OnDragDrop(evt) {
-
-        let { shape } = this.props;
-        let stageBoardHighlight = document.querySelectorAll('.stage-board-field-highlight');
-
-        TweenLite.set(stageBoardHighlight, {
-            width: this.gridCellWidth ,
-            height: this.gridCellHeight
-        })
-    }
-
     render() {
         return (
             <li ref={div => { this.item = div}}
                 className="mdl-list__item mdl-list__item--two-line shape-list-btn drag-element"
                 draggable="true"
                 onDrag={this.onDragStart.bind(this)}
-                onDragLeave={this.OnDragDrop.bind(this)}
-                onDragEnd={this.OnDragDrop.bind(this)}
                 onMouseOver={this.onMouseOver.bind(this)}
                 onMouseOut={this.onMouseOut.bind(this)}
                 onMouseDown={this.onMouseDown.bind(this)}

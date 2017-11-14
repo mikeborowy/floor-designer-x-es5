@@ -400,7 +400,7 @@ class StageItem extends React.Component {
 
     componentWillLeave(callback) {
         //TweenLite.set(this.stageItem, { x: this.props.x, y: this.props.y });
-        TweenLite.to(this.stageItem, 0.2, { scale: 0, onComplete: callback });
+        TweenLite.to(this.stageItem, 0.5, { scale: 0, onComplete: callback });
     }
 
     componentDidMount(prevProps, prevState) {

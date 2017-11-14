@@ -75,10 +75,11 @@ class Stage extends React.Component {
         this.stageScaleNum = 1;
         this.stageScaleNumMin = 0.2;
         this.stageScaleNumMax = 2;
-        this.stageBoardsList = [];
+        //this.stageBoardsList = [];
 
         this.state = {
             floor: {},
+            stageBoardsList:[],
             selectedItem: this.dummyObj,
             itemsAtStage: []
         }
@@ -112,7 +113,8 @@ class Stage extends React.Component {
 
         TweenLite.set(this.stage, {
             width: floor.width * this.cfg.gridCellWidth,
-            height: floor.height * this.cfg.gridCellHeight
+            height: floor.height * this.cfg.gridCellHeight,
+            backgroundColor: 'white'
         })
 
 
@@ -128,27 +130,21 @@ class Stage extends React.Component {
     createGrid(floor) {
 
         let { gridCellWidth, gridCellHeight } = this.cfg;
-
         
         let gridColumns = floor.width;
         let gridRows = floor.height;
 
-        console.log('gridColumns', gridColumns)
-        console.log('gridRows', gridColumns)
+        let stageBoardsList = [];
 
-        this.stageBoardsList = [];
-
-        const w = 1;
-        const h = 1;
+        let w = 1;
+        let h = 1;
 
         for (let i = 0; i < gridRows * gridColumns; i++) {
 
             let x = (i * gridCellWidth) % (gridColumns * gridCellWidth);
             let y = Math.floor(i / gridColumns) * gridCellHeight;
 
-            console.log(x,y)
-
-            this.stageBoardsList.push({
+            stageBoardsList.push({
                 id: i,
                 width: (gridCellWidth * w),
                 height: (gridCellHeight * h),
@@ -157,7 +153,7 @@ class Stage extends React.Component {
             })
         }
 
-        console.log('createGrid', this.stageBoardsList)
+        this.setState({ stageBoardsList });
     };
 
     initStageAsDraggable() {
@@ -464,23 +460,7 @@ class Stage extends React.Component {
     /**
     * REACT LIFECYCLES START
     */
-
-    //shouldComponentUpdate(nextProps, nextState) {
-    //    //if (nextState.selectedItem.id === -1)
-    //    //    return false;
-    //    //if (this.state.itemsAtStage.length != nextState.itemsAtStage.length)
-    //    //    return true;
-    //    //if (this.state.stageBoardsList.length != nextState.stageBoardsList.length)
-    //    //    return true;
-
-    //    return true;
-    //}
-
-
-
     componentWillReceiveProps(newProps) {
-
-        this.setState({ floor: newProps.floor })
 
         this.createStage(newProps.floor);
         this.createGrid(newProps.floor);
@@ -546,15 +526,17 @@ class Stage extends React.Component {
         })
 
 
-        let stageBoardList = this.stageBoardsList.map(function (boardItem) {
+        let stageBoardList = this.state.stageBoardsList.map(function (boardItem) {
 
             return <StageBoard
-                key={boardItem.id}
+                key={( 'b' + boardItem.id)}
                 {...boardItem}
             />
         })
 
-        let stageBoardHighlight = this.stageBoardsList.map(function (boardItem) {
+        let stageBoardHighlight = this.state.stageBoardsList.map(function (boardItem) {
+
+            console.log(boardItem.id, boardItem.height)
 
             return <StageBoardHighlight
                 key={boardItem.id}
@@ -570,7 +552,7 @@ class Stage extends React.Component {
                 <div
                     id="stage"
                     ref={div => { this.stage = div }} >
-                    <img id="stage-bgnd" />
+                    <img id="stage-bgnd" src={this.props.floor.image}/>
                     <div id="stage-grid-bgnd">
                     {
                         stageBoardList
