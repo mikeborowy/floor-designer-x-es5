@@ -91,7 +91,28 @@ class Workspace extends React.Component {
                 "xpos": 0,
                 "ypos": 0,
                 "image": "../Images/bgnd_12x10.jpg",
-                "rooms": []
+                "rooms": [
+                    {
+                        "id": 27,
+                        "floorId": 3,
+                        "shape": "shape-room-sqr-3x3",
+                        "width": 180,
+                        "height": 180,
+                        "xpos": 0,
+                        "ypos": 0,
+                        "rotation": 0
+                    },
+                    {
+                        "id": 28,
+                        "floorId": 3,
+                        "shape": "shape-room-l-3x2",
+                        "width": 180,
+                        "height": 180,
+                        "xpos": 0,
+                        "ypos": 180,
+                        "rotation": 0
+                    }
+                ]
             },
             {
                 "id": 3,
@@ -102,14 +123,7 @@ class Workspace extends React.Component {
                 "xpos": 0,
                 "ypos": 0,
                 "image": "",
-                "rooms": [
-                    {
-                        "id": 27, "shape": "shape-room-sqr-3x3", "width": 180, "height": 180, "xpos": 0, "ypos": 0, "rotation": 0, "floorId": 3
-                    },
-                    {
-                        "id": 28, "shape": "shape-room-l-3x2", "width": 300, "height": 180, "xpos": 0, "ypos": 180, "rotation": 0, "floorId": 3
-                    }
-                ]
+                "rooms": []
             }
         ]
 

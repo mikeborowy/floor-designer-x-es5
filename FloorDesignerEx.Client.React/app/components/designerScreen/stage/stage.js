@@ -106,8 +106,9 @@ class Stage extends React.Component {
         this.onStageItemDelete = this.onStageItemDelete.bind(this);
 
         this.onUpdateDimensions = this.onUpdateDimensions.bind(this);
-    }
 
+        this.setItemsAtStage = this.setItemsAtStage.bind(this);
+    }
 
     createStage(floor) {
 
@@ -116,7 +117,6 @@ class Stage extends React.Component {
             height: floor.height * this.cfg.gridCellHeight,
             backgroundColor: 'white'
         })
-
 
         //TweenLite.set(this.stageItemsContainer, {
         //    width: floor.width * this.cfg.gridCellWidth,
@@ -268,6 +268,27 @@ class Stage extends React.Component {
         }
         return null;
     };
+
+    setItemsAtStage(array) {
+
+        let itemsAtStage = array.map(item => {
+            return {
+                id: item.id,
+                x: item.xpos,
+                y: item.ypos,
+                r: item.rotation,
+                tox: 0,
+                toy: 0,
+                w: item.width,
+                h: item.height,
+                sh: item.shape,
+                isSelected: false,
+                dragBounds: null
+            }
+        });
+
+        this.setState({ itemsAtStage });
+    }
     /**
      * EVENT HANDLERS START
      */
@@ -464,6 +485,8 @@ class Stage extends React.Component {
 
         this.createStage(newProps.floor);
         this.createGrid(newProps.floor);
+        this.setItemsAtStage(newProps.floor.rooms);
+
         this.onUpdateDimensions();
     }
 
@@ -471,6 +494,8 @@ class Stage extends React.Component {
 
         this.createStage(this.props.floor);
         this.createGrid(this.props.floor);
+        this.setItemsAtStage(this.props.floor.rooms);
+
         this.onUpdateDimensions();
         this.initStageAsDraggable();
 
@@ -524,8 +549,6 @@ class Stage extends React.Component {
                 {...stageItem}
             />
         })
-
-
         let stageBoardList = this.state.stageBoardsList.map(function (boardItem) {
 
             return <StageBoard
@@ -533,7 +556,6 @@ class Stage extends React.Component {
                 {...boardItem}
             />
         })
-
         let stageBoardHighlight = this.state.stageBoardsList.map(function (boardItem) {
 
             console.log(boardItem.id, boardItem.height)
