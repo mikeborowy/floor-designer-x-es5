@@ -1,5 +1,4 @@
 ﻿import * as React from 'react';
-import ReactTransitionGroup from 'react-addons-transition-group'
 
 import Toolbar from '../toolbar/toolbar';
 import ShapesPanel from '../shapesPanel/shapesPanel';
@@ -110,7 +109,7 @@ class Workspace extends React.Component {
                         "height": 180,
                         "xpos": 0,
                         "ypos": 180,
-                        "rotation": 0
+                        "rotation": 90
                     }
                 ]
             },

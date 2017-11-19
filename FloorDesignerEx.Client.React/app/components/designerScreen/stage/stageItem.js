@@ -1,4 +1,5 @@
 ﻿import * as React from 'react';
+
 import TweenMax from 'gsap';
 import TweenLite from 'gsap';
 import Draggable from 'gsap/Draggable';
@@ -91,7 +92,6 @@ class StageItem extends React.Component {
     }
 
     onDelete(item) {
-        console.log('onDelete', item.id, item.sh, this.props.key, );
         this.props.onStageItemDelete(item);
     }
 
@@ -401,10 +401,10 @@ class StageItem extends React.Component {
     //    TweenLite.from(this.stageItem, 0.5, { scale: 0, onComplete: callback });
     //}
 
-    componentWillLeave(callback) {
-        TweenLite.to(this.stageItem, 0.5, { scale: 0, onComplete: callback });
-        ////TweenLite.set(this.stageItem, { x: this.props.x, y: this.props.y });
-    }
+    //componentWillLeave(callback) {
+    //    TweenLite.to(this.stageItem, 0.5, { scale: 0, onComplete: callback });
+    //    ////TweenLite.set(this.stageItem, { x: this.props.x, y: this.props.y });
+    //}
 
     componentDidUpdate() {
         this.setInitPosition(this.props);
@@ -414,7 +414,6 @@ class StageItem extends React.Component {
 
         this.setInitPosition(this.props);
         TweenLite.from(this.stageItem, 0.5, { scale: 0 });
-
 
         this.dragBtn.addEventListener('mousedown', this.onDragBtnDown.bind(this));
         this.dragBtn.addEventListener('mouseup', this.onActionBtnUp.bind(this));
@@ -462,6 +461,7 @@ class StageItem extends React.Component {
             <div
                 ref={(thisDiv) => { this.stageItem = thisDiv; }}
                 className='item-box'
+                id={'box-item-'+ this.props.id}
                 style={style}>
                 <div
                     className="shape-bgnd-container"

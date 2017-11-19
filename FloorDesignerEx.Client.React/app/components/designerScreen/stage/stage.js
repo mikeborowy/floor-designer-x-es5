@@ -1,6 +1,6 @@
 ﻿//react libs
 import * as React from 'react';
-import ReactTransitionGroup from 'react-addons-transition-group'
+import ReactTransitionGroup from 'react-addons-transition-group';
 //import { assign } from 'babel-polyfill';
 //3rd party libs
 import TweenLite from 'gsap';
@@ -85,7 +85,7 @@ class Stage extends React.Component {
         this.state = {
             floor: {},
             stageBoardsList: [],
-            gridColumns:0,
+            gridColumns: 0,
             gridRows: 0,
             selectedItem: this.dummyObj,
             itemsAtStage: [],
@@ -259,7 +259,7 @@ class Stage extends React.Component {
             stageBoardsList.push(bolardTile)
         }
 
-        this.setState({ stageBoardsList});
+        this.setState({ stageBoardsList });
     };
 
     setItemsAtStage(array) {
@@ -306,6 +306,20 @@ class Stage extends React.Component {
     }
 
     onStageItemDelete(deletedItem) {
+
+        let setDelete = this.setDelete.bind(this)
+
+        TweenLite.to(document.querySelector('#box-item-' + deletedItem.id), 0.2, {
+            scale: 0,
+            onComplete: function () {
+
+                setDelete(deletedItem);
+            }
+        });
+    }
+
+    setDelete(deletedItem) {
+
         let findId;
         this.setState((prevState, props) => {
 
@@ -320,7 +334,6 @@ class Stage extends React.Component {
                 itemAtStage: tempItemsAtStage
             }
         });
-
     }
 
     onStageItemSelect(selectedItem) {
@@ -496,6 +509,7 @@ class Stage extends React.Component {
     /**
     * REACT LIFECYCLES START
     */
+
     componentWillReceiveProps(newProps) {
 
         this.setGrid(newProps.floor);
@@ -508,17 +522,16 @@ class Stage extends React.Component {
         this.initStageAsDraggable();
         this.onUpdateDimensions();
 
-        if (prevProps.floor.id != this.props.floor.id)
-        {
+        if (prevProps.floor.id != this.props.floor.id) {
             const tiles = document.querySelectorAll('.stage-board-field');
 
-            tiles.forEach((item, i)=> {
-                TweenMax.from(item, 0.5, {
+            tiles.forEach((item, i) => {
+                TweenMax.from(item, 0.2, {
                     alpha: 0,
                     delay: (i * 0.01),
                     onComplete: function () {
-                        if (i === tiles.length - 1)
-                        {
+                        if (i === tiles.length - 1) {
+
                         }
                     }
                 })
@@ -533,6 +546,7 @@ class Stage extends React.Component {
             //    })
             //})
         }
+
     }
 
     componentDidMount() {
@@ -597,8 +611,6 @@ class Stage extends React.Component {
         })
         let stageBoardList = this.state.stageBoardsList.map(function (boardItem) {
 
-            console.log()
-
             return <StageBoard
                 key={_.uniqueId('b')}
                 {...boardItem}
@@ -628,7 +640,7 @@ class Stage extends React.Component {
                     </div>
                     <div id="stage-grid-live">
                         {
-                           stageBoardHighlight
+                            stageBoardHighlight
                         }
                     </div>
                     <div

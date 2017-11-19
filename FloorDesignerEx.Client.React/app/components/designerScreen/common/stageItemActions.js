@@ -4,7 +4,8 @@
     SELECTED : "selected",
     UNSELECTED : "unselected",
     CREATED : "created",
-    DELETE: "delete",
+    UPDATED: "updated",
+    DELETED: "deleted",
     //actions of GSAP actionsOfDraggable
     DRAG: "x,y",
     RESIZE: "resize",
