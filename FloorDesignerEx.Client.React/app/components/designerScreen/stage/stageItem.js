@@ -58,6 +58,7 @@ class StageItem extends React.Component {
         this.createDraggableStageItem = this.createDraggableStageItem.bind(this);
         this.killDraggable = this.killDraggable.bind(this);
 
+        this.setInitPosition = this.setInitPosition.bind(this);
         this.updateButtonsAngle = this.updateButtonsAngle.bind(this);
         this.setupTransforamtionPoint = this.setupTransforamtionPoint.bind(this);
     }
@@ -354,8 +355,12 @@ class StageItem extends React.Component {
         // TweenLite.set(invBtn, { scaleX: 1, scaleY: 1 })
     }
 
-    updateButtonsAngle(rotation) {
+    setInitPosition(props) {
+        TweenLite.set(this.stageItem, { x: props.x, y: props.y, rotation: props.r });
+        this.updateButtonsAngle(props.r)
+    }
 
+    updateButtonsAngle(rotation) {
         let r = rotation % 360;
         TweenLite.set(this.stageItem.querySelectorAll('.shape-button'), { rotation: - r });
     }
@@ -391,20 +396,25 @@ class StageItem extends React.Component {
     * ANIMATIONS HANDLERS & HELPERS END
     */
 
-    componentWillEnter(callback) {
-        TweenLite.set(this.stageItem, { x: this.props.x, y: this.props.y });
-        TweenLite.from(this.stageItem, 0.5, { scale: 0, onComplete: callback });
-    }
+    //componentWillEnter(callback) {
+    //    TweenLite.set(this.stageItem, { x: this.props.x, y: this.props.y });
+    //    TweenLite.from(this.stageItem, 0.5, { scale: 0, onComplete: callback });
+    //}
 
     componentWillLeave(callback) {
         TweenLite.to(this.stageItem, 0.5, { scale: 0, onComplete: callback });
         ////TweenLite.set(this.stageItem, { x: this.props.x, y: this.props.y });
     }
 
+    componentDidUpdate() {
+        this.setInitPosition(this.props);
+    }
+
     componentDidMount(prevProps, prevState) {
 
-        //TweenLite.set(this.stageItem, { x: this.props.x, y: this.props.y, rotation: this.props.r });
-        //this.updateButtonsAngle();
+        this.setInitPosition(this.props);
+        TweenLite.from(this.stageItem, 0.5, { scale: 0 });
+
 
         this.dragBtn.addEventListener('mousedown', this.onDragBtnDown.bind(this));
         this.dragBtn.addEventListener('mouseup', this.onActionBtnUp.bind(this));
@@ -430,7 +440,7 @@ class StageItem extends React.Component {
     }
 
     render() {
-        let { w, h, sh} = this.props;
+        let { w, h, sh } = this.props;
 
         let style = {
             position: 'absolute',

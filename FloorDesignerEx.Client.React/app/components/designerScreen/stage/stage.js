@@ -512,17 +512,17 @@ class Stage extends React.Component {
         {
             const tiles = document.querySelectorAll('.stage-board-field');
 
-            //tiles.forEach((item, i)=> {
-            //    TweenMax.from(item, 0.5, {
-            //        alpha: 0,
-            //        delay: (i * 0.01),
-            //        onComplete: function () {
-            //            if (i === tiles.length - 1)
-            //            {
-            //            }
-            //        }
-            //    })
-            //})
+            tiles.forEach((item, i)=> {
+                TweenMax.from(item, 0.5, {
+                    alpha: 0,
+                    delay: (i * 0.01),
+                    onComplete: function () {
+                        if (i === tiles.length - 1)
+                        {
+                        }
+                    }
+                })
+            })
 
             //const itemsAtStage = document.querySelectorAll('.item-box');
 
@@ -631,14 +631,13 @@ class Stage extends React.Component {
                            stageBoardHighlight
                         }
                     </div>
-                    <ReactTransitionGroup
-                        component="div"
+                    <div
                         id="stage-items-container"
                         ref={div => { this.stageItemsContainer = div }}>
                         {
                             itemsAtStage
                         }
-                    </ReactTransitionGroup>
+                    </div>
                 </div>
                 <div id="stage-bottom"></div>
             </div>
