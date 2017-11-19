@@ -346,8 +346,6 @@ class StageItem extends React.Component {
 
     killDraggable() {
 
-        console.log(this.currentDraggable)
-
         if (this.currentDraggable !== null) {
             //this.currentDraggable[0].disable();
             this.currentDraggable[0].kill();
@@ -399,11 +397,14 @@ class StageItem extends React.Component {
     }
 
     componentWillLeave(callback) {
-        //TweenLite.set(this.stageItem, { x: this.props.x, y: this.props.y });
         TweenLite.to(this.stageItem, 0.5, { scale: 0, onComplete: callback });
+        ////TweenLite.set(this.stageItem, { x: this.props.x, y: this.props.y });
     }
 
     componentDidMount(prevProps, prevState) {
+
+        //TweenLite.set(this.stageItem, { x: this.props.x, y: this.props.y, rotation: this.props.r });
+        //this.updateButtonsAngle();
 
         this.dragBtn.addEventListener('mousedown', this.onDragBtnDown.bind(this));
         this.dragBtn.addEventListener('mouseup', this.onActionBtnUp.bind(this));

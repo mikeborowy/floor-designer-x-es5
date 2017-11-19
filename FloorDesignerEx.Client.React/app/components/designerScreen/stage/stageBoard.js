@@ -13,7 +13,7 @@ const StageBoard = ({ id, width, height, top, left }) => {
 
     return (
         <div id={id} className="stage-board-field" style={divStyle}>
-        </div>  
+        </div>
     );
 }
 

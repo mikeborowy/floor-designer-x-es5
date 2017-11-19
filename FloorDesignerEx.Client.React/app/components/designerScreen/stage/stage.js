@@ -7,6 +7,7 @@ import TweenLite from 'gsap';
 import TweenMax from 'gsap';
 import Draggable from 'gsap/Draggable';
 import ScrollToPlugin from "gsap/src/uncompressed/plugins/ScrollToPlugin";
+import _ from 'lodash';
 //cfg files
 import RoomsCfg from '../common/roomsCfg';
 import BlueprintImg from '../../../assets/blueprints/bgnd_12x10.jpg';
@@ -26,6 +27,11 @@ class Stage extends React.Component {
         const roomsCfg = RoomsCfg();
 
         this.cfg = {
+            animationOfStageItem: {
+                showAnimationTime: 0.5,
+                leaveAnimationTime: 0.3,
+                delayAnimationTime: 0
+            },
             gridCellWidth: roomsCfg.CELL_WIDTH,
             gridCellHeight: roomsCfg.CELL_HEIGHT,
             paddingLeft: roomsCfg.SHAPE_CFG.PADDING_LEFT,
@@ -69,7 +75,6 @@ class Stage extends React.Component {
 
         this.draggedObj = this.dummyObj;
         this.currentDraggable = null;
-
         this.zoomMouse = false;
         this.dragStage = false;
         this.stageScaleNum = 1;
@@ -79,16 +84,17 @@ class Stage extends React.Component {
 
         this.state = {
             floor: {},
-            stageBoardsList:[],
+            stageBoardsList: [],
+            gridColumns:0,
+            gridRows: 0,
             selectedItem: this.dummyObj,
-            itemsAtStage: []
+            itemsAtStage: [],
+            uniqId: (new Date().valueOf())
         }
 
         //bind functions to this class
         this.initStageAsDraggable = this.initStageAsDraggable.bind(this);
         this.createStage = this.createStage.bind(this);
-        this.createGrid = this.createGrid.bind(this);
-        this.clearStage = this.clearStage.bind(this);
         this.zoomStage = this.zoomStage.bind(this);
 
         this.onZoomStage = this.onZoomStage.bind(this);
@@ -107,7 +113,11 @@ class Stage extends React.Component {
 
         this.onUpdateDimensions = this.onUpdateDimensions.bind(this);
 
+        //setters
+        this.setGrid = this.setGrid.bind(this);
         this.setItemsAtStage = this.setItemsAtStage.bind(this);
+
+        //helpers
     }
 
     createStage(floor) {
@@ -127,35 +137,6 @@ class Stage extends React.Component {
         //this.stage.style.height = floor.height * this.cfg.gridCellHeight;
     }
 
-    createGrid(floor) {
-
-        let { gridCellWidth, gridCellHeight } = this.cfg;
-        
-        let gridColumns = floor.width;
-        let gridRows = floor.height;
-
-        let stageBoardsList = [];
-
-        let w = 1;
-        let h = 1;
-
-        for (let i = 0; i < gridRows * gridColumns; i++) {
-
-            let x = (i * gridCellWidth) % (gridColumns * gridCellWidth);
-            let y = Math.floor(i / gridColumns) * gridCellHeight;
-
-            stageBoardsList.push({
-                id: i,
-                width: (gridCellWidth * w),
-                height: (gridCellHeight * h),
-                top: y,
-                left: x
-            })
-        }
-
-        this.setState({ stageBoardsList });
-    };
-
     initStageAsDraggable() {
 
         let draggableObj = Draggable.create(this.stageContainer, {
@@ -167,13 +148,6 @@ class Stage extends React.Component {
 
         Draggable.get("#stage-container").disable();
     }
-
-    clearStage() {
-
-        //$('#stage-grid-bgnd').html('');
-        //$('#stage-grid-live').html('');
-        //$('#stage-items-container').html('');
-    };
 
     zoomStage() {
 
@@ -255,18 +229,37 @@ class Stage extends React.Component {
     }
 
     /**
-     * HELPERS START
+     * STATE SETTERS START
      */
-    findValueByKey(array, key) {
 
-        for (let i = 0; i < array.length; i++) {
+    setGrid(floor) {
 
-            if (array[i][key]) {
+        let { gridCellWidth, gridCellHeight } = this.cfg;
 
-                return array[i][key];
+        let gridColumns = floor.width;
+        let gridRows = floor.height;
+
+        let stageBoardsList = [];
+
+        let w = 1;
+        let h = 1;
+
+        for (let i = 0; i < gridRows * gridColumns; i++) {
+
+            let x = (i * gridCellWidth) % (gridColumns * gridCellWidth);
+            let y = Math.floor(i / gridColumns) * gridCellHeight;
+
+            const bolardTile = {
+                width: (gridCellWidth * w),
+                height: (gridCellHeight * h),
+                top: y,
+                left: x
             }
+
+            stageBoardsList.push(bolardTile)
         }
-        return null;
+
+        this.setState({ stageBoardsList});
     };
 
     setItemsAtStage(array) {
@@ -289,23 +282,8 @@ class Stage extends React.Component {
 
         this.setState({ itemsAtStage });
     }
-    /**
-     * EVENT HANDLERS START
-     */
-    onListItemDrag(evt) {
-        //combine x,y to draggedObj
-        this.draggedObj = Object.assign({}, this.draggedObj, evt.detail);
-    }
 
-    onListItemDrop(evt) {
-        //combine id,w,h,sh to draggedObj
-        let item = Object.assign({}, this.draggedObj, evt.detail, { isSelected: true });
-        //pass extracted items
-        this.onStageItemAdd(item);
-    }
-
-    /* Item Handlers START */
-
+    //-- Item Start
     onStageItemAdd(item) {
         //save all items to state 
         this.setState({
@@ -354,8 +332,47 @@ class Stage extends React.Component {
             }
         })
     }
+    //-- Item End
 
-    /* Item Handlers END */
+    /**
+     * STATE SETTERS END
+     */
+
+    /**
+     * HELPERS START
+     */
+    findValueByKey(array, key) {
+
+        for (let i = 0; i < array.length; i++) {
+
+            if (array[i][key]) {
+
+                return array[i][key];
+            }
+        }
+        return null;
+    };
+
+    /**
+     * EVENT HANDLERS START
+     */
+    onListItemDrag(evt) {
+        //combine x,y to draggedObj
+        this.draggedObj = Object.assign({}, this.draggedObj, evt.detail);
+    }
+
+    onListItemDrop(evt) {
+
+        //combine id,w,h,sh to draggedObj, add animation speed
+        let item = Object.assign({}, this.draggedObj, evt.detail, {
+            isSelected: true,
+            showAnimationTime: this.cfg.animationOfStageItem.showAnimationTime,
+            leaveAnimationTime: this.cfg.animationOfStageItem.leaveAnimationTime,
+            delayAnimationTime: this.cfg.animationOfStageItem.delayAnimationTime
+        });
+        //pass extracted items
+        this.onStageItemAdd(item);
+    }
 
     onStageClick(evt) {
 
@@ -446,8 +463,6 @@ class Stage extends React.Component {
 
     onUpdateDimensions() {
 
-        console.log('onUpdateDimensions');
-
         let toolbarHeight = document.querySelector("#designer-toolbar").offsetHeight;
         let windowWidth = window.innerWidth;
         let windowHeight = window.innerHeight;
@@ -483,21 +498,52 @@ class Stage extends React.Component {
     */
     componentWillReceiveProps(newProps) {
 
-        this.createStage(newProps.floor);
-        this.createGrid(newProps.floor);
+        this.setGrid(newProps.floor);
         this.setItemsAtStage(newProps.floor.rooms);
+    }
 
+    componentDidUpdate(prevProps, prevState) {
+
+        this.createStage(this.props.floor);
+        this.initStageAsDraggable();
         this.onUpdateDimensions();
+
+        if (prevProps.floor.id != this.props.floor.id)
+        {
+            const tiles = document.querySelectorAll('.stage-board-field');
+
+            //tiles.forEach((item, i)=> {
+            //    TweenMax.from(item, 0.5, {
+            //        alpha: 0,
+            //        delay: (i * 0.01),
+            //        onComplete: function () {
+            //            if (i === tiles.length - 1)
+            //            {
+            //            }
+            //        }
+            //    })
+            //})
+
+            //const itemsAtStage = document.querySelectorAll('.item-box');
+
+            //itemsAtStage.forEach((item, i) => {
+
+            //    TweenMax.from(item, 1, {
+            //        scale: 0
+            //    })
+            //})
+        }
     }
 
     componentDidMount() {
 
-        this.createStage(this.props.floor);
-        this.createGrid(this.props.floor);
-        this.setItemsAtStage(this.props.floor.rooms);
+        //this.createStage(this.props.floor);
+        //this.initStageAsDraggable();
 
-        this.onUpdateDimensions();
-        this.initStageAsDraggable();
+        //this.setGrid(this.props.floor);
+        //this.setItemsAtStage(this.props.floor.rooms);
+
+        //this.onUpdateDimensions();
 
         window.addEventListener("resize", this.onUpdateDimensions);
         window.addEventListener('wheel', this.onMouseWheel);
@@ -551,17 +597,17 @@ class Stage extends React.Component {
         })
         let stageBoardList = this.state.stageBoardsList.map(function (boardItem) {
 
+            console.log()
+
             return <StageBoard
-                key={( 'b' + boardItem.id)}
+                key={_.uniqueId('b')}
                 {...boardItem}
             />
         })
         let stageBoardHighlight = this.state.stageBoardsList.map(function (boardItem) {
 
-            console.log(boardItem.id, boardItem.height)
-
             return <StageBoardHighlight
-                key={boardItem.id}
+                key={_.uniqueId('bh')}
                 {...boardItem}
             />
         })
@@ -574,16 +620,16 @@ class Stage extends React.Component {
                 <div
                     id="stage"
                     ref={div => { this.stage = div }} >
-                    <img id="stage-bgnd" src={this.props.floor.image}/>
-                    <div id="stage-grid-bgnd">
-                    {
-                        stageBoardList
-                    }
+                    <img id="stage-bgnd" src={this.props.floor.image} />
+                    <div id="stage-grid-bgnd" >
+                        {
+                            stageBoardList
+                        }
                     </div>
                     <div id="stage-grid-live">
-                    {
-                        stageBoardHighlight
-                    }
+                        {
+                           stageBoardHighlight
+                        }
                     </div>
                     <ReactTransitionGroup
                         component="div"
