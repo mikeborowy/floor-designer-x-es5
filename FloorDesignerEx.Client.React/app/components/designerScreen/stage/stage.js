@@ -70,7 +70,8 @@ class Stage extends React.Component {
             h: 0,
             sh: '',
             isSelected: false,
-            dragBounds: null
+            dragBounds: null,
+            actions: {}
         };
 
         this.draggedObj = this.dummyObj;
@@ -523,30 +524,44 @@ class Stage extends React.Component {
         this.onUpdateDimensions();
 
         if (prevProps.floor.id != this.props.floor.id) {
+
+            TweenLite.set(document.querySelector('#stage-bgnd'), {
+                alpha: 0
+            })
+
+            const itemBoxes = document.querySelectorAll('.item-box');
+            itemBoxes.forEach((box, i) => {
+                TweenLite.set(box, {
+                    scale: 0
+                });
+            });
+
             const tiles = document.querySelectorAll('.stage-board-field');
 
             tiles.forEach((item, i) => {
-                TweenMax.from(item, 0.2, {
+                TweenLite.from(item, 0.2, {
                     alpha: 0,
                     delay: (i * 0.01),
                     onComplete: function () {
-                        if (i === tiles.length - 1) {
+                        if (i === tiles.length * 0.5) {
+
+                            TweenLite.to(document.querySelector('#stage-bgnd'), 0.2, {
+                                alpha: 1
+                            })
+
+                            itemBoxes.forEach((box, i) => {
+                                TweenLite.to(box, 1, {
+                                    scale: 1,
+                                    ease: Elastic.easeOut,
+                                    delay: (i * 0.1)
+                                });
+                            });
 
                         }
                     }
                 })
             })
-
-            //const itemsAtStage = document.querySelectorAll('.item-box');
-
-            //itemsAtStage.forEach((item, i) => {
-
-            //    TweenMax.from(item, 1, {
-            //        scale: 0
-            //    })
-            //})
         }
-
     }
 
     componentDidMount() {
@@ -594,7 +609,7 @@ class Stage extends React.Component {
         //let onStageItemMouseDown = this.onStageItemMouseDown.bind(this);
         //let onStageItemMouseUp = this.onStageItemMouseUp.bind(this);
 
-        let itemsAtStage = this.state.itemsAtStage.map(function (stageItem, i) {
+        let itemsAtStage = this.state.itemsAtStage.map((stageItem, i) => {
 
             stageItem.isSelected = (selectedItem.id === stageItem.id) ? true : false;
             stageItem.dragBounds = document.querySelector('#stage');
@@ -606,17 +621,18 @@ class Stage extends React.Component {
 
             return <StageItem
                 key={stageItem.id}
+                delay={i}
                 {...stageItem}
             />
         })
-        let stageBoardList = this.state.stageBoardsList.map(function (boardItem) {
+        let stageBoardList = this.state.stageBoardsList.map(boardItem => {
 
             return <StageBoard
                 key={_.uniqueId('b')}
                 {...boardItem}
             />
         })
-        let stageBoardHighlight = this.state.stageBoardsList.map(function (boardItem) {
+        let stageBoardHighlight = this.state.stageBoardsList.map(boardItem => {
 
             return <StageBoardHighlight
                 key={_.uniqueId('bh')}
@@ -632,7 +648,9 @@ class Stage extends React.Component {
                 <div
                     id="stage"
                     ref={div => { this.stage = div }} >
-                    <img id="stage-bgnd" src={this.props.floor.image} />
+                    <img
+                        id="stage-bgnd"
+                        src={this.props.floor.image} />
                     <div id="stage-grid-bgnd" >
                         {
                             stageBoardList
@@ -643,13 +661,13 @@ class Stage extends React.Component {
                             stageBoardHighlight
                         }
                     </div>
-                    <div
+                    <ReactTransitionGroup component="div"
                         id="stage-items-container"
                         ref={div => { this.stageItemsContainer = div }}>
                         {
                             itemsAtStage
                         }
-                    </div>
+                    </ReactTransitionGroup>
                 </div>
                 <div id="stage-bottom"></div>
             </div>

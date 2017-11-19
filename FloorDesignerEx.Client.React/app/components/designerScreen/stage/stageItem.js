@@ -23,8 +23,7 @@ class StageItem extends React.Component {
             paddingTop: roomsCfg.SHAPE_CFG.PADDING_TOP,
             itemBorderSize: roomsCfg.SHAPE_CFG.BORDER_SIZE,
             itemColor: roomsCfg.COLOR_WHITE_01,
-            itemSelectedColor: roomsCfg.COLOR_BLUE_01,
-            itemActions: itemActions
+            itemSelectedColor: roomsCfg.COLOR_BLUE_01
         }
 
         let { itemSelectedColor, itemColor } = this.cfg;
@@ -69,7 +68,7 @@ class StageItem extends React.Component {
         let { isSelected } = this.props;
 
         let tempIsSelected = isSelected ? false : true;
-        let selectedItem = Object.assign({}, this.props, { isSelected: tempIsSelected });
+        let selectedItem = Object.assign({}, this.props, { isSelected: tempIsSelected, actions: tempIsSelected ? itemActions.SELECTED : itemActions.UNSELECTED });
 
         if (tempIsSelected)
             this.props.onStageItemSelect(selectedItem);
@@ -80,7 +79,7 @@ class StageItem extends React.Component {
     onUpdate(newProps) {
 
         let tempNewProps = {};
-
+        tempNewProps.actions = itemActions.UPDATED;
         if (newProps.hasOwnProperty('x')) tempNewProps.x = newProps.x;
         if (newProps.hasOwnProperty('y')) tempNewProps.y = newProps.y;
         if (newProps.hasOwnProperty('r')) tempNewProps.r = newProps.r;
@@ -222,7 +221,7 @@ class StageItem extends React.Component {
         const throwProps = true;
         const rotationSnap = 90;
 
-        let { gridCellWidth, gridCellHeight, itemActions } = this.cfg;
+        let { gridCellWidth, gridCellHeight } = this.cfg;
         let { dragBounds } = this.props;
         let x, y, r, w, h, resizeW, resizeH;
         let currentDraggable = this.currentDraggable;
@@ -407,13 +406,17 @@ class StageItem extends React.Component {
     //}
 
     componentDidUpdate() {
-        this.setInitPosition(this.props);
+        //this.setInitPosition(this.props);
     }
 
     componentDidMount(prevProps, prevState) {
 
         this.setInitPosition(this.props);
-        TweenLite.from(this.stageItem, 0.5, { scale: 0 });
+
+        if (this.props.actions === itemActions.CREATED)
+            TweenLite.from(this.stageItem, 0.5, { scale: 0 });
+        //else
+        //    TweenLite.from(this.stageItem, 0.2, { scale: 0, delay: this.props.delay * 0.1  });
 
         this.dragBtn.addEventListener('mousedown', this.onDragBtnDown.bind(this));
         this.dragBtn.addEventListener('mouseup', this.onActionBtnUp.bind(this));

@@ -2,6 +2,8 @@
 import { TweenLite } from 'gsap';
 
 import RoomsCfg from '../common/roomsCfg';
+import { itemActions } from '../common/stageItemActions';
+
 
 class ShapesPanelListItem extends React.Component {
 
@@ -94,6 +96,7 @@ class ShapesPanelListItem extends React.Component {
         this.draggedObj.w = this.gridCellWidth * shape.width;
         this.draggedObj.h = this.gridCellHeight * shape.height;
         this.draggedObj.sh = shape.name;
+        this.draggedObj.actions = itemActions.CREATED;
 
         var evt = new CustomEvent('onDragObject', { detail: this.draggedObj });
         window.dispatchEvent(evt);
