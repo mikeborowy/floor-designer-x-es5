@@ -1,4 +1,4 @@
-﻿import { shapesGFX } from '../../../assets/shapes/shapesGFX';
+﻿import { shapesGFX } from '../../assets/shapes/shapesGFX';
 
 const shapesList = () => {
     return [

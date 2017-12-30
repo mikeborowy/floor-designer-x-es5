@@ -5,8 +5,8 @@ import TweenLite from 'gsap';
 import Draggable from 'gsap/Draggable';
 import ThrowPropsPlugin from 'gsap/src/uncompressed/plugins/ThrowPropsPlugin';
 
-import RoomsCfg from '../common/roomsCfg';
-import { itemActions, actionsOfDraggable } from '../common/stageItemActions';
+import RoomsCfg from '../../common/roomsCfg';
+import { itemActions, actionsOfDraggable } from '../../common/stageItemActions';
 
 class StageItem extends React.Component {
 

@@ -1,8 +1,8 @@
 ﻿import * as React from 'react';
 import { TweenLite } from 'gsap';
 
-import RoomsCfg from '../common/roomsCfg';
-import { itemActions } from '../common/stageItemActions';
+import RoomsCfg from '../../common/roomsCfg';
+import { itemActions } from '../../common/stageItemActions';
 
 
 class ShapesPanelListItem extends React.Component {

@@ -4,12 +4,15 @@ import Toolbar from '../toolbar/toolbar';
 import ShapesPanel from '../shapesPanel/shapesPanel';
 import Stage from '../stage/stage';
 
-import RoomsCfg from '../common/roomsCfg';
+import RoomsCfg from '../../common/roomsCfg';
+import InitialState  from '../../common/initialState';
 
 class Workspace extends React.Component {
 
     constructor(props) {
         super(props)
+
+        console.log(InitialState.floorList);
 
         this.floorDummy = {
             id: -1,
@@ -78,54 +81,7 @@ class Workspace extends React.Component {
     /* HTTP CALL REQUESTS START */
     getFloorList() {
 
-        let customId = new Date().valueOf();
-
-        let floorList = [
-            {
-                "id": 1,
-                "officeId": 1,
-                "name": "Floor 1",
-                "width": 12,
-                "height": 10,
-                "xpos": 0,
-                "ypos": 0,
-                "image": "../Images/bgnd_12x10.jpg",
-                "rooms": [
-                    {
-                        "id": 27,
-                        "floorId": 3,
-                        "shape": "shape-room-sqr-3x3",
-                        "width": 180,
-                        "height": 180,
-                        "xpos": 0,
-                        "ypos": 0,
-                        "rotation": 0
-                    },
-                    {
-                        "id": 28,
-                        "floorId": 3,
-                        "shape": "shape-room-l-3x2",
-                        "width": 180,
-                        "height": 180,
-                        "xpos": 0,
-                        "ypos": 180,
-                        "rotation": 90
-                    }
-                ]
-            },
-            {
-                "id": 3,
-                "officeId": 1,
-                "name": "Floor-2",
-                "width": 8,
-                "height": 8,
-                "xpos": 0,
-                "ypos": 0,
-                "image": "",
-                "rooms": []
-            }
-        ]
-
+        let floorList = InitialState.floorList;
         this.setState({ floorList })
 
         //let action = "http://localhost:52191/api/floors";

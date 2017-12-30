@@ -9,9 +9,9 @@ import Draggable from 'gsap/Draggable';
 import ScrollToPlugin from "gsap/src/uncompressed/plugins/ScrollToPlugin";
 import _ from 'lodash';
 //cfg files
-import RoomsCfg from '../common/roomsCfg';
+import RoomsCfg from '../../common/roomsCfg';
 import BlueprintImg from '../../../assets/blueprints/bgnd_12x10.jpg';
-import { itemActions, actionsOfDraggable } from '../common/stageItemActions';
+import { itemActions, actionsOfDraggable } from '../../common/stageItemActions';
 
 //components
 import StageBoard from './stageBoard';
@@ -648,9 +648,7 @@ class Stage extends React.Component {
                 <div
                     id="stage"
                     ref={div => { this.stage = div }} >
-                    <img
-                        id="stage-bgnd"
-                        src={this.props.floor.image} />
+                    {this.props.floor.image && (<img id="stage-bgnd" src={this.props.floor.image} />)}
                     <div id="stage-grid-bgnd" >
                         {
                             stageBoardList

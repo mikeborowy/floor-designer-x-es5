@@ -1,5 +1,5 @@
 ﻿import * as React from 'react';
-import ShapesListCfg from '../common/shapesCfg';
+import ShapesListCfg from '../../common/shapesCfg';
 import ShapesPanelListItem from './shapesPanelListItem';
 
 class ShapesPanel extends React.Component {
