@@ -270,7 +270,8 @@
     #shapes-panel #shapes-box .mdl-list__item-primary-content {
       margin-left: 15px; }
     #shapes-panel #shapes-box #shapes-list .shape-list-size {
-      display: inline-block; }
+      display: inline-block;
+      padding-right: 5px; }
     #shapes-panel #shapes-box #shapes-list .shape-list-title {
       padding-left: 10px; }
     #shapes-panel #shapes-box #shapes-list .shape-list-sml-bar {

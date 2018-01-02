@@ -3,14 +3,13 @@ import * as React from 'react';
 import ReactTransitionGroup from 'react-addons-transition-group';
 //import { assign } from 'babel-polyfill';
 //3rd party libs
-import TweenLite from 'gsap';
 import TweenMax from 'gsap';
 import Draggable from 'gsap/Draggable';
 import ScrollToPlugin from "gsap/src/uncompressed/plugins/ScrollToPlugin";
 import _ from 'lodash';
 //cfg files
 import RoomsCfg from '../../common/roomsCfg';
-import BlueprintImg from '../../../assets/blueprints/bgnd_12x10.jpg';
+//import BlueprintImg from '../../../assets/blueprints/bgnd_12x10.jpg';
 import { itemActions, actionsOfDraggable } from '../../common/stageItemActions';
 
 //components
@@ -86,11 +85,8 @@ class Stage extends React.Component {
         this.state = {
             floor: {},
             stageBoardsList: [],
-            gridColumns: 0,
-            gridRows: 0,
             selectedItem: this.dummyObj,
-            itemsAtStage: [],
-            uniqId: (new Date().valueOf())
+            itemsAtStage: []
         }
 
         //bind functions to this class
@@ -121,21 +117,29 @@ class Stage extends React.Component {
         //helpers
     }
 
-    createStage(floor) {
+    createStage(floor, prevFloor) {
 
-        TweenLite.set(this.stage, {
+        TweenMax.set(this.stage, {
             width: floor.width * this.cfg.gridCellWidth,
             height: floor.height * this.cfg.gridCellHeight,
             backgroundColor: 'white'
-        })
+            //transformOrigin: "" + (floor.width * 0.5) + "px " + (floor.height * 0.5)  + "px"
+        });
 
-        //TweenLite.set(this.stageItemsContainer, {
-        //    width: floor.width * this.cfg.gridCellWidth,
-        //    height: floor.height * this.cfg.gridCellHeight
-        //})
+        let prevWidth = prevFloor.width * this.cfg.gridCellWidth;
+        let prevHeight =  prevFloor.height * this.cfg.gridCellHeight;
 
-        //this.stage.style.width = floor.width * this.cfg.gridCellWidth;
-        //this.stage.style.height = floor.height * this.cfg.gridCellHeight;
+        this.onUpdateDimensions();
+
+        TweenMax.from(this.stage, 0.5, {
+            width: prevWidth,
+            height: prevHeight,
+   
+            //onComplete: onUpdateDimensions
+        });
+
+        //this.onUpdateDimensions();
+
     }
 
     initStageAsDraggable() {
@@ -257,10 +261,11 @@ class Stage extends React.Component {
                 left: x
             }
 
-            stageBoardsList.push(bolardTile)
+            stageBoardsList.push(bolardTile);
         }
 
-        this.setState({ stageBoardsList });
+        return stageBoardsList;
+        //this.setState({ stageBoardsList });
     };
 
     setItemsAtStage(array) {
@@ -281,7 +286,7 @@ class Stage extends React.Component {
             }
         });
 
-        this.setState({ itemsAtStage });
+        return itemsAtStage;
     }
 
     //-- Item Start
@@ -310,7 +315,7 @@ class Stage extends React.Component {
 
         let setDelete = this.setDelete.bind(this)
 
-        TweenLite.to(document.querySelector('#box-item-' + deletedItem.id), 0.2, {
+        TweenMax.to(document.querySelector('#box-item-' + deletedItem.id), 0.2, {
             scale: 0,
             onComplete: function () {
 
@@ -332,6 +337,7 @@ class Stage extends React.Component {
             console.log('onStageItemDelete', prevState.itemsAtStage.id, prevState.itemsAtStage.sh, findId)
 
             return {
+                selectedItem: this.dummyObj,
                 itemAtStage: tempItemsAtStage
             }
         });
@@ -488,18 +494,24 @@ class Stage extends React.Component {
 
         if (this.stage.offsetHeight <= parentHeight) {
             let posY = (parentHeight / 2 - this.stage.offsetHeight / 2);
-            TweenLite.set(this.stage, { y: posY });
+            //TweenMax.set(this.stage, { y: posY });
+            TweenMax.to(this.stage, 0.5, { y: posY });
+
         }
         else {
-            TweenLite.set(this.stage, { y: 0 });
+            //TweenMax.set(this.stage, { y: 0 });
+            TweenMax.to(this.stage, 0.5, { y: 0 });
         }
 
         if (this.stage.offsetWidth <= parentWidth) {
             let posX = (parentWidth / 2 - this.stage.offsetWidth / 2)
-            TweenLite.set(this.stage, { x: posX })
+            //TweenMax.set(this.stage, { x: posX })
+            TweenMax.to(this.stage, 0.5, { x: posX });
+
         }
         else {
-            TweenLite.set(this.stage, { x: 0 })
+            //TweenMax.set(this.stage, { x: 0 })
+            TweenMax.to(this.stage, 0.5, { x: 0 });
         }
     }
 
@@ -513,54 +525,69 @@ class Stage extends React.Component {
 
     componentWillReceiveProps(newProps) {
 
-        this.setGrid(newProps.floor);
-        this.setItemsAtStage(newProps.floor.rooms);
+        let stageBoardsList = this.setGrid(newProps.floor);
+        let itemsAtStage = this.setItemsAtStage(newProps.floor.rooms);
+
+        this.setState({
+            stageBoardsList,
+            itemsAtStage,
+            selectedItem: this.dummyObj
+        });
+
+        //this.setGrid(newProps.floor);
+        //this.setItemsAtStage(newProps.floor.rooms);
     }
 
     componentDidUpdate(prevProps, prevState) {
 
-        this.createStage(this.props.floor);
-        this.initStageAsDraggable();
-        this.onUpdateDimensions();
-
         if (prevProps.floor.id != this.props.floor.id) {
 
-            TweenLite.set(document.querySelector('#stage-bgnd'), {
-                alpha: 0
-            })
+            this.createStage(this.props.floor, prevProps.floor);
+            this.initStageAsDraggable();
 
-            const itemBoxes = document.querySelectorAll('.item-box');
-            itemBoxes.forEach((box, i) => {
-                TweenLite.set(box, {
-                    scale: 0
-                });
-            });
+            if (prevProps.floor.id != this.props.floor.id) {
 
-            const tiles = document.querySelectorAll('.stage-board-field');
+                const stageBgnd = document.querySelector('#stage-bgnd');
+                if (stageBgnd != null)
+                    TweenMax.set(stageBgnd, {
+                        alpha: 0
+                    })
 
-            tiles.forEach((item, i) => {
-                TweenLite.from(item, 0.2, {
-                    alpha: 0,
-                    delay: (i * 0.01),
-                    onComplete: function () {
-                        if (i === tiles.length * 0.5) {
+                const itemBoxes = document.querySelectorAll('.item-box');
+                if (itemBoxes.length > 0)
+                    itemBoxes.forEach((box, i) => {
+                        TweenMax.set(box, {
+                            scale: 0
+                        });
+                    });
 
-                            TweenLite.to(document.querySelector('#stage-bgnd'), 0.2, {
-                                alpha: 1
-                            })
+                const tiles = document.querySelectorAll('.stage-board-field');
+                if (tiles.length > 0)
+                    tiles.forEach((item, i) => {
+                        TweenMax.from(item, 0.2, {
+                            alpha: 0,
+                            delay: (i * 0.01),
+                            onComplete: function () {
+                                if (i === tiles.length * 0.5) {
 
-                            itemBoxes.forEach((box, i) => {
-                                TweenLite.to(box, 1, {
-                                    scale: 1,
-                                    ease: Elastic.easeOut,
-                                    delay: (i * 0.1)
-                                });
-                            });
+                                    if (stageBgnd != null)
+                                        TweenMax.to(stageBgnd, 0.2, {
+                                            alpha: 1
+                                        })
 
-                        }
-                    }
-                })
-            })
+                                    if (itemBoxes.length > 0)
+                                        itemBoxes.forEach((box, i) => {
+                                            TweenMax.to(box, 1, {
+                                                scale: 1,
+                                                ease: Elastic.easeOut,
+                                                delay: (i * 0.1)
+                                            });
+                                        });
+                                }
+                            }
+                        })
+                    })
+            }
         }
     }
 

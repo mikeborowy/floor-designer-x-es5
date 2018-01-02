@@ -1,18 +1,18 @@
 ﻿import * as React from 'react';
 
+import axios from 'axios';
+
 import Toolbar from '../toolbar/toolbar';
 import ShapesPanel from '../shapesPanel/shapesPanel';
 import Stage from '../stage/stage';
 
 import RoomsCfg from '../../common/roomsCfg';
-import InitialState  from '../../common/initialState';
+import InitialState from '../../common/initialState';
 
 class Workspace extends React.Component {
 
     constructor(props) {
         super(props)
-
-        console.log(InitialState.floorList);
 
         this.floorDummy = {
             id: -1,
@@ -29,7 +29,8 @@ class Workspace extends React.Component {
         this.state = {
             zoom: 1,
             floorList: [],
-            selectedFloor: this.floorDummy
+            selectedFloor: this.floorDummy,
+            prevSelectedFloor: this.floorDummy
         }
 
         this.currentAction = '';
@@ -65,11 +66,14 @@ class Workspace extends React.Component {
     /*we get zoom value from toolbar and set in current comp state*/
     onEditFloor(evt) {
 
+        let prevSelectedFloor = this.state.selectedFloor;
         let floorId = evt.detail.floorId * 1;
         let findId = this.state.floorList.map(floor => (floor.id)).indexOf(floorId);
         let selectedFloor = this.state.floorList[findId];
 
-        this.setState({ selectedFloor });
+        if (prevSelectedFloor.id != selectedFloor.id)
+            this.setState({ selectedFloor });
+
     }
 
     onDeleteFloor(evt) {
@@ -79,31 +83,28 @@ class Workspace extends React.Component {
     /* FLOOR DATA EVENT HANDLERS END */
 
     /* HTTP CALL REQUESTS START */
-    getFloorList() {
+    getFloorListReq() {
 
-        let floorList = InitialState.floorList;
-        this.setState({ floorList })
+        const that = this;
 
-        //let action = "http://localhost:52191/api/floors";
-        //$.ajax({
-        //    type: "GET",
-        //    url: action,
-        //    cache: false,
-        //    success: function (response) {
-        //        console.log('getFloorList', response)
-        //    },
-        //    error: function (xhr, ajaxOptions, thrownError) {
-        //        if (debugMode) {
-        //            console.log(xhr, ajaxOptions, thrownError);
-        //        }
-        //    }
-        //});
+        let response = axios({
+            method: 'get',
+            url: "http://localhost:52191/api/floors"
+        })
+            .then(response => {
+                let floorList = response.data;
+                that.setState({ floorList });
+            })
+            .catch(error => {
+                that.setState({ floorList: InitialState.floorList });
+            });
+
     }
     /* HTTP CALL REQUESTS END */
 
     componentDidMount() {
         this.updateDimensions();
-        this.getFloorList();
+        this.getFloorListReq();
 
         window.addEventListener("resize", this.updateDimensions.bind(this));
         window.addEventListener('onEditFloor', this.onEditFloor);
@@ -112,7 +113,6 @@ class Workspace extends React.Component {
 
     componentWillUnmount() {
         window.removeEventListener("resize", this.updateDimensions.bind(this));
-
         window.removeEventListener('onEditFloor', this.onEditFloor);
         window.removeEventListener('onDeleteFloor', this.onDeleteFloor);
     }

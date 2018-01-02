@@ -395,20 +395,6 @@ class StageItem extends React.Component {
     * ANIMATIONS HANDLERS & HELPERS END
     */
 
-    //componentWillEnter(callback) {
-    //    TweenLite.set(this.stageItem, { x: this.props.x, y: this.props.y });
-    //    TweenLite.from(this.stageItem, 0.5, { scale: 0, onComplete: callback });
-    //}
-
-    //componentWillLeave(callback) {
-    //    TweenLite.to(this.stageItem, 0.5, { scale: 0, onComplete: callback });
-    //    ////TweenLite.set(this.stageItem, { x: this.props.x, y: this.props.y });
-    //}
-
-    componentDidUpdate() {
-        //this.setInitPosition(this.props);
-    }
-
     componentDidMount(prevProps, prevState) {
 
         this.setInitPosition(this.props);
