@@ -296,6 +296,7 @@ class Stage extends React.Component {
             selectedItem: item,
             itemsAtStage: [...this.state.itemsAtStage, item]
         })
+
     }
 
     onStageItemUpdate(updatedItem) {
@@ -309,6 +310,7 @@ class Stage extends React.Component {
 
             return { itemAtStage }
         });
+
     }
 
     onStageItemDelete(deletedItem) {
@@ -322,6 +324,7 @@ class Stage extends React.Component {
                 setDelete(deletedItem);
             }
         });
+
     }
 
     setDelete(deletedItem) {
@@ -333,8 +336,6 @@ class Stage extends React.Component {
             prevState.itemsAtStage.splice(findId, 1);
 
             let tempItemsAtStage = Object.assign({}, prevState);
-
-            console.log('onStageItemDelete', prevState.itemsAtStage.id, prevState.itemsAtStage.sh, findId)
 
             return {
                 selectedItem: this.dummyObj,
@@ -540,6 +541,14 @@ class Stage extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
 
+        let event = new CustomEvent('onStageItemsChanged', {
+            detail: {
+                itemsAtStage: this.state.itemsAtStage
+            }
+        });
+
+        window.dispatchEvent(event);
+
         if (prevProps.floor.id != this.props.floor.id) {
 
             this.createStage(this.props.floor, prevProps.floor);
@@ -564,6 +573,7 @@ class Stage extends React.Component {
                 const tiles = document.querySelectorAll('.stage-board-field');
                 if (tiles.length > 0)
                     tiles.forEach((item, i) => {
+
                         TweenMax.from(item, 0.2, {
                             alpha: 0,
                             delay: (i * 0.01),

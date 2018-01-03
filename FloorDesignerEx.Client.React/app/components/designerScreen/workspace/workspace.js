@@ -33,6 +33,8 @@ class Workspace extends React.Component {
             prevSelectedFloor: this.floorDummy
         }
 
+        this.itemsAtStage = [];
+
         this.currentAction = '';
         this.gridCellWidth = RoomsCfg().CELL_WIDTH;
         this.gridCellHeight = RoomsCfg().CELL_HEIGHT;
@@ -44,6 +46,7 @@ class Workspace extends React.Component {
         this.onEditFloor = this.onEditFloor.bind(this);
         this.onDeleteFloor = this.onDeleteFloor.bind(this);
         this.onSaveFloor = this.onSaveFloor.bind(this);
+        this.onStageItemsChanged = this.onStageItemsChanged.bind(this);
     }
 
     /* HELPERS START */
@@ -69,6 +72,9 @@ class Workspace extends React.Component {
     onCreateFloor(evt) {
 
         let floor = evt.detail;
+        let floorList = this.state.floorList;
+
+        const that = this;
 
         axios({
             method: 'post',
@@ -85,7 +91,7 @@ class Workspace extends React.Component {
             }
         })
             .then(response => {
-                console.log('update list')
+                that.setState({ floorList: Object.assign(floorList, response.data) });
             })
             .catch(error => {
 
@@ -104,16 +110,69 @@ class Workspace extends React.Component {
     }
 
     onDeleteFloor(evt) {
-        console.log('onDeleteFloor', evt.detail);
+        let floorList = this.state.floorList;
+        let findId = floorList.map((item) => { return item.id }).indexOf(evt.detail.floorId);
+        const that = this;
+
+        axios({
+            method: 'delete',
+            url: "http://localhost:52191/api/floors/" + evt.detail.floorId
+        })
+            .then(response => {
+                floorList.splice(findId, 1);
+                this.setState({ floorList });
+            })
+            .catch(error => {
+                console.log(error)
+            });
     }
 
     onSaveFloor(evt) {
 
+        console.log(this)
+
+        //let id = this.state.selectedFloor.id;
+        //let floor = {
+        //    "id": this.state.selectedFloor.id,
+        //    "officeId": this.state.selectedFloor.officeId,
+        //    "name": this.state.selectedFloor.floorNum,
+        //    "width": this.state.selectedFloor.width,
+        //    "height": this.state.selectedFloor.height,
+        //    "xpos": 0,
+        //    "ypos": 0,
+        //    "image": null,
+        //    "rooms": this.itemsAtStage
+        //}
+
+        //const that = this;
+
+        //axios({
+        //    method: 'put',
+        //    url: "http://localhost:52191/api/floors/" + id,
+        //    data: floor
+        //})
+        //    .then(response => {
+        //        console.log(response)
+        //    })
+        //    .catch(error => {
+
+        //    });
+    }
+
+    onStageItemsChanged(evt) {
+        let rooms = evt.detail.itemsAtStage;
+        let selectedFloor = this.state.selectedFloor;
+        let tempSelectedFloor = Object.assign({}, selectedFloor, {rooms})
+
+        console.log(tempSelectedFloor)
+
+        //setState(selectedFloor)
+        //console.log(this.itemsAtStage)
     }
     /* FLOOR DATA EVENT HANDLERS END */
 
     /* HTTP CALL REQUESTS START */
-    getFloorListReq() {
+    onGetFloorList() {
 
         const that = this;
 
@@ -133,7 +192,7 @@ class Workspace extends React.Component {
 
     componentDidMount() {
         this.updateDimensions();
-        this.getFloorListReq();
+        this.onGetFloorList();
 
         window.addEventListener("resize", this.updateDimensions.bind(this));
 
@@ -141,6 +200,8 @@ class Workspace extends React.Component {
         window.addEventListener('onEditFloor', this.onEditFloor);
         window.addEventListener('onDeleteFloor', this.onDeleteFloor);
         window.addEventListener('onSaveFloor', this.onSaveFloor);
+
+        window.addEventListener('onStageItemsChanged', this.onStageItemsChanged);
     }
 
     componentWillUnmount() {
@@ -151,6 +212,8 @@ class Workspace extends React.Component {
         window.removeEventListener('onEditFloor', this.onEditFloor);
         window.removeEventListener('onDeleteFloor', this.onDeleteFloor);
         window.removeEventListener('onSaveFloor', this.onSaveFloor);
+
+        window.removeEventListener('onStageItemsChanged', this.onStageItemsChanged);
     }
 
     render() {

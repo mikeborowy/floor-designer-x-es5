@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "cbb21528c9eb38d24f8e"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "00a3d4cc659b51fbb20c"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -597,7 +597,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "cbb21528c9eb38d24f8e"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "00a3d4cc659b51fbb20c"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -24344,6 +24344,8 @@
 	            prevSelectedFloor: _this.floorDummy
 	        };
 	
+	        _this.itemsAtStage = [];
+	
 	        _this.currentAction = '';
 	        _this.gridCellWidth = (0, _roomsCfg2.default)().CELL_WIDTH;
 	        _this.gridCellHeight = (0, _roomsCfg2.default)().CELL_HEIGHT;
@@ -24355,6 +24357,7 @@
 	        _this.onEditFloor = _this.onEditFloor.bind(_this);
 	        _this.onDeleteFloor = _this.onDeleteFloor.bind(_this);
 	        _this.onSaveFloor = _this.onSaveFloor.bind(_this);
+	        _this.onStageItemsChanged = _this.onStageItemsChanged.bind(_this);
 	        return _this;
 	    }
 	
@@ -24388,6 +24391,9 @@
 	        value: function onCreateFloor(evt) {
 	
 	            var floor = evt.detail;
+	            var floorList = this.state.floorList;
+	
+	            var that = this;
 	
 	            (0, _axios2.default)({
 	                method: 'post',
@@ -24403,7 +24409,7 @@
 	                    "rooms": []
 	                }
 	            }).then(function (response) {
-	                console.log('update list');
+	                that.setState({ floorList: Object.assign(floorList, response.data) });
 	            }).catch(function (error) {});
 	        }
 	    }, {
@@ -24422,18 +24428,76 @@
 	    }, {
 	        key: 'onDeleteFloor',
 	        value: function onDeleteFloor(evt) {
-	            console.log('onDeleteFloor', evt.detail);
+	            var _this2 = this;
+	
+	            var floorList = this.state.floorList;
+	            var findId = floorList.map(function (item) {
+	                return item.id;
+	            }).indexOf(evt.detail.floorId);
+	            var that = this;
+	
+	            (0, _axios2.default)({
+	                method: 'delete',
+	                url: "http://localhost:52191/api/floors/" + evt.detail.floorId
+	            }).then(function (response) {
+	                floorList.splice(findId, 1);
+	                _this2.setState({ floorList: floorList });
+	            }).catch(function (error) {
+	                console.log(error);
+	            });
 	        }
 	    }, {
 	        key: 'onSaveFloor',
-	        value: function onSaveFloor(evt) {}
+	        value: function onSaveFloor(evt) {
+	
+	            console.log(this);
+	
+	            //let id = this.state.selectedFloor.id;
+	            //let floor = {
+	            //    "id": this.state.selectedFloor.id,
+	            //    "officeId": this.state.selectedFloor.officeId,
+	            //    "name": this.state.selectedFloor.floorNum,
+	            //    "width": this.state.selectedFloor.width,
+	            //    "height": this.state.selectedFloor.height,
+	            //    "xpos": 0,
+	            //    "ypos": 0,
+	            //    "image": null,
+	            //    "rooms": this.itemsAtStage
+	            //}
+	
+	            //const that = this;
+	
+	            //axios({
+	            //    method: 'put',
+	            //    url: "http://localhost:52191/api/floors/" + id,
+	            //    data: floor
+	            //})
+	            //    .then(response => {
+	            //        console.log(response)
+	            //    })
+	            //    .catch(error => {
+	
+	            //    });
+	        }
+	    }, {
+	        key: 'onStageItemsChanged',
+	        value: function onStageItemsChanged(evt) {
+	            var rooms = evt.detail.itemsAtStage;
+	            var selectedFloor = this.state.selectedFloor;
+	            var tempSelectedFloor = Object.assign({}, selectedFloor, { rooms: rooms });
+	
+	            console.log(tempSelectedFloor);
+	
+	            //setState(selectedFloor)
+	            //console.log(this.itemsAtStage)
+	        }
 	        /* FLOOR DATA EVENT HANDLERS END */
 	
 	        /* HTTP CALL REQUESTS START */
 	
 	    }, {
-	        key: 'getFloorListReq',
-	        value: function getFloorListReq() {
+	        key: 'onGetFloorList',
+	        value: function onGetFloorList() {
 	
 	            var that = this;
 	
@@ -24453,7 +24517,7 @@
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
 	            this.updateDimensions();
-	            this.getFloorListReq();
+	            this.onGetFloorList();
 	
 	            window.addEventListener("resize", this.updateDimensions.bind(this));
 	
@@ -24461,6 +24525,8 @@
 	            window.addEventListener('onEditFloor', this.onEditFloor);
 	            window.addEventListener('onDeleteFloor', this.onDeleteFloor);
 	            window.addEventListener('onSaveFloor', this.onSaveFloor);
+	
+	            window.addEventListener('onStageItemsChanged', this.onStageItemsChanged);
 	        }
 	    }, {
 	        key: 'componentWillUnmount',
@@ -24472,6 +24538,8 @@
 	            window.removeEventListener('onEditFloor', this.onEditFloor);
 	            window.removeEventListener('onDeleteFloor', this.onDeleteFloor);
 	            window.removeEventListener('onSaveFloor', this.onSaveFloor);
+	
+	            window.removeEventListener('onStageItemsChanged', this.onStageItemsChanged);
 	        }
 	    }, {
 	        key: 'render',
@@ -72131,8 +72199,6 @@
 	
 	                var tempItemsAtStage = Object.assign({}, prevState);
 	
-	                console.log('onStageItemDelete', prevState.itemsAtStage.id, prevState.itemsAtStage.sh, findId);
-	
 	                return {
 	                    selectedItem: _this2.dummyObj,
 	                    itemAtStage: tempItemsAtStage
@@ -72346,6 +72412,14 @@
 	        key: 'componentDidUpdate',
 	        value: function componentDidUpdate(prevProps, prevState) {
 	
+	            var event = new CustomEvent('onStageItemsChanged', {
+	                detail: {
+	                    itemsAtStage: this.state.itemsAtStage
+	                }
+	            });
+	
+	            window.dispatchEvent(event);
+	
 	            if (prevProps.floor.id != this.props.floor.id) {
 	
 	                this.createStage(this.props.floor, prevProps.floor);
@@ -72367,6 +72441,7 @@
 	
 	                    var tiles = document.querySelectorAll('.stage-board-field');
 	                    if (tiles.length > 0) tiles.forEach(function (item, i) {
+	
 	                        _gsap2.default.from(item, 0.2, {
 	                            alpha: 0,
 	                            delay: i * 0.01,
