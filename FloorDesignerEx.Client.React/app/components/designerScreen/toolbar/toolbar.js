@@ -119,6 +119,9 @@ class Toolbar extends React.Component {
     onSaveFloorClick(evt) {
 
         if (this.debugMode) console.log("onSaveFloorClick", evt)
+
+        var evt = new CustomEvent('onSaveFloor');
+        window.dispatchEvent(evt);
     }
     /*SAVE END*/
 
@@ -186,6 +189,7 @@ class Toolbar extends React.Component {
                                 </span>
                                 </button>
                                 <button
+                                    disabled
                                     id="upload-floor-bgnd-btn"
                                     onClick={this.onUploadPhotoClick}
                                     className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent designer-toolbar-button">
@@ -204,6 +208,7 @@ class Toolbar extends React.Component {
                                     <span>Save Floor Plan</span>
                                 </button>
                                 <button
+                                    disabled
                                     id="floor-finder-btn"
                                     onClick={this.onFloorFinderClick}
                                     className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent designer-toolbar-button"

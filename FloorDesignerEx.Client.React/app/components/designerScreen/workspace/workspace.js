@@ -40,8 +40,10 @@ class Workspace extends React.Component {
 
         this.onUpdateZoom = this.onUpdateZoom.bind(this);
 
+        this.onCreateFloor = this.onCreateFloor.bind(this);
         this.onEditFloor = this.onEditFloor.bind(this);
         this.onDeleteFloor = this.onDeleteFloor.bind(this);
+        this.onSaveFloor = this.onSaveFloor.bind(this);
     }
 
     /* HELPERS START */
@@ -64,6 +66,32 @@ class Workspace extends React.Component {
 
     /* FLOOR DATA EVENT HANDLERS START */
     /*we get zoom value from toolbar and set in current comp state*/
+    onCreateFloor(evt) {
+
+        let floor = evt.detail;
+
+        axios({
+            method: 'post',
+            url: "http://localhost:52191/api/floors",
+            data: {
+                "officeId": 1,
+                "name": "Floor-" + floor.floorNum,
+                "width": floor.width,
+                "height": floor.height,
+                "xpos": 0,
+                "ypos": 0,
+                "image": null,
+                "rooms": []
+            }
+        })
+            .then(response => {
+                console.log('update list')
+            })
+            .catch(error => {
+
+            });
+    }
+
     onEditFloor(evt) {
 
         let prevSelectedFloor = this.state.selectedFloor;
@@ -73,11 +101,13 @@ class Workspace extends React.Component {
 
         if (prevSelectedFloor.id != selectedFloor.id)
             this.setState({ selectedFloor });
-
     }
 
     onDeleteFloor(evt) {
-        console.log('onDeleteFloor', evt.detail)
+        console.log('onDeleteFloor', evt.detail);
+    }
+
+    onSaveFloor(evt) {
 
     }
     /* FLOOR DATA EVENT HANDLERS END */
@@ -87,7 +117,7 @@ class Workspace extends React.Component {
 
         const that = this;
 
-        let response = axios({
+        axios({
             method: 'get',
             url: "http://localhost:52191/api/floors"
         })
@@ -98,7 +128,6 @@ class Workspace extends React.Component {
             .catch(error => {
                 that.setState({ floorList: InitialState.floorList });
             });
-
     }
     /* HTTP CALL REQUESTS END */
 
@@ -107,14 +136,21 @@ class Workspace extends React.Component {
         this.getFloorListReq();
 
         window.addEventListener("resize", this.updateDimensions.bind(this));
+
+        window.addEventListener('onCreateFloor', this.onCreateFloor);
         window.addEventListener('onEditFloor', this.onEditFloor);
         window.addEventListener('onDeleteFloor', this.onDeleteFloor);
+        window.addEventListener('onSaveFloor', this.onSaveFloor);
     }
 
     componentWillUnmount() {
+
         window.removeEventListener("resize", this.updateDimensions.bind(this));
+
+        window.removeEventListener('onCreateFloor', this.onCreateFloor);
         window.removeEventListener('onEditFloor', this.onEditFloor);
         window.removeEventListener('onDeleteFloor', this.onDeleteFloor);
+        window.removeEventListener('onSaveFloor', this.onSaveFloor);
     }
 
     render() {
